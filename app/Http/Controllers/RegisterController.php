@@ -9,8 +9,20 @@ use Telegram\TwoFactorCode;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Route;
 
-class RegisterController extends Controller
+class RegisterController extends ModelController
 {
+    /**
+     * @var array 'method' => 'policy'
+     */
+    protected $guardedMethods = [
+        'export' => 'export',
+        'import' => 'import',
+    ];
+    protected $methodsWithoutModels = ['import'];
+    protected function getModelClass(): string
+    {
+        return User::class;
+    }
     public function index()
     {
 

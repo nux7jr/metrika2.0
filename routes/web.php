@@ -23,14 +23,6 @@ Route::get('/logout', function () {
     return redirect('/');
 })->name('logout');
 
-
-Route::get('/foo', function () {
-    if (Auth::check()) {
-        return "Hello admin";
-    }
-    return route('login');
-});
-
 Route::middleware(['guest', 'twofactor'])->group(function () {
     Route::get('register', [RegisterController::class, 'index'])->name('register')->middleware();
     Route::post('register', [RegisterController::class, 'store'])->name('register.store')->middleware();
