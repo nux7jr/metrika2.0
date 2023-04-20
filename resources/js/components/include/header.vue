@@ -4,11 +4,11 @@
             <a class="nav__link nav__heading" href="/">
                 <img
                     class="nav__logo"
-                    src="../../../images/logo.webp"
+                    src="../../../images/logos/logo.webp"
                     alt="logo"
                 />
             </a>
-            <!-- <ul  class="nav__list">
+            <!-- <ul class="nav__list">
                 <li>
                     <a class="nav__link nav__option" href="/register">
                         Регистрация
@@ -90,7 +90,7 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 18px 32px;
+    padding: 6px 15px;
     gap: 16px;
 
     font-style: normal;

@@ -25,7 +25,6 @@ class RegisterController extends ModelController
     }
     public function index()
     {
-
         return view('register.index');
     }
 
@@ -62,22 +61,6 @@ class RegisterController extends ModelController
         } catch (Exeption $error) {
         }
         return ['error' => 'Что-то пошло не так!'];
-
-
-        // $user = User::query()->create([
-        //     'name' => $request->input('name'),
-        //     'login' => $request->input('login'),
-        //     'password' => $request->input('password'),
-        //     'telegram_chat_id' => $request->input('telegram_chat_id')
-        // ]);
-
-        // if (Auth::attempt(['login' => $validator->getData()['login'], 'password' => $validator->getData()['password']])) {
-        //     Auth::user();
-        //     $this->authenticated($request, $user);
-        //     $message['url'] = route('verify.index');
-        //     return $message;
-        // }
-        // return ['error' => 'Что-то пошло не так!'];
     }
 
     protected function authenticated(Request $request, $user)

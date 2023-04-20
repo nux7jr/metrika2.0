@@ -1,6 +1,7 @@
 <template>
     <div>
         <label
+            @focusin="openInput()"
             ref="wrapper"
             :for="name"
             class="wrapper"
@@ -10,18 +11,17 @@
             }"
         >
             <span class="basic-input__text">{{ placeholder }}</span>
-            <Transition name="bounce">
-                <input
-                    v-if="isActive"
-                    ref="basic_input"
-                    class="basic-input"
-                    autocomplete="off"
-                    :type="typeInput"
-                    :name="name"
-                    :id="name"
-                    v-model="value"
-                />
-            </Transition>
+            <input
+                ref="basicInput"
+                class="basic-input visually-hidden"
+                autocomplete="off"
+                readonly
+                onfocus="this.removeAttribute('readonly')"
+                :type="typeInput"
+                :name="name"
+                :id="name"
+                v-model="value"
+            />
             <div
                 ref="basic_close"
                 @click="clear_input()"
@@ -62,9 +62,13 @@ export default {
 
     mounted() {
         this.$refs.wrapper.addEventListener("click", (evt) => {
+            this.$refs.basicInput.classList.remove("visually-hidden");
+            this.$refs.basicInput.classList.add("bounce-enter-active");
+            setTimeout(() => {
+                this.$refs.basicInput.classList.remove("bounce-enter-active");
+            }, 400);
             this.isActive = true;
             this.$refs.basic_close.style.display = "flex";
-            console.log("focusout IN");
         });
     },
     props: {
@@ -94,11 +98,29 @@ export default {
                 this.isActive = true;
             }, 1);
         },
+        openInput() {
+            this.$refs.basicInput.classList.remove("visually-hidden");
+            this.$refs.basic_close.style.display = "flex";
+            this.isActive = true;
+        },
     },
 };
 </script>
 
 <style scoped>
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    border: 0;
+    padding: 0;
+    white-space: nowrap;
+    clip-path: inset(100%);
+    clip: rect(0 0 0 0);
+    overflow: hidden;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -157,7 +179,7 @@ input:-webkit-autofill:active {
     width: -webkit-fill-available;
     border: none;
     outline: none;
-    display: none;
+    display: flex;
 
     font-style: normal;
     font-weight: 400;

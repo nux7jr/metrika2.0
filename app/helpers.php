@@ -9,7 +9,10 @@ if (!function_exists('active_link')) {
         return Route::is($name) ? $class : '';
     }
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 if (!function_exists('permissions_roles')) {
 
     function permissions_roles(): array

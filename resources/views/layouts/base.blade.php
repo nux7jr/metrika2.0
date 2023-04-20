@@ -26,12 +26,12 @@
 </head>
 <body>
     <div id="app" class="app">
-        <metrikamenu :is_auth='@json(Auth::check())'></metrikamenu>
+        <metrikamenu v-if='@json(Auth::check())' :is_auth='@json(Auth::check())' :user='@json(Auth::user())'></metrikamenu>
         <div class="container">
-            <metrikaheader :is_auth='@json(Auth::check())' :user='@json(Auth::user())'></metrikaheader>
-                <div>
-                    @yield('content')
-                </div>
+            <metrikaheader v-if='@json(Auth::check())' :is_auth='@json(Auth::check())' :user='@json(Auth::user())'></metrikaheader>
+            <div class="main-page">
+                @yield('content')
+            </div>
         </div>
     </div>
 </body>

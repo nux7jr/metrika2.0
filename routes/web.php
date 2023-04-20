@@ -17,6 +17,7 @@ use App\Http\Controllers\TwoFactorController;
 */
 
 Route::view('/', 'home.index')->name('home')->middleware(['auth', 'twofactor']);
+Route::view('/somelink', 'somelink.index')->name('somelink')->middleware(['auth', 'twofactor']);
 
 Route::get('/logout', function () {
     Auth::logout();

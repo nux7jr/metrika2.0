@@ -46,10 +46,15 @@ export default {
     methods: {
         async send_data() {
             this.loading = true;
-            const data = await axios.post("/verify", this.$refs.userForm);
-            this.info = data.data;
-            if (data.data.url) {
-                window.location.href = data.data.url;
+            try {
+                const data = await axios.post("/verify", this.$refs.userForm);
+                this.info = data.data;
+                if (data.data.url) {
+                    window.location.href = data.data.url;
+                }
+            } catch (e) {
+                console.log(e);
+                this.info.error = e.message;
             }
             this.loading = false;
         },
