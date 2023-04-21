@@ -1,3 +1,7 @@
+:root {
+    --ag-border-radius: 33px !important;
+}
+
 body {
     font-family: "Montserrat", sans-serif;
     -webkit-font-smoothing: subpixel-antialiased;

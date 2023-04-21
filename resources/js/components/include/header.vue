@@ -72,15 +72,12 @@ export default {
 .nav {
     justify-content: space-between;
     width: -webkit-fill-available;
-    background: whitesmoke;
 
     padding: 10px;
 
     align-items: center;
 }
 .metrikaheader {
-    min-height: 70px;
-
     display: flex;
     align-items: center;
 }
@@ -90,7 +87,7 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 6px 15px;
+    padding: 6px 12px;
     gap: 16px;
 
     font-style: normal;
@@ -99,7 +96,7 @@ export default {
     line-height: 28px;
     color: #fcfcfc;
     background: #8dccec;
-    border-radius: 12px;
+    border-radius: 3px;
 
     flex: none;
     order: 0;
@@ -110,7 +107,7 @@ export default {
 }
 .nav__login {
     background: transparent;
-    border: 2px solid #8dccec;
+    border: 1px solid #8dccec;
     color: #8dccec;
 }
 .nav__option:hover {
@@ -118,7 +115,7 @@ export default {
 }
 .nav__login:hover {
     background: transparent;
-    border: 2px solid #74b1d0;
+    border: 1px solid #74b1d0;
     color: #74b1d0;
 }
 .nav__text {
@@ -126,7 +123,6 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 18px 32px;
     gap: 16px;
 
     font-style: normal;
