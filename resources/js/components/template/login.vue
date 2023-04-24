@@ -55,12 +55,16 @@ export default {
     methods: {
         async send_data() {
             this.loading = true;
-            const data = await axios.post("/login", this.$refs.login);
-            if (data.data.url) {
-                window.location.href = data.data.url;
-            } else {
-                this.info = data.data;
-                this.loading = false;
+            try {
+                const data = await axios.post("/login", this.$refs.login);
+                if (data.data.url) {
+                    window.location.href = data.data.url;
+                } else {
+                    this.info = data.data;
+                    this.loading = false;
+                }
+            } catch (error) {
+                console.log(error);
             }
         },
     },

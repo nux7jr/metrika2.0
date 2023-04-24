@@ -35,7 +35,7 @@
 <script>
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import 'ag-grid-enterprise';
+import "ag-grid-enterprise";
 import { AgGridVue } from "ag-grid-vue3";
 import { lang } from "../../locale/ru.js";
 export default {
@@ -52,6 +52,7 @@ export default {
                     maxWidth: 90,
                     filter: "agNumberColumnFilter",
                     filterType: "number",
+                    sortable: false,
                 },
                 { field: "DATE", filter: "agDateColumnFilter", width: 100 },
                 { field: "CITY", width: 150 },
@@ -59,7 +60,11 @@ export default {
                 { field: "PHONE" },
                 { field: "EMAIL" },
                 { field: "UTM_SOURCE" },
+                { field: "UTM_MEDIUM" },
+                { field: "UTM_CAMPAIGN" },
+                { field: "UTM_TERM" },
             ],
+
             gridApi: null,
             columnApi: null,
             defaultColDef: {
@@ -69,12 +74,29 @@ export default {
                 filterParams: { buttons: ["reset", "apply"] },
             },
             rowData: null,
+            statusBar: {
+                statusPanels: [
+                    {
+                        statusPanel: "agTotalAndFilteredRowCountComponent",
+                        align: "left",
+                    },
+                ],
+            },
         };
     },
 
     created() {
-        this.rowSelection = 'multiple';
+        this.rowSelection = "multiple";
         this.localeText = lang;
+
+        this.statusBar = {
+            statusPanels: [
+                {
+                    statusPanel: "agAggregationComponent",
+                    statusPanelParams: { aggFuncs: ["sum", "avg"] },
+                },
+            ],
+        };
     },
     methods: {
         // range: function (start, end) {
