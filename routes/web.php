@@ -32,7 +32,7 @@ Route::middleware(['guest', 'twofactor'])->group(function () {
     Route::post('login', [LoginController::class, 'store'])->name('login.store');
 });
 
-Route::middleware('twofactor')->group(function () {
+Route::middleware(['twofactor','auth'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
     Route::post('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
     Route::get('verify', [TwoFactorController::class, 'index'])->name('verify.index');

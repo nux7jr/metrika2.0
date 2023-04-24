@@ -123,7 +123,7 @@ export default {
 
             const updateData = (data) => params.api.setRowData(data);
 
-            fetch("http://127.0.0.1:8000/print.php")
+            fetch("/print.php")
                 .then((resp) => resp.json())
                 .then((data) => updateData(data));
         },
