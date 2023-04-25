@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TwoFactorController;
+use App\Http\Controllers\DataGridController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +44,7 @@ Route::middleware(['twofactor', 'auth'])->group(function () {
 
     Route::get('create', [RegisterController::class, 'index'])->name('register')->middleware();
     Route::post('create', [RegisterController::class, 'store'])->name('register.store')->middleware();
+
+    Route::post('get_leads', [DataGridController::class, 'store'])->name('get_leads');
+    Route::get('get_leads', [DataGridController::class, 'store'])->name('get_leads');
 });
