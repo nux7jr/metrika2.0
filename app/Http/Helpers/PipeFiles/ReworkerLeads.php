@@ -11,13 +11,11 @@ class ReworkerLeads
 
     public function __construct($leads)
     {
-
         $this->leads = $leads;
     }
 
     public function unique_leads_by_day()
     {
-
         return $this->get_unique($this->leads);
     }
 
@@ -34,7 +32,6 @@ class ReworkerLeads
 
     private function get_unique($leads)
     {
-
         $leads_by_day_and_site = [];
 
         foreach ($leads as $date_lead => $date) {
@@ -91,7 +88,6 @@ class ReworkerLeads
 
     private function multineedle_stripos($haystack, $needles, $offset = 0)
     {
-
         foreach ($needles as $needle) {
             if (stripos($haystack, $needle, $offset) !== false) return true;
         }
