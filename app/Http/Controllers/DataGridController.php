@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Helpers\PipeFiles\Leads;
 
 class DataGridController extends Controller
 {
@@ -48,7 +49,7 @@ class DataGridController extends Controller
 
 
         $json = json_encode($arr_to_json, JSON_UNESCAPED_UNICODE);
-        echo $json;
+        echo ($json);
     }
 
     /**

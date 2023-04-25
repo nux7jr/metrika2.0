@@ -118,8 +118,17 @@ export default {
             this.gridColumnApi = params.columnApi;
 
             const updateData = (data) => params.api.setRowData(data);
+            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            fetch("/print.php")
+            fetch("/get_leads",{
+                method: 'post',
+                headers:{
+                    "X-CSRF-TOKEN": token,
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Accept": "application/json, text-plain, */*",
+                }
+            })
                 .then((resp) => resp.json())
                 .then((data) => updateData(data));
         },
