@@ -14,9 +14,10 @@
         "vue-router": "^4.1.6"
     },
     "dependencies": {
-        "ag-grid-community": "^29.3.0",
-        "ag-grid-enterprise": "^29.3.0",
-        "ag-grid-vue3": "^29.3.0",
+        "@ag-grid-enterprise/core": "^29.3.2",
+        "ag-grid-community": "^29.3.2",
+        "ag-grid-enterprise": "^29.3.2",
+        "ag-grid-vue3": "^29.3.2",
         "apexcharts": "^3.39.0"
     }
 }

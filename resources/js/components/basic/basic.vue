@@ -25,8 +25,10 @@
                     Скачать выбранные лиды (exel)
                 </button>
                 <button @click="getFilterModel()">getFilterModel</button>
+                <!-- <button @click="getUserFilter()">getFilterModel</button> -->
             </div>
-            <div class="info-option__text">text-info:</div>
+            <!-- <div class="info-option__text">text-info:</div>
+            <div @click="justShow()">justShow</div> -->
         </div>
         <div class="main-table">
             <ag-grid-vue
@@ -50,11 +52,14 @@
 </template>
 
 <script>
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import "ag-grid-enterprise";
+// import "../../adGrid/ag-grid-enterprise";
+
 import { AgGridVue } from "ag-grid-vue3";
+import "ag-grid-community/styles//ag-grid.css";
+import "ag-grid-community/styles//ag-theme-alpine.css";
 import { lang } from "../../locale/ru.js";
+
+import "ag-grid-enterprise";
 
 export default {
     name: "metrikaBasic",
@@ -94,11 +99,12 @@ export default {
             },
             rowData: null,
             sideBar: null,
+
+            model: {},
         };
     },
 
     created() {
-        // this.sideBar = "filters";
         this.rowSelection = "multiple";
         this.localeText = lang;
 
@@ -115,7 +121,6 @@ export default {
                     width: 250,
                 },
             ],
-            // hiddenByDefault: true,
             position: "left",
             defaultToolPanel: "filters",
         };
@@ -123,9 +128,22 @@ export default {
         this.getDateNow();
     },
     methods: {
+        saveFilter() {
+            if (localStorage.getItem("filter")) {
+                console.log("est");
+            } else {
+                console.log("nety");
+            }
+        },
+        justShow() {
+            console.log(this.model);
+        },
         clearFilters() {
+            this.model = {};
+            localStorage.setItem("filter", "");
             this.gridApi.setFilterModel(null);
         },
+
         getDateNow() {
             let now = new Date();
             let prevDate = new Date(

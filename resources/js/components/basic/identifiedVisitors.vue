@@ -24,7 +24,13 @@
 <script>
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import "ag-grid-enterprise";
+// import "ag-grid-enterprise";
+
+// import { ModuleRegistry } from "@ag-grid-community/core";
+// import { SideBarModule } from "@ag-grid-enterprise/side-bar";
+
+// ModuleRegistry.registerModules([SideBarModule]);
+
 import { AgGridVue } from "ag-grid-vue3";
 import { lang } from "../../locale/ru.js";
 export default {
