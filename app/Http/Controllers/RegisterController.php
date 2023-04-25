@@ -51,10 +51,10 @@ class RegisterController extends ModelController
                 'password' => $request->input('password'),
                 'telegram_chat_id' => $request->input('telegram_chat_id')
             ]);
-
             if (Auth::attempt(['login' => $validator->getData()['login'], 'password' => $validator->getData()['password']])) {
-                Auth::user();
-                $this->authenticated($request, $user);
+                $assign = Auth::user();
+                $assign->assignRole('user');
+                $this->authenticated($request, $assign);
                 $message['url'] = route('verify.index');
                 return $message;
             }
