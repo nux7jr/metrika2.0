@@ -1,25 +1,14 @@
 <template>
     <div v-if="this.user" class="metrikaheader container">
         <nav class="nav">
-            <a class="nav__link nav__heading" href="/">
+            <h1 class="nav__heading">Аналитика 2.0</h1>
+            <!-- <a class="nav__link nav__heading" href="/">
                 <img
                     class="nav__logo"
                     src="../../../images/logos/logo.webp"
                     alt="logo"
                 />
-            </a>
-            <!-- <ul class="nav__list">
-                <li>
-                    <a class="nav__link nav__option" href="/register">
-                        Регистрация
-                    </a>
-                </li>
-                <li>
-                    <a class="nav__link nav__option nav__login" href="/login">
-                        Вход
-                    </a>
-                </li>
-            </ul> -->
+            </a> -->
             <ul class="nav__list">
                 <li class="nav__text">
                     Привет,
@@ -55,7 +44,8 @@ export default {
     font-size: 30px;
     line-height: 28px;
     letter-spacing: 1px;
-    color: #14142b;
+    color: #ffffff;
+    margin: 10px 0;
 }
 .nav__list {
     list-style: none;
@@ -127,6 +117,6 @@ export default {
     font-weight: 600;
     font-size: 16px;
     line-height: 28px;
-    color: #000000;
+    color: #ffffff;
 }
 </style>

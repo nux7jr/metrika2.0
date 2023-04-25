@@ -5,16 +5,27 @@
         class="menu"
         v-bind:class="{ isActive: isActive }"
     >
-        <input type="checkbox" class="menu__checkbox" id="menu__checkbox" />
-        <label
-            class="menu__label menu__item menu__toggle"
-            @click="isActive = !isActive"
-            for="menu__checkbox"
-        >
-            <div class="burder__item"></div>
-            <div class="burder__item"></div>
-            <div class="burder__item"></div>
-        </label>
+        <div class="option">
+            <input type="checkbox" class="menu__checkbox" id="menu__checkbox" />
+            <label
+                class="menu__label menu__item menu__toggle"
+                @click="isActive = !isActive"
+                for="menu__checkbox"
+            >
+                <div class="burder__item"></div>
+                <div class="burder__item"></div>
+                <div class="burder__item"></div>
+            </label>
+            <Transition name="slide-fade">
+                <a v-if="isActive" class="menu__logo" href="/">
+                    <img
+                        class="logo__img"
+                        src="../../../images/logos/logo.webp"
+                        alt="logo"
+                    />
+                </a>
+            </Transition>
+        </div>
         <a class="menu__item" href="/">
             <img
                 class="menu__img"
@@ -22,7 +33,9 @@
                 alt="icon"
             />
             <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">home</span>
+                <span class="menu__text" v-if="isActive"
+                    >Страница с лидами</span
+                >
             </Transition>
         </a>
         <a class="menu__item" href="/visitors">
@@ -32,7 +45,9 @@
                 alt="icon"
             />
             <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">dashboard</span>
+                <span class="menu__text" v-if="isActive"
+                    >Аунтификация посетителей</span
+                >
             </Transition>
         </a>
         <a class="menu__item" href="/somelink">
@@ -155,6 +170,7 @@ export default {
     border-radius: 5px;
 
     background-color: whitesmoke;
+    background-color: #181d1f;
     width: 56px;
     color: white;
 
@@ -163,17 +179,18 @@ export default {
 }
 .menu__item {
     display: flex;
-    justify-content: space-between;
+    gap: 5px;
+    flex-wrap: nowrap;
     align-items: center;
     padding: 4px 10px;
 
     background: transparent;
 
-    background: linear-gradient(to left, whitesmoke 50%, #8dccec8c 50%) right;
+    background: linear-gradient(to left, #181d1f 50%, #8dccec8c 50%) right;
     background-size: 200%;
     transition: 0.4s ease-out;
 
-    color: black;
+    color: rgb(255, 255, 255);
     margin: 5px;
     border-radius: 5px;
     height: 46px;
@@ -187,8 +204,9 @@ export default {
     cursor: pointer;
 }
 .menu__text {
+    font-size: 14px;
     font-weight: 600;
-    text-align: end;
+    text-align: left;
 }
 .menu.isActive {
     animation: slideIn 0.7s forwards;
@@ -199,9 +217,8 @@ export default {
 }
 
 .menu__label {
-    margin: 0 auto;
     display: block;
-    width: 30px;
+    width: 40px;
     height: 30px;
     transform: translateY(-50%);
     transition: 0.3s ease transform;
@@ -211,7 +228,7 @@ export default {
 .menu__label .burder__item {
     width: 6px;
     height: 4px;
-    background-color: #143240;
+    background-color: #ffffff;
     margin-left: 0;
     margin-bottom: 6px;
     border-radius: 4px;
@@ -242,5 +259,11 @@ export default {
     margin-left: 12px;
     margin-bottom: 3px;
     background-color: #8dccec;
+}
+.menu__logo {
+    width: 100px;
+}
+.option {
+    display: flex;
 }
 </style>

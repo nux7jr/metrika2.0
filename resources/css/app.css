@@ -1,5 +1,9 @@
 :root {
-    --ag-border-radius: 33px !important;
+    /* --ag-border-radius: 33px !important; */
+
+    --main-color: #3b3f41;
+    --second-color: #2b2b2b;
+    --third-color: #323336;
 }
 
 body {
@@ -26,6 +30,7 @@ main {
     display: flex;
     flex-direction: row;
     height: 100vh;
+    background-color: var(--main-color);
 }
 .container {
     flex-grow: 1;

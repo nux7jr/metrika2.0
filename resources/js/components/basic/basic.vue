@@ -1,7 +1,20 @@
 <template>
     <div ref="info" class="info">
         <div class="info-option">
+            <div class="info-filters">
+                <div class="filter__input">
+                    <label for="date-off">date-off</label>
+                    <input type="date" name="date-off" id="date-off" />
+                </div>
+                <div class="filter__input">
+                    <label for="date-on">date-off</label>
+                    <input type="date" name="date-on" id="date-on" />
+                </div>
+            </div>
             <div class="info-option__button button-group">
+                <button class="def__button" v-on:click="clearFilters()">
+                    Показать данные
+                </button>
                 <button class="def__button" v-on:click="clearFilters()">
                     Сброс всех фильтров
                 </button>
@@ -11,14 +24,14 @@
                 >
                     Скачать выбранные лиды (exel)
                 </button>
-                <button @click="getFilterModel">getFilterModel</button>
+                <button @click="getFilterModel()">getFilterModel</button>
             </div>
             <div class="info-option__text">text-info:</div>
         </div>
         <div class="main-table">
             <ag-grid-vue
-                style="width: 100%; height: calc(100vh - 110px)"
-                class="ag-theme-alpine main-table__wrapper"
+                style="width: 100%; height: calc(100vh - 124px)"
+                class="ag-theme-alpine-dark main-table__wrapper"
                 :columnDefs="columnDefs"
                 @grid-ready="onGridReady"
                 :localeText="localeText"
@@ -42,34 +55,34 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-enterprise";
 import { AgGridVue } from "ag-grid-vue3";
 import { lang } from "../../locale/ru.js";
+
 export default {
     name: "metrikaBasic",
     data() {
         return {
-            info: {},
-            numberIndex: 40,
             localeText: null,
             columnDefs: [
                 {
                     field: "ID",
+                    headerName: "id",
                     rowDrag: false,
-                    maxWidth: 90,
+                    width: 120,
                     filter: "agNumberColumnFilter",
                     sortable: false,
                 },
                 {
                     field: "DATE",
+                    headerName: "Дата",
                     filter: "agDateColumnFilter",
                     filterParams: filterParams,
                 },
-                { field: "PHONE" },
-                { field: "EMAIL" },
+                { field: "PHONE", headerName: "Телефон" },
+                { field: "EMAIL", headerName: "Емейл" },
                 { field: "UTM_SOURCE" },
                 { field: "UTM_MEDIUM" },
                 { field: "UTM_CAMPAIGN" },
                 { field: "UTM_TERM" },
             ],
-
             gridApi: null,
             columnApi: null,
             defaultColDef: {
@@ -106,28 +119,59 @@ export default {
             position: "left",
             defaultToolPanel: "filters",
         };
+
+        this.getDateNow();
     },
     methods: {
         clearFilters() {
             this.gridApi.setFilterModel(null);
         },
-
+        getDateNow() {
+            let now = new Date();
+            let prevDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() - 21
+            )
+                .toISOString()
+                .split("T")[0];
+            let thisDate = now.toISOString().split("T")[0];
+            // localStorage.setItem("prevWeek", prevDate);
+            // localStorage.setItem("thisWeek", thisDate);
+            const date = {
+                date_off: thisDate,
+                date_on: prevDate,
+            };
+            localStorage.setItem("date", JSON.stringify(date));
+        },
         onGridReady(params) {
             this.loading = true;
             this.gridApi = params.api;
             this.gridColumnApi = params.columnApi;
 
             const updateData = (data) => params.api.setRowData(data);
-            let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
 
-            fetch("/get_leads",{
-                method: 'post',
-                headers:{
+            const localDate = JSON.parse(localStorage.getItem("date"));
+
+            console.log(localDate.date_on);
+            console.log(localDate.date_off);
+
+            const userFormDate = new FormData();
+            userFormDate.append("date_on", localDate.date_on);
+            userFormDate.append("date_off", localDate.date_off);
+
+            fetch("/get_leads", {
+                method: "POST",
+                headers: {
                     "X-CSRF-TOKEN": token,
-                    "Content-Type": "application/json",
+                    // "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest",
-                    "Accept": "application/json, text-plain, */*",
-                }
+                    Accept: "application/json, text-plain, */*",
+                },
+                body: userFormDate,
             })
                 .then((resp) => resp.json())
                 .then((data) => updateData(data));
@@ -138,7 +182,6 @@ export default {
     },
 };
 // filter
-
 const filterParams = {
     comparator: (filterLocalDateAtMidnight, cellValue) => {
         const dateAsString = cellValue;
@@ -161,14 +204,23 @@ const filterParams = {
         return 0;
     },
     minValidYear: 2015,
-    // maxValidYear: 2021,
     inRangeFloatingFilterDateFormat: "Do MMM YYYY",
 };
-
 // end filter
 </script>
 
 <style>
+.ag-theme-alpine-dark {
+    --ag-border-radius: 7px;
+
+    --main-color: #3b3f41;
+    --second-color: #2b2b2b;
+    --third-color: #323336;
+
+    --ag-background-color: #323336;
+    --ag-odd-row-background-color: #323336;
+}
+
 .ag-root-wrapper.ag-layout-normal {
     border-radius: 5px;
     border-color: whitesmoke;
@@ -196,7 +248,7 @@ const filterParams = {
 
 .main-table__wrapper {
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 108px);
 }
 .ag-header {
     border-bottom: none;
@@ -240,5 +292,9 @@ const filterParams = {
     align-items: center;
     gap: 20px;
     padding-bottom: 7px;
+}
+.info-filters {
+    display: flex;
+    gap: 20px;
 }
 </style>
