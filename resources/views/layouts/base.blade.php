@@ -25,16 +25,16 @@
         {{-- for admin --}}
         <metrikamenu v-if='@json(Auth::check()
         && Auth::user()->hasRole("super-admin")
-        && Auth::user()->two_factor_code < 1)' role="user" :is_auth='@json(Auth::check())' :user='@json(Auth::user()->login ?? '')'></metrikamenu>
+        && Auth::user()->two_factor_code < 1)' role="user" :user='@json(Auth::user()->login ?? '')'></metrikamenu>
 
         {{-- for user --}}
         <usermenu v-if='@json(Auth::check()
         && Auth::user()->hasRole("user")
-        && Auth::user()->two_factor_code < 1)' role="user" :is_auth='@json(Auth::check())' :user='@json(Auth::user()->login ?? '')'></usermenu>
+        && Auth::user()->two_factor_code < 1)' role="user" :user='@json(Auth::user()->login ?? '')'></usermenu>
 
         {{-- CONTENT --}}
             <div class="container">
-                <metrikaheader v-if='@json(Auth::check())' :is_auth='@json(Auth::check())' :user='@json(Auth::user()->login ?? '')'></metrikaheader>
+                <metrikaheader v-if='@json(Auth::check())' :user='@json(Auth::user()->login ?? '')'></metrikaheader>
                 <div class="main-page">
                     @yield('content')
                 </div>

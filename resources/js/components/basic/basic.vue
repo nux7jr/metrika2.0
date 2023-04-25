@@ -1,21 +1,19 @@
 <template>
     <div ref="info" class="info">
-        <div class="button-group">
-            <button class="def__button" v-on:click="clearFilters()">
-                Сброс всех фильтров
-            </button>
-            <button
-                class="def__button"
-                v-on:click="this.gridApi.exportDataAsExcel()"
-            >
-                Скачать выбранные лиды (exel)
-            </button>
-            <button
-                class="def__button"
-                v-on:click="this.gridApi.exportDataAsExcel()"
-            >
-                Объединить в группы (по сайтам)
-            </button>
+        <div class="info-option">
+            <div class="info-option__button button-group">
+                <button class="def__button" v-on:click="clearFilters()">
+                    Сброс всех фильтров
+                </button>
+                <button
+                    class="def__button"
+                    v-on:click="this.gridApi.exportDataAsExcel()"
+                >
+                    Скачать выбранные лиды (exel)
+                </button>
+                <button @click="getFilterModel">getFilterModel</button>
+            </div>
+            <div class="info-option__text">text-info:</div>
         </div>
         <div class="main-table">
             <ag-grid-vue
@@ -62,6 +60,7 @@ export default {
                 {
                     field: "DATE",
                     filter: "agDateColumnFilter",
+                    filterParams: filterParams,
                 },
                 { field: "PHONE" },
                 { field: "EMAIL" },
@@ -78,6 +77,7 @@ export default {
                 sortable: true,
                 filter: true,
                 filterParams: { buttons: ["reset", "apply"] },
+                width: 250,
             },
             rowData: null,
             sideBar: null,
@@ -85,9 +85,27 @@ export default {
     },
 
     created() {
-        this.sideBar = "filters";
+        // this.sideBar = "filters";
         this.rowSelection = "multiple";
         this.localeText = lang;
+
+        this.sideBar = {
+            toolPanels: [
+                {
+                    id: "filters",
+                    labelDefault: "Filters",
+                    labelKey: "filters",
+                    iconKey: "filter",
+                    toolPanel: "agFiltersToolPanel",
+                    minWidth: 180,
+                    maxWidth: 400,
+                    width: 250,
+                },
+            ],
+            // hiddenByDefault: true,
+            position: "left",
+            defaultToolPanel: "filters",
+        };
     },
     methods: {
         clearFilters() {
@@ -110,6 +128,35 @@ export default {
         "ag-grid-vue": AgGridVue,
     },
 };
+// filter
+
+const filterParams = {
+    comparator: (filterLocalDateAtMidnight, cellValue) => {
+        const dateAsString = cellValue;
+        if (dateAsString == null) return -1;
+        const dateParts = dateAsString.split("/");
+        const cellDate = new Date(
+            Number(dateParts[2]),
+            Number(dateParts[1]) - 1,
+            Number(dateParts[0])
+        );
+        if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+            return 0;
+        }
+        if (cellDate < filterLocalDateAtMidnight) {
+            return -1;
+        }
+        if (cellDate > filterLocalDateAtMidnight) {
+            return 1;
+        }
+        return 0;
+    },
+    minValidYear: 2015,
+    // maxValidYear: 2021,
+    inRangeFloatingFilterDateFormat: "Do MMM YYYY",
+};
+
+// end filter
 </script>
 
 <style>
@@ -149,7 +196,6 @@ export default {
     display: flex;
     gap: 5px;
     max-width: fit-content;
-    margin-bottom: 7px;
 }
 .def__button {
     display: flex;
@@ -176,5 +222,14 @@ export default {
 
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
         border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.ag-side-button-label {
+    font-family: "Montserrat", sans-serif;
+}
+.info-option {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 7px;
 }
 </style>

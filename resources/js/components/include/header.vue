@@ -43,7 +43,6 @@ export default {
         return {};
     },
     props: {
-        is_auth: "",
         user: "",
     },
 };
