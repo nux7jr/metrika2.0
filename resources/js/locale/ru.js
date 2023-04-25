@@ -24,7 +24,7 @@ export const lang = {
     notBlank: "Не пусто",
 
     // Filter Buttons
-    applyFilter: "Приминить",
+    applyFilter: "Применить",
     resetFilter: "Сбросить",
     clearFilter: "Отчистить",
     cancelFilter: "Отмена",

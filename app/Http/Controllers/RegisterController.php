@@ -9,6 +9,8 @@ use Telegram\TwoFactorCode;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Route;
 
+use function PHPUnit\Framework\returnSelf;
+
 class RegisterController extends ModelController
 {
     /**
@@ -25,12 +27,13 @@ class RegisterController extends ModelController
     }
     public function index()
     {
-        return view('register.index');
+        // return Auth::user()->hasRole("super-admin");
+        if (!Auth::user()->hasRole("super-admin")) return Auth::user()->hasRole("super-admin");
+        return view('create.index');
     }
 
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:50'],
             'login' => ['required', 'string', 'max:50', 'unique:users'],

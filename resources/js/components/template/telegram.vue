@@ -51,12 +51,14 @@ export default {
                 this.info = data.data;
                 if (data.data.url) {
                     window.location.href = data.data.url;
+                } else {
+                    this.loading = false;
                 }
             } catch (e) {
                 console.log(e);
                 this.info.error = e.message;
+                this.loading = false;
             }
-            this.loading = false;
         },
         form_is_ready() {
             this.$refs.telegramCode.addEventListener("keyup", (evt) => {

@@ -1,5 +1,6 @@
 <?php
-require_once '../'.'/vendor/autoload.php';
+require_once '../' . '/vendor/autoload.php';
+
 use Carbon\Carbon;
 
 ini_set('display_errors', 'on');
@@ -9,7 +10,7 @@ ini_set('display_errors', 'on');
 
 class Leads
 {
-  private const pathFileWithLeads = 'C:/OSPanel/alldealers_leads.txt';
+  private const pathFileWithLeads = 'C:/Users/MTretiakov/Desktop/logos/metrika2.0/helpers/alldealers_leads.txt';
 
 
   public function protect($rows, $date_on, $date_off)
@@ -68,8 +69,8 @@ class ReworkerLeads
     foreach ($leads as $date_lead => $date) {
       foreach ($date as $lead) {
         $arr_date_time = $this->str_to_arr_date_and_time($lead[0]);
-//        $rework_lead['DATE'] = Carbon::createFromTimestamp(strtotime($arr_date_time[0]))->isoFormat('YYYY-MM-DDThh:mm:ss');
-        $rework_lead['DATE'] = strtotime($arr_date_time[0]);
+        $rework_lead['DATE'] = Carbon::createFromTimestamp(strtotime($arr_date_time[0]))->isoFormat('DD/MM/YYYY');
+        // $rework_lead['DATE'] = strtotime($arr_date_time[0]);
         $rework_lead['TIME'] = $arr_date_time[1];
         $rework_lead['CITY'] = !empty($lead[1]) ? $lead[1] : 'Без города';
         $rework_lead['PARTNER'] = !empty($lead[2]) ? $lead[2] : '-';
@@ -78,9 +79,9 @@ class ReworkerLeads
         $rework_lead['NAME'] = !empty($lead[6]) ? $lead[6] : '-';
         $rework_lead['TYPE'] = !empty($lead[7]) ? $lead[7] : '-';
         $rework_lead['COMMENT'] = !empty($lead[8]) ? $lead[8] : '-';
-        if (isset($lead[9])){
-            $arr_data_url = $this->parse_url_to_site_and_utm($lead[9]);
-            $rework_lead['REFERER'] = $lead[9];
+        if (isset($lead[9])) {
+          $arr_data_url = $this->parse_url_to_site_and_utm($lead[9]);
+          $rework_lead['REFERER'] = $lead[9];
         }
         $leads_by_day_and_site[$date_lead][$arr_data_url['SITE']][$rework_lead['PHONE']][] = array_merge($rework_lead, $arr_data_url);
       }
@@ -130,18 +131,18 @@ class ReworkerLeads
   //Приводим телефоны к одному виду
   private function replace_phone($phone)
   {
-      if (!empty($phone)) {
-          $phone = str_replace(array('(', ' ', '-', ')', '+'), '', $phone);
-          $phone[0] === '8' ? $phone[0] = '7' : null;
-      }
+    if (!empty($phone)) {
+      $phone = str_replace(array('(', ' ', '-', ')', '+'), '', $phone);
+      $phone[0] === '8' ? $phone[0] = '7' : null;
+    }
 
-      return $phone;
+    return $phone;
   }
 
   private function str_to_arr_date_and_time($input_date)
   {
     $datetime = explode(' ', $input_date);
-    $split = explode('.',$datetime[0]);
+    $split = explode('.', $datetime[0]);
     $datetime[0] = $split[0] . '.' . $split[1] . '.20' . $split[2];
 
     return $datetime;
@@ -164,21 +165,21 @@ class ReworkerLeads
 
   private function parse_url_to_site_and_utm($url)
   {
-    if ($url === null){
-        $result['UTM_SOURCE'] = 'Без UTM';
-        $result['UTM_MEDIUM'] = 'Без UTM';
-        $result['UTM_CAMPAIGN'] = 'Без UTM';
-        $result['UTM_TERM'] = 'Без UTM';
-        $result['UTM_CONTENT'] = 'Без UTM';
-        $result['SITE'] = 'Сайт не указан';
+    if ($url === null) {
+      $result['UTM_SOURCE'] = 'Без UTM';
+      $result['UTM_MEDIUM'] = 'Без UTM';
+      $result['UTM_CAMPAIGN'] = 'Без UTM';
+      $result['UTM_TERM'] = 'Без UTM';
+      $result['UTM_CONTENT'] = 'Без UTM';
+      $result['SITE'] = 'Сайт не указан';
 
-        return $result;
+      return $result;
     }
     $utm_metka_dirty = parse_url($url);
 
-    if (isset($utm_metka_dirty['query'])){
-        parse_str($utm_metka_dirty['query'], $utm_metka);
-        $utm_metka2 = str_replace("|", "-", $utm_metka);
+    if (isset($utm_metka_dirty['query'])) {
+      parse_str($utm_metka_dirty['query'], $utm_metka);
+      $utm_metka2 = str_replace("|", "-", $utm_metka);
     }
 
 
@@ -188,17 +189,16 @@ class ReworkerLeads
     $result['UTM_TERM'] = isset($utm_metka2['utm_term']) ? $utm_metka2['utm_term'] : 'Без UTM';
     $result['UTM_CONTENT'] = isset($utm_metka2['utm_content']) ? $utm_metka2['utm_content'] : 'Без UTM';
 
-    if (!isset($utm_metka_dirty['host']))
-    {
-        $result['SITE'] = 'Сайт не указан';
-        return $result;
+    if (!isset($utm_metka_dirty['host'])) {
+      $result['SITE'] = 'Сайт не указан';
+      return $result;
     }
     $dirty_host = explode('.', $utm_metka_dirty['host']);
     $dns = $dirty_host[count($dirty_host) - 1];
-    if (count($dirty_host) - 2 !== -1){
-        $domain = $dirty_host[count($dirty_host) - 2];
-    }else{
-        $domain = '';
+    if (count($dirty_host) - 2 !== -1) {
+      $domain = $dirty_host[count($dirty_host) - 2];
+    } else {
+      $domain = '';
     }
     $result['SITE'] = $domain . '.' . $dns;
     if ($result['SITE'] === '.') {

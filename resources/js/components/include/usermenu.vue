@@ -35,60 +35,6 @@
                 <span class="menu__text" v-if="isActive">dashboard</span>
             </Transition>
         </a>
-        <a class="menu__item" href="/somelink">
-            <img
-                class="menu__img"
-                src="../../../images/icons/projects.svg"
-                alt="icon"
-            />
-            <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">projects</span>
-            </Transition>
-        </a>
-        <a class="menu__item" href="/day">
-            <img
-                class="menu__img"
-                src="../../../images/icons/projects.svg"
-                alt="icon"
-            />
-            <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive"
-                    >Ежедневный отчет
-                </span>
-            </Transition>
-        </a>
-        <a class="menu__item" href="/week">
-            <img
-                class="menu__img"
-                src="../../../images/icons/projects.svg"
-                alt="icon"
-            />
-            <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive"
-                    >Еженедельный отчет
-                </span>
-            </Transition>
-        </a>
-        <a class="menu__item" href="/create">
-            <img
-                class="menu__img"
-                src="../../../images/icons/projects.svg"
-                alt="icon"
-            />
-            <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">CREATE USER</span>
-            </Transition>
-        </a>
-        <a class="menu__item" href="/diagram">
-            <img
-                class="menu__img"
-                src="../../../images/icons/projects.svg"
-                alt="icon"
-            />
-            <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">Diagrams</span>
-            </Transition>
-        </a>
     </div>
 </template>
 

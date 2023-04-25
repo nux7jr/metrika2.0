@@ -22,13 +22,27 @@
 </head>
 <body>
     <div id="app" class="app">
-        <metrikamenu v-if='@json(Auth::check())' role="user" :is_auth='@json(Auth::check())' :user='@json(Auth::user())'></metrikamenu>
-        <div class="container">
-            <metrikaheader v-if='@json(Auth::check())' :is_auth='@json(Auth::check())' :user='@json(Auth::user())'></metrikaheader>
-            <div class="main-page">
-                @yield('content')
+        {{-- for admin --}}
+        <metrikamenu v-if='@json(Auth::check() 
+        && Auth::user()->hasRole("super-admin") 
+        && Auth::user()->two_factor_code < 1)' role="user" :is_auth='@json(Auth::check())' :user='@json(isset(Auth::user()->login))'></metrikamenu>
+        
+        {{-- for user --}}
+        <usermenu v-if='@json(Auth::check() 
+        && Auth::user()->hasRole("user")
+        && Auth::user()->two_factor_code < 1)' role="user" :is_auth='@json(Auth::check())' :user='@json(isset(Auth::user()->login))'></usermenu>
+
+        {{-- CONTENT --}}
+            <div class="container">
+                <metrikaheader v-if='@json(Auth::check())' :is_auth='@json(Auth::check())' :user='@json(isset(Auth::user()->login))'></metrikaheader>
+                <div class="main-page">
+                    @yield('content')
+                </div>
             </div>
-        </div>
     </div>
+    {{-- // $user = Auth::user();
+    // $user->assignRole('super-admin'); --}}
 </body>
 </html>
+
+

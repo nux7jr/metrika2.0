@@ -1,25 +1,8 @@
 <template>
     <div ref="info" class="info">
-        <div class="button-group">
-            <button class="def__button" v-on:click="clearFilters()">
-                Сброс всех фильтров
-            </button>
-            <button
-                class="def__button"
-                v-on:click="this.gridApi.exportDataAsExcel()"
-            >
-                Скачать выбранные лиды (exel)
-            </button>
-            <button
-                class="def__button"
-                v-on:click="this.gridApi.exportDataAsExcel()"
-            >
-                Объединить в группы (по сайтам)
-            </button>
-        </div>
         <div class="main-table">
             <ag-grid-vue
-                style="width: 100%; height: calc(100vh - 110px)"
+                style="width: 100%; height: 600px"
                 class="ag-theme-alpine main-table__wrapper"
                 :columnDefs="columnDefs"
                 @grid-ready="onGridReady"
@@ -45,32 +28,32 @@ import "ag-grid-enterprise";
 import { AgGridVue } from "ag-grid-vue3";
 import { lang } from "../../locale/ru.js";
 export default {
-    name: "metrikaBasic",
+    name: "identifiedvisitors",
     data() {
         return {
             info: {},
             numberIndex: 40,
             localeText: null,
             columnDefs: [
-                {
-                    field: "ID",
-                    rowDrag: false,
-                    maxWidth: 90,
-                    filter: "agNumberColumnFilter",
-                    sortable: false,
-                },
-                {
-                    field: "DATE",
-                    filter: "agDateColumnFilter",
-                },
-                { field: "PHONE" },
-                { field: "EMAIL" },
-                { field: "UTM_SOURCE" },
-                { field: "UTM_MEDIUM" },
-                { field: "UTM_CAMPAIGN" },
-                { field: "UTM_TERM" },
+                { field: "ip", headerName: "PIs" },
+                { field: "first_name" },
+                { field: "phone" },
+                { field: "email" },
+                { field: "city_browser", headerName: "browser" },
+                { field: "city_user" },
+                { field: "first_contact_site" },
+                { field: "all_sites_visitors" },
+                { field: "second_name" },
+                // {
+                //     field: "SITE",
+                // },
+                // { field: "PHONE" },
+                // { field: "EMAIL" },
+                // { field: "UTM_SOURCE" },
+                // { field: "UTM_MEDIUM" },
+                // { field: "UTM_CAMPAIGN" },
+                // { field: "UTM_TERM" },
             ],
-
             gridApi: null,
             columnApi: null,
             defaultColDef: {
@@ -90,10 +73,6 @@ export default {
         this.localeText = lang;
     },
     methods: {
-        clearFilters() {
-            this.gridApi.setFilterModel(null);
-        },
-
         onGridReady(params) {
             this.loading = true;
             this.gridApi = params.api;
@@ -101,7 +80,7 @@ export default {
 
             const updateData = (data) => params.api.setRowData(data);
 
-            fetch("/print.php")
+            fetch("http://api.tiksan.ru/api/test")
                 .then((resp) => resp.json())
                 .then((data) => updateData(data));
         },
@@ -144,37 +123,5 @@ export default {
 }
 .ag-header {
     border-bottom: none;
-}
-.button-group {
-    display: flex;
-    gap: 5px;
-    max-width: fit-content;
-    margin-bottom: 7px;
-}
-.def__button {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 14px;
-    gap: 16px;
-
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    color: #fcfcfc;
-    background: #8dccec;
-
-    border-radius: 3px;
-    border-color: transparent;
-
-    flex: none;
-    order: 0;
-    flex-grow: 1;
-
-    cursor: pointer;
-
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 </style>

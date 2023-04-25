@@ -23,7 +23,7 @@
             <ul class="nav__list">
                 <li class="nav__text">
                     Привет,
-                    {{ user.name }}
+                    {{ user }}
                 </li>
                 <li>
                     <a class="nav__link nav__option nav__login" href="/logout">
@@ -87,13 +87,12 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 6px 12px;
+    padding: 8px 14px;
     gap: 16px;
 
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
-    line-height: 28px;
     color: #fcfcfc;
     background: #8dccec;
     border-radius: 3px;
