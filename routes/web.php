@@ -17,21 +17,18 @@ use App\Http\Controllers\DataGridController;
 |
 */
 
-Route::view('/', 'home.index')->name('home')->middleware(['auth', 'twofactor']);
-Route::view('/visitors', 'visitors.index')->name('visitors')->middleware(['auth', 'twofactor']);
-Route::view('/somelink', 'somelink.index')->name('somelink')->middleware(['auth', 'twofactor']);
-Route::view('/diagram', 'diagram.index')->name('diagram')->middleware(['auth', 'twofactor']);
-
+Route::view('/', 'home.index', ["title" => 'Аналитика 2.0'])->name('home')->middleware(['auth', 'twofactor']);
+Route::view('/visitors', 'visitors.index', ["title" => 'Аунтификация посетителей'])->name('visitors')->middleware(['auth', 'twofactor']);
+Route::view('/week', 'somelink.index', ["title" => 'Еженедельный отчет'])->name('somelink')->middleware(['auth', 'twofactor']);
+Route::view('/day', 'somelink.index', ["title" => 'Ежедневный отчет'])->name('somelink')->middleware(['auth', 'twofactor']);
+Route::view('/diagram', 'diagram.index', ["title" => 'Диаграммы'])->name('diagram')->middleware(['auth', 'twofactor']);
 Route::get('/logout', function () {
     Auth::logout();
     return redirect('/');
 })->name('logout');
 
 
-
-
 Route::middleware(['guest', 'twofactor'])->group(function () {
-
     Route::get('login', [LoginController::class, 'index'])->name('login');
     Route::post('login', [LoginController::class, 'store'])->name('login.store');
 });

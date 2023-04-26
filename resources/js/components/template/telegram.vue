@@ -108,7 +108,7 @@ input::-webkit-inner-spin-button {
     letter-spacing: 15px;
     background: repeating-linear-gradient(
             to right,
-            rgb(128, 192, 223) 0 1ch,
+            #2196f3 0 1ch,
             transparent 1ch calc(1ch + 15px)
         )
         bottom/100% 2px content-box no-repeat;
@@ -120,7 +120,7 @@ input::-webkit-inner-spin-button {
 
 .two-factor__sumbit {
     color: white;
-    background: #8dccec;
+    background: #2196f3;
     border-radius: 12px;
     font-weight: 600;
     font-size: 16px;
@@ -136,7 +136,7 @@ input::-webkit-inner-spin-button {
     cursor: pointer;
 }
 .two-factor__sumbit:hover {
-    background: #80c0df;
+    background: #1a8cea;
 }
 .two-factor {
     height: -webkit-fill-available;

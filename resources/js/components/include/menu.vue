@@ -3,13 +3,13 @@
         v-if="user"
         ref="menu"
         class="menu"
-        v-bind:class="{ isActive: isActive }"
+        v-bind:class="{ isActive: isActive, isDisable: !isActive }"
     >
         <div class="option">
             <input type="checkbox" class="menu__checkbox" id="menu__checkbox" />
             <label
                 class="menu__label menu__item menu__toggle"
-                @click="isActive = !isActive"
+                @click="toggle_menu()"
                 for="menu__checkbox"
             >
                 <div class="burder__item"></div>
@@ -91,7 +91,9 @@
                 alt="icon"
             />
             <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">CREATE USER</span>
+                <span class="menu__text" v-if="isActive"
+                    >Создать пользователя</span
+                >
             </Transition>
         </a>
         <a class="menu__item" href="/diagram">
@@ -121,39 +123,31 @@ export default {
     props: {
         user: "",
     },
+    mounted() {
+        setTimeout(() => {
+            this.$refs.menu.classList.remove(".preload");
+        }, 500);
+    },
     computed: {},
-    methods: {},
+    methods: {
+        toggle_menu() {
+            this.isActive = !this.isActive;
+        },
+    },
 };
 </script>
 
 <style scoped>
-@keyframes slideIn {
-    0% {
-        width: 56px;
-    }
-    100% {
-        width: 210px;
-    }
-}
-@keyframes slideOut {
-    0% {
-        width: 210px;
-    }
-    100% {
-        width: 56px;
-    }
-}
 .slide-fade-enter-active {
-    transition: all 0.2s ease-out;
+    transition: all 2s ease-out;
 }
 
 .slide-fade-leave-active {
-    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+    transition: all 0.3s ease-out;
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-    transform: translateX(20px);
     opacity: 0;
 }
 .toggle-img {
@@ -175,7 +169,7 @@ export default {
     color: white;
 
     padding-top: 26px;
-    animation: slideOut 0.7s forwards;
+    transition: width 0.7s;
 }
 .menu__item {
     display: flex;
@@ -186,7 +180,7 @@ export default {
 
     background: transparent;
 
-    background: linear-gradient(to left, #181d1f 50%, #8dccec8c 50%) right;
+    background: linear-gradient(to left, #181d1f 50%, #2196f3 50%) right;
     background-size: 200%;
     transition: 0.4s ease-out;
 
@@ -194,6 +188,8 @@ export default {
     margin: 5px;
     border-radius: 5px;
     height: 46px;
+
+    gap: 10px;
 }
 .menu__item:hover {
     background-position: left;
@@ -209,9 +205,11 @@ export default {
     text-align: left;
 }
 .menu.isActive {
-    animation: slideIn 0.7s forwards;
+    width: 210px;
 }
-
+.menu.isDisable {
+    width: 56px;
+}
 .menu__checkbox {
     display: none;
 }
@@ -258,7 +256,7 @@ export default {
     height: 8px;
     margin-left: 12px;
     margin-bottom: 3px;
-    background-color: #8dccec;
+    background-color: #2196f3;
 }
 .menu__logo {
     width: 100px;

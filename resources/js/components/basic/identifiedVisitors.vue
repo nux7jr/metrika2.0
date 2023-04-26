@@ -1,11 +1,59 @@
 <template>
     <div ref="info" class="info">
+        <div class="info-option">
+            <div class="info-filters">
+                <div class="filter__item">
+                    <label class="filter__label" for="date-off"
+                        >Показать данные от</label
+                    >
+                    <input
+                        class="filter__input"
+                        type="date"
+                        name="date-off"
+                        id="date-off"
+                        v-model="date.date_on"
+                        @change="set_user_date()"
+                    />
+                </div>
+                <div class="filter__item">
+                    <label class="filter__label" for="date-on">До</label>
+                    <input
+                        class="filter__input"
+                        type="date"
+                        name="date-on"
+                        id="date-on"
+                        @change="set_user_date()"
+                        v-model="date.date_off"
+                    />
+                </div>
+            </div>
+            <div class="info-option__button button-group">
+                <button class="def__button" @click="get_date_grid()">
+                    <span v-if="loading" class="loader"></span>
+                    Показать данные
+                </button>
+                <button class="def__button" @click="clear_filters()">
+                    Сброс всех фильтров
+                </button>
+                <button class="def__button" @click="get_export_checked_box()">
+                    Скачать выбранные строки
+                </button>
+                <button class="def__button" @click="get_export_all()">
+                    Скачать всё
+                </button>
+                <input
+                    class="option-hidden"
+                    id="selectedOnly"
+                    type="checkbox"
+                    checked
+                />
+            </div>
+        </div>
         <div class="main-table">
             <ag-grid-vue
-                style="width: 100%; height: 600px"
-                class="ag-theme-alpine main-table__wrapper"
+                class="ag-theme-alpine-dark main-table__wrapper"
                 :columnDefs="columnDefs"
-                @grid-ready="onGridReady"
+                @grid-ready="on_grid_ready"
                 :localeText="localeText"
                 :defaultColDef="defaultColDef"
                 :rowDragManaged="true"
@@ -15,50 +63,54 @@
                 :rowData="rowData"
                 :copyHeadersToClipboard="true"
                 :sideBar="sideBar"
+                :statusBar="statusBar"
+                :suppressRowClickSelection="true"
+                :overlayLoadingTemplate="overlayLoadingTemplate"
             ></ag-grid-vue>
             <!-- debounceVerticalScrollbar="true" -->
         </div>
     </div>
 </template>
-
 <script>
+// import "../../adGrid/ag-grid-enterprise";
+import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-// import "ag-grid-enterprise";
-
-// import { ModuleRegistry } from "@ag-grid-community/core";
-// import { SideBarModule } from "@ag-grid-enterprise/side-bar";
-
-// ModuleRegistry.registerModules([SideBarModule]);
-
-import { AgGridVue } from "ag-grid-vue3";
 import { lang } from "../../locale/ru.js";
+
+import "ag-grid-enterprise";
+
 export default {
-    name: "identifiedvisitors",
+    name: "metrikaBasic",
     data() {
         return {
-            info: {},
-            numberIndex: 40,
+            loading: false,
+
             localeText: null,
             columnDefs: [
-                { field: "ip", headerName: "PIs" },
-                { field: "first_name" },
-                { field: "phone" },
-                { field: "email" },
-                { field: "city_browser", headerName: "browser" },
-                { field: "city_user" },
-                { field: "first_contact_site" },
-                { field: "all_sites_visitors" },
-                { field: "second_name" },
-                // {
-                //     field: "SITE",
-                // },
-                // { field: "PHONE" },
-                // { field: "EMAIL" },
-                // { field: "UTM_SOURCE" },
-                // { field: "UTM_MEDIUM" },
-                // { field: "UTM_CAMPAIGN" },
-                // { field: "UTM_TERM" },
+                {
+                    field: "ID",
+                    headerName: "id",
+                    rowDrag: false,
+                    width: 120,
+                    filter: "agNumberColumnFilter",
+                    sortable: false,
+                    headerCheckboxSelection: true,
+                    checkboxSelection: true,
+                },
+                {
+                    field: "DATE",
+                    headerName: "Дата",
+                    width: 150,
+                    filter: "agDateColumnFilter",
+                    filterParams: filterParams,
+                },
+                { field: "PHONE", width: 180, headerName: "Телефон" },
+                { field: "EMAIL", headerName: "Емейл" },
+                { field: "UTM_SOURCE" },
+                { field: "UTM_MEDIUM" },
+                { field: "UTM_CAMPAIGN" },
+                { field: "UTM_TERM" },
             ],
             gridApi: null,
             columnApi: null,
@@ -67,40 +119,207 @@ export default {
                 sortable: true,
                 filter: true,
                 filterParams: { buttons: ["reset", "apply"] },
+                width: 250,
             },
             rowData: null,
+            rowSelection: null,
             sideBar: null,
+            date: {
+                date_on: "",
+                date_off: "",
+            },
+            model: {},
         };
     },
 
+    computed: {},
+
     created() {
-        this.sideBar = "filters";
         this.rowSelection = "multiple";
         this.localeText = lang;
+        this.statusBar = {
+            statusPanels: [
+                {
+                    statusPanel: "agTotalAndFilteredRowCountComponent",
+                    align: "left",
+                },
+                { statusPanel: "agTotalRowCountComponent", align: "center" },
+                { statusPanel: "agFilteredRowCountComponent" },
+                { statusPanel: "agSelectedRowCountComponent" },
+                { statusPanel: "agAggregationComponent" },
+            ],
+        };
+        this.sideBar = {
+            toolPanels: [
+                {
+                    id: "filters",
+                    labelDefault: "Filters",
+                    labelKey: "filters",
+                    iconKey: "filter",
+                    toolPanel: "agFiltersToolPanel",
+                    minWidth: 180,
+                    maxWidth: 400,
+                    width: 250,
+                },
+            ],
+            position: "left",
+            defaultToolPanel: "filters",
+        };
+        this.overlayLoadingTemplate =
+            '<span class="ag-overlay-loading-center loader"></span>';
+        this.get_date_now();
     },
     methods: {
-        onGridReady(params) {
-            this.loading = true;
+        get_export_all() {
+            this.gridApi.exportDataAsExcel();
+        },
+        get_export_checked_box() {
+            this.gridApi.exportDataAsExcel({
+                onlySelected: document.querySelector("#selectedOnly").checked,
+            });
+        },
+        clear_filters() {
+            this.gridApi.setFilterModel(null);
+        },
+        get_date_now() {
+            let now = new Date();
+            let prevDate = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() - 7
+            )
+                .toISOString()
+                .split("T")[0];
+            let thisDate = now.toISOString().split("T")[0];
+            this.date = {
+                date_off: thisDate,
+                date_on: prevDate,
+            };
+            localStorage.setItem("date", JSON.stringify(this.date));
+        },
+        set_user_date() {
+            localStorage.setItem("date", JSON.stringify(this.date));
+        },
+        on_grid_ready(params) {
+            document.getElementById("selectedOnly").checked = true;
+
             this.gridApi = params.api;
             this.gridColumnApi = params.columnApi;
-
             const updateData = (data) => params.api.setRowData(data);
-
-            fetch("http://api.tiksan.ru/api/test")
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+            const localDate = JSON.parse(localStorage.getItem("date"));
+            const userFormDate = new FormData();
+            userFormDate.append("date_on", localDate.date_on);
+            userFormDate.append("date_off", localDate.date_off);
+            fetch("/get_leads", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": token,
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                body: JSON.stringify({
+                    date_on: localDate.date_on,
+                    date_off: localDate.date_off,
+                }),
+            })
                 .then((resp) => resp.json())
                 .then((data) => updateData(data));
+        },
+
+        get_date_grid() {
+            this.loading = true;
+            this.gridApi.showLoadingOverlay();
+            document.getElementById("selectedOnly").checked = true;
+
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+            const localDate = JSON.parse(localStorage.getItem("date"));
+            const userFormDate = new FormData();
+            userFormDate.append("date_on", localDate.date_on);
+            userFormDate.append("date_off", localDate.date_off);
+            fetch("/get_leads", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": token,
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                body: JSON.stringify({
+                    date_on: localDate.date_on,
+                    date_off: localDate.date_off,
+                }),
+            })
+                .then((resp) => resp.json())
+                .then((data) => {
+                    this.gridApi.setRowData(data);
+                    this.loading = false;
+                    this.gridApi.hideOverlay();
+                });
         },
     },
     components: {
         "ag-grid-vue": AgGridVue,
     },
 };
+const filterParams = {
+    comparator: (filterLocalDateAtMidnight, cellValue) => {
+        const dateAsString = cellValue;
+        if (dateAsString == null) return -1;
+        const dateParts = dateAsString.split("/");
+        const cellDate = new Date(
+            Number(dateParts[2]),
+            Number(dateParts[1]) - 1,
+            Number(dateParts[0])
+        );
+        if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+            return 0;
+        }
+        if (cellDate < filterLocalDateAtMidnight) {
+            return -1;
+        }
+        if (cellDate > filterLocalDateAtMidnight) {
+            return 1;
+        }
+        return 0;
+    },
+    minValidYear: 2015,
+    inRangeFloatingFilterDateFormat: "Do MMM YYYY",
+};
 </script>
 
 <style>
-.ag-root-wrapper.ag-layout-normal {
-    border-radius: 5px;
-    border-color: whitesmoke;
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.loader {
+    width: 17px;
+    height: 17px;
+    border: 2px solid #fff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.ag-theme-alpine-dark {
+    --ag-border-radius: 7px;
+
+    --main-color: #3b3f41;
+    --second-color: #2b2b2b;
+    --third-color: #323336;
+
+    --ag-background-color: #323336;
+    --ag-odd-row-background-color: #323336;
 }
 
 .ag-body-viewport-wrapper.ag-layout-normal {
@@ -111,12 +330,12 @@ export default {
     -webkit-appearance: none;
     width: 8px;
     height: 8px;
-    background: whitesmoke;
+    background: #212425b0;
 }
 ::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background-color: rgba(33, 33, 33, 0.5);
-    box-shadow: 0 0 1px rgba(202, 199, 199, 0.953);
+    background-color: #080909;
+    box-shadow: 0 0 1px rgba(26, 103, 228, 0.953);
 }
 .main-table {
     margin-right: 7px;
@@ -125,9 +344,91 @@ export default {
 
 .main-table__wrapper {
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 124px);
 }
 .ag-header {
     border-bottom: none;
+}
+.button-group {
+    display: flex;
+    gap: 5px;
+    max-width: fit-content;
+}
+.def__button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 14px;
+    gap: 9px;
+
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fcfcfc;
+    background: #2196f3;
+
+    border-radius: 7px;
+    border-color: transparent;
+
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+
+    cursor: pointer;
+
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.def__button:hover {
+    background: #1a7bca;
+}
+.ag-root-wrapper {
+    border-radius: 7px;
+}
+.ag-group-title-bar {
+    background-color: transparent;
+}
+.ag-side-button-label,
+.ag-text-field-input {
+    font-family: "Montserrat", sans-serif;
+}
+.ag-standard-button {
+    cursor: pointer;
+}
+.info-option {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 7px;
+}
+.info-filters {
+    display: flex;
+    gap: 20px;
+}
+.filter__input {
+    font-family: "Montserrat", sans-serif;
+    padding: 8px;
+    border-radius: 7px;
+    border-color: transparent;
+    border: 1px #2196f3 solid;
+
+    outline: none;
+
+    color: white;
+    background: transparent;
+
+    color-scheme: dark;
+}
+.filter__label {
+    color: white;
+}
+.filter__item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.option-hidden {
+    display: none;
 }
 </style>

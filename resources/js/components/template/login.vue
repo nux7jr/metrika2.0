@@ -128,7 +128,7 @@ export default {
 }
 .login__sumbit {
     color: white;
-    background: #8dccec;
+    background: #2196f3;
     border-radius: 12px;
 
     display: flex;
@@ -142,7 +142,7 @@ export default {
     cursor: pointer;
 }
 .login__sumbit:hover {
-    background: #80c0df;
+    background: #1c93f4;
 }
 .login__btn-text {
     font-weight: 600;
