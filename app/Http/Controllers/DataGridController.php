@@ -28,28 +28,33 @@ class DataGridController extends Controller
      */
     public function store(Request $request)
     {
-        $date_on = empty($request->input('date_on')) ? '2023-01-01' :$request->input('date_on');
-        $date_off = empty($request->input('date_off')) ? '2023-04-20' :$request->input('date_off');
+        try {
+            $date_on = empty($request->input('date_on')) ? '2023-01-01' :$request->input('date_on');
+            $date_off = empty($request->input('date_off')) ? '2023-04-20' :$request->input('date_off');
 
 
-        $date_on = "'" . $date_on . "'";
-        $date_off = "'" . $date_off . "'";
+            $date_on = "'" . $date_on . "'";
+            $date_off = "'" . $date_off . "'";
 
-        $lead = new Leads();
-        $arr = $lead->protect("", $date_on, $date_off);
-        $arr_to_json = [];
-        foreach ($arr as $key => $item) {
-            foreach ($item as $key1 => $item1) {
-                if (mb_detect_encoding($item1) != 'utf-8') {
-                    $item1 = mb_convert_encoding($item1, 'utf-8');
+            $lead = new Leads();
+            $arr = $lead->protect("", $date_on, $date_off);
+            $arr_to_json = [];
+            foreach ($arr as $key => $item) {
+                foreach ($item as $key1 => $item1) {
+                    if (mb_detect_encoding($item1) != 'utf-8') {
+                        $item1 = mb_convert_encoding($item1, 'utf-8');
+                    }
+                    $arr_to_json[$key][$key1] = $item1;
                 }
-                $arr_to_json[$key][$key1] = $item1;
             }
+
+
+            $json = json_encode($arr_to_json, JSON_UNESCAPED_UNICODE);
+            echo ($json);
+        }catch (Exeption $error){
+            var_dump($error->getMessage());
         }
 
-
-        $json = json_encode($arr_to_json, JSON_UNESCAPED_UNICODE);
-        echo ($json);
     }
 
     /**

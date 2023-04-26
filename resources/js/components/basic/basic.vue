@@ -185,11 +185,14 @@ export default {
                 method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": token,
-                    // "Content-Type": "application/json",
+                    "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest",
-                    Accept: "application/json, text-plain, */*",
+                    // Accept: "application/json, text-plain, */*",
                 },
-                body: userFormDate,
+                body: JSON.stringify({
+                    "date_on":localDate.date_on,
+                    "date_off":localDate.date_off
+                }),
             })
                 .then((resp) => resp.json())
                 .then((data) => updateData(data));

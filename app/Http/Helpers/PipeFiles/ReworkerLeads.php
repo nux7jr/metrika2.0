@@ -98,9 +98,15 @@ class ReworkerLeads
     //Приводим телефоны к одному виду
     private function replace_phone($phone)
     {
-        if (!empty($phone)) {
-            $phone = str_replace(array('(', ' ', '-', ')', '+'), '', $phone);
-            $phone[0] === '8' ? $phone[0] = '7' : null;
+        try {
+            if (!empty($phone)){
+                $phone = str_replace(array('(', ' ', '-', ')', '+'), '', $phone);
+                $phone[0] === '8' ? $phone[0] = '7' : null;
+            }
+        }catch (\ErrorException $error){
+            if ($error->getMessage() == 'Uninitialized string offset 0'){
+                return $phone;
+            }
         }
 
         return $phone;
