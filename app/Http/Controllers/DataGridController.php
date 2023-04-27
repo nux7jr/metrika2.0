@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\Reports\WeekReport;
 use Illuminate\Http\Request;
 use App\Http\Helpers\PipeFiles\Leads;
 
@@ -60,9 +61,10 @@ class DataGridController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function week(Request $request)
     {
-        //
+        $Reporter = new WeekReport();
+        return $Reporter->getJSON();
     }
 
     /**

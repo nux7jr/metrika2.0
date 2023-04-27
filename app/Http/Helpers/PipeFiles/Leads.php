@@ -4,7 +4,7 @@ namespace App\Http\Helpers\PipeFiles;
 
 class Leads
 {
-    private const pathFileWithLeads = 'C:/Users/MTretiakov/Desktop/logos/metrika2.0/app/Http/Helpers/PipeFiles/alldealers_leads.txt';
+    private const pathFileWithLeads = 'C:/OSPanel/alldealers_leads.txt';
 
 
     public function protect($rows, $date_on, $date_off)
