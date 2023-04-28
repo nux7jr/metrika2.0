@@ -56,38 +56,39 @@ class WeekReport
         header('Content-Type: text/html; charset=utf-8');;
 
         $first = [];
+        $counter = 0;
         while ($row = $result->fetch_row()) {
             $count = count($row);
             for ($i = 0; $i < $count; $i++){
                 if ($i === 0){
-                    $first[$row[0]]['City'] = $row[$i];
+                    $first[$counter]['City'] = $row[$i];
                 }
                 if ($i === 1){
-                    $first[$row[0]]['Summary_leads'] = $row[$i];
+                    $first[$counter]['Summary_leads'] = $row[$i];
                 }
                 if ($i === 2){
-                    $first[$row[0]]['Summary_price_lead'] = $row[$i];
+                    $first[$counter]['Summary_price_lead'] = $row[$i];
                 }
                 if ($i === 3){
-                    $first[$row[0]]['Yandex|Count_leads'] = $row[$i];
+                    $first[$counter]['Yandex|Count_leads'] = $row[$i];
                 }
                 if ($i === 4){
-                    $first[$row[0]]['Yandex|Cost_period'] = $row[$i];
+                    $first[$counter]['Yandex|Cost_period'] = $row[$i];
                 }
                 if ($i === 5){
-                    $first[$row[0]]['Yandex|Price_lead'] = $row[$i];
+                    $first[$counter]['Yandex|Price_lead'] = $row[$i];
                 }
                 if ($i === 6){
-                    $first[$row[0]]['Yandex|Surplus_nds'] = $row[$i];
+                    $first[$counter]['Yandex|Surplus_nds'] = $row[$i];
                 }
                 if ($i === 7){
-                    $first[$row[0]]['Price_plan'] = $row[$i];
+                    $first[$counter]['Price_plan'] = $row[$i];
                 }
                 if ($i === 8){
-                    $first[$row[0]]['Price_fact'] = $row[$i];
+                    $first[$counter]['Price_fact'] = $row[$i];
                 }
                 if ($i === 9){
-                    $first[$row[0]]['Count_fact'] = $row[$i];
+                    $first[$counter]['Count_fact'] = $row[$i];
                 }
             }
         }
