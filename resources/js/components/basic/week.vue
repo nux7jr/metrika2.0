@@ -225,7 +225,7 @@ export default {
             const userFormDate = new FormData();
             userFormDate.append("date_on", localDate.date_on);
             userFormDate.append("date_off", localDate.date_off);
-            fetch("/get_leads", {
+            fetch("/get_week_report", {
                 method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": token,
@@ -253,7 +253,7 @@ export default {
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
 
-            fetch("/get_leads", {
+            fetch("/get_week_report", {
                 method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": token,
