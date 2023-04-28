@@ -30,12 +30,12 @@ class DataGridController extends Controller
     public function store(Request $request)
     {
         try {
-            $date_on = empty($request->input('date_on')) ? '2023-01-01' :$request->input('date_on');
-            $date_off = empty($request->input('date_off')) ? '2023-04-20' :$request->input('date_off');
+            $date_on = empty($request->input('date_on')) ? date('YYYY-MM-DD', strtotime('today -7 days')) :$request->input('date_on');
+            $date_off = empty($request->input('date_off')) ? date('YYYY-MM-DD', strtotime('today')) :$request->input('date_off');
 
 
-            $date_on = "'" . $date_on . "'";
-            $date_off = "'" . $date_off . "'";
+            $date_on = $date_on;
+            $date_off = $date_off;
 
             $lead = new Leads();
             $arr = $lead->protect("", $date_on, $date_off);
@@ -52,7 +52,7 @@ class DataGridController extends Controller
 
             $json = json_encode($arr_to_json, JSON_UNESCAPED_UNICODE);
             echo ($json);
-        }catch (Exeption $error){
+        }catch (\Exception $error){
             var_dump($error->getMessage());
         }
 
@@ -63,8 +63,16 @@ class DataGridController extends Controller
      */
     public function week(Request $request)
     {
-        $Reporter = new WeekReport();
-        return $Reporter->getJSON();
+        try {
+            $date_on = empty($request->input('date_on')) ? date('YYYY-MM-DD', strtotime('today -7 days')) :$request->input('date_on');
+            $date_off = empty($request->input('date_off')) ? date('YYYY-MM-DD', strtotime('today')) :$request->input('date_off');
+
+            $Reporter = new WeekReport($date_on,$date_off);
+            return $Reporter->getJSON();
+        }catch (\Exception $error){
+            var_dump($error->getMessage());
+        }
+        return false;
     }
 
     /**

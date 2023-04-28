@@ -12,9 +12,9 @@ class WeekReport
         $this->connenct = mysqli_connect('188.246.224.99', 'admin_ometrika', 'C3qUD6vtaw', 'admin_old_metrika', '3306');
         $this->connenct->set_charset('utf8');
     }
-    public function getJSON(){
-        $date_s = date('Y-m-d',strtotime('2023-04-17'));
-        $date_to = date('Y-m-d',strtotime('2023-04-23'));
+    public function getJSON($date_s,$date_to){
+        $date_s = date('Y-m-d',strtotime($date_s));
+        $date_to = date('Y-m-d',strtotime($date_to));
 
         $period_in_seconds = strtotime($date_to)-strtotime($date_s);//нужен для того чтобы узнать период больше недели или нет
 
