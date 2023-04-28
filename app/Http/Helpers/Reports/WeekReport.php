@@ -91,6 +91,7 @@ class WeekReport
                     $first[$counter]['Count_fact'] = $row[$i];
                 }
             }
+            $counter++;
         }
         foreach ($first as &$row) {
             $budget_month = 0;
