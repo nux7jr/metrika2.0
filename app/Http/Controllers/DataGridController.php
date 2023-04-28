@@ -67,8 +67,8 @@ class DataGridController extends Controller
             $date_on = empty($request->input('date_on')) ? date('YYYY-MM-DD', strtotime('today -7 days')) :$request->input('date_on');
             $date_off = empty($request->input('date_off')) ? date('YYYY-MM-DD', strtotime('today')) :$request->input('date_off');
 
-            $Reporter = new WeekReport($date_on,$date_off);
-            return $Reporter->getJSON();
+            $Reporter = new WeekReport();
+            return $Reporter->getJSON($date_on,$date_off);
         }catch (\Exception $error){
             var_dump($error->getMessage());
         }

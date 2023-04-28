@@ -44,5 +44,6 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
 
     Route::post('get_leads', [DataGridController::class, 'store'])->name('get_leads');
     Route::get('get_leads', [DataGridController::class, 'store'])->name('get_leads');
+
     Route::post('get_week_report', [DataGridController::class, 'week'])->name('get_week_report');
 });
