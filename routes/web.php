@@ -19,7 +19,7 @@ use App\Http\Controllers\DataGridController;
 
 Route::view('/', 'home.index', ["title" => 'Аналитика 2.0'])->name('home')->middleware(['auth', 'twofactor']);
 Route::view('/visitors', 'visitors.index', ["title" => 'Аунтификация посетителей'])->name('visitors')->middleware(['auth', 'twofactor']);
-Route::view('/week', 'somelink.index', ["title" => 'Еженедельный отчет'])->name('somelink')->middleware(['auth', 'twofactor']);
+Route::view('/week', 'week.index', ["title" => 'Еженедельный отчет'])->name('week')->middleware(['auth', 'twofactor']);
 Route::view('/day', 'somelink.index', ["title" => 'Ежедневный отчет'])->name('somelink')->middleware(['auth', 'twofactor']);
 Route::view('/diagram', 'diagram.index', ["title" => 'Диаграммы'])->name('diagram')->middleware(['auth', 'twofactor']);
 Route::get('/logout', function () {
@@ -33,10 +33,10 @@ Route::middleware(['guest', 'twofactor'])->group(function () {
     Route::post('login', [LoginController::class, 'store'])->name('login.store');
 });
 
-Route::middleware(['twofactor', 'auth'])->group(function () {
+Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная аутентификация'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
     Route::post('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
-    Route::get('verify', [TwoFactorController::class, 'index'])->name('verify.index');
+    Route::get('verify', [TwoFactorController::class, 'index'], ["title" => 'Двухфакторная аутентификация'])->name('verify.index');
     Route::post('verify', [TwoFactorController::class, 'store'])->name('verify.store');
 
     Route::get('create', [RegisterController::class, 'index'])->name('register')->middleware();

@@ -1,11 +1,12 @@
 import "./bootstrap";
 import { createApp } from "vue/dist/vue.esm-bundler";
-// import { AgGridVue } from "ag-grid-vue3";
 
 // Общие компоненты
 import login from "./components/template/login.vue";
 import telegram from "./components/template/telegram.vue";
 import metrikabasic from "./components/basic/basic.vue";
+import metrikaweek from "./components/basic/week.vue";
+
 import metrikaidentifiedvisitors from "./components/basic/identifiedVisitors.vue";
 import metrikaheader from "./components/include/header.vue";
 
@@ -32,5 +33,6 @@ createApp({
         metrikaidentifiedvisitors,
         usermenu,
         diagram,
+        metrikaweek,
     },
 }).mount("#app");

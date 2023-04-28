@@ -27,7 +27,7 @@
             && Auth::user()->two_factor_code < 1)' role="user" :user='@json(Auth::user()->login ?? '')'>
         </metrikamenu>
             <div class="container">
-                <metrikaheader title="{{ isset($title) ? $title : 'Новая страница' }}" 
+                <metrikaheader title="{{ isset($title) ? $title : 'Аналитика 2.0' }}" 
                     v-if='@json(Auth::check())' 
                     :user='@json(Auth::user()->login ?? '')'>
                 </metrikaheader>

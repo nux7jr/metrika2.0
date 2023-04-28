@@ -67,7 +67,6 @@
                 :suppressRowClickSelection="true"
                 :overlayLoadingTemplate="overlayLoadingTemplate"
             ></ag-grid-vue>
-            <!-- debounceVerticalScrollbar="true" -->
         </div>
     </div>
 </template>
@@ -89,28 +88,151 @@ export default {
             localeText: null,
             columnDefs: [
                 {
-                    field: "ID",
-                    headerName: "id",
+                    field: "ip",
+                    headerName: "ip адрес",
                     rowDrag: false,
-                    width: 120,
-                    filter: "agNumberColumnFilter",
-                    sortable: false,
-                    headerCheckboxSelection: true,
-                    checkboxSelection: true,
+                    rowGroup: true,
+                    hide: true,
+                    width: 140,
                 },
                 {
-                    field: "DATE",
-                    headerName: "Дата",
-                    width: 150,
-                    filter: "agDateColumnFilter",
-                    filterParams: filterParams,
+                    field: "city_browser",
+                    headerName: "city_browser",
+                    rowDrag: false,
+                    width: 160,
                 },
-                { field: "PHONE", width: 180, headerName: "Телефон" },
-                { field: "EMAIL", headerName: "Емейл" },
-                { field: "UTM_SOURCE" },
-                { field: "UTM_MEDIUM" },
-                { field: "UTM_CAMPAIGN" },
-                { field: "UTM_TERM" },
+                {
+                    field: "city_user",
+                    headerName: "city_user",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_contact_site",
+                    headerName: "first_contact_site",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "all_sites_visitors",
+                    headerName: "all_sites_visitors",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "phone",
+                    headerName: "phone",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "email",
+                    headerName: "email",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_name",
+                    headerName: "first_name",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "second_name",
+                    headerName: "second_name",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "last_name",
+                    headerName: "last_name",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_referer",
+                    headerName: "first_referer",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_adv_or_seo",
+                    headerName: "first_adv_or_seo",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "second_adv_or_seo",
+                    headerName: "second_adv_or_seo",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "seo",
+                    headerName: "seo",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "adv",
+                    headerName: "adv",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_utm_source",
+                    headerName: "first_utm_source",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_utm_medium",
+                    headerName: "first_utm_medium",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_utm_campaign",
+                    headerName: "first_utm_campaign",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_utm_term",
+                    headerName: "first_utm_term",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "first_utm_content",
+                    headerName: "first_utm_content",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "utm_store",
+                    headerName: "utm_store",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "count_visits",
+                    headerName: "count_visits",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "created_at",
+                    headerName: "created_at",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "updated_at",
+                    headerName: "updated_at",
+                    rowDrag: false,
+                    width: 160,
+                },
             ],
             gridApi: null,
             columnApi: null,
@@ -133,8 +255,8 @@ export default {
     },
 
     computed: {},
-
     created() {
+        this.check_user_date();
         this.rowSelection = "multiple";
         this.localeText = lang;
         this.statusBar = {
@@ -163,11 +285,10 @@ export default {
                 },
             ],
             position: "left",
-            defaultToolPanel: "filters",
+            defaultToolPanel: "",
         };
         this.overlayLoadingTemplate =
             '<span class="ag-overlay-loading-center loader"></span>';
-        this.get_date_now();
     },
     methods: {
         get_export_all() {
@@ -182,83 +303,93 @@ export default {
             this.gridApi.setFilterModel(null);
         },
         get_date_now() {
-            let now = new Date();
-            let prevDate = new Date(
-                now.getFullYear(),
-                now.getMonth(),
-                now.getDate() - 7
-            )
-                .toISOString()
-                .split("T")[0];
-            let thisDate = now.toISOString().split("T")[0];
+            const supDate = new Date(),
+                targetDay = 1,
+                targetDate = new Date(),
+                lastDate = new Date(),
+                delta = targetDay - supDate.getDay();
+            if (delta >= 0) {
+                targetDate.setDate(supDate.getDate() + delta);
+                lastDate.setDate(supDate.getDate() + 5);
+            } else {
+                targetDate.setDate(supDate.getDate() - 7 + delta);
+                lastDate.setDate(supDate.getDate() - 1 + delta);
+            }
             this.date = {
-                date_off: thisDate,
-                date_on: prevDate,
+                date_on: targetDate.toISOString().split("T")[0],
+                date_off: lastDate.toISOString().split("T")[0],
             };
-            localStorage.setItem("date", JSON.stringify(this.date));
-        },
-        set_user_date() {
-            localStorage.setItem("date", JSON.stringify(this.date));
-        },
-        on_grid_ready(params) {
-            document.getElementById("selectedOnly").checked = true;
 
-            this.gridApi = params.api;
-            this.gridColumnApi = params.columnApi;
-            const updateData = (data) => params.api.setRowData(data);
-            let token = document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content");
-            const localDate = JSON.parse(localStorage.getItem("date"));
-            const userFormDate = new FormData();
-            userFormDate.append("date_on", localDate.date_on);
-            userFormDate.append("date_off", localDate.date_off);
-            fetch("/get_leads", {
-                method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": token,
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-                body: JSON.stringify({
+            sessionStorage.setItem("date", JSON.stringify(this.date));
+        },
+        check_user_date() {
+            if (sessionStorage.getItem("date")) {
+                const localDate = JSON.parse(sessionStorage.getItem("date"));
+                this.date = {
                     date_on: localDate.date_on,
                     date_off: localDate.date_off,
-                }),
-            })
-                .then((resp) => resp.json())
-                .then((data) => updateData(data));
+                };
+            } else {
+                this.get_date_now();
+            }
         },
-
+        set_user_date() {
+            sessionStorage.setItem("date", JSON.stringify(this.date));
+        },
         get_date_grid() {
-            this.loading = true;
+            // this.loading = true;
             this.gridApi.showLoadingOverlay();
             document.getElementById("selectedOnly").checked = true;
 
             let token = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
-            const localDate = JSON.parse(localStorage.getItem("date"));
+            const localDate = JSON.parse(sessionStorage.getItem("date"));
             const userFormDate = new FormData();
             userFormDate.append("date_on", localDate.date_on);
             userFormDate.append("date_off", localDate.date_off);
-            fetch("/get_leads", {
-                method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": token,
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-                body: JSON.stringify({
-                    date_on: localDate.date_on,
-                    date_off: localDate.date_off,
-                }),
+            fetch("http://api.tiksan.ru/api/test", {
+                method: "GET",
+                // headers: {
+                //     "X-CSRF-TOKEN": token,
+                //     "Content-Type": "application/json",
+                //     "X-Requested-With": "XMLHttpRequest",
+                // },
+                // body: JSON.stringify({
+                //     date_on: this.date.date_on,
+                //     date_off: this.date.date_off,
+                // }),
             })
                 .then((resp) => resp.json())
                 .then((data) => {
                     this.gridApi.setRowData(data);
-                    this.loading = false;
+                    // this.loading = false;
                     this.gridApi.hideOverlay();
                 });
+        },
+        on_grid_ready(params) {
+            document.getElementById("selectedOnly").checked = true;
+            this.gridApi = params.api;
+            this.gridColumnApi = params.columnApi;
+            const updateData = (data) => params.api.setRowData(data);
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            fetch("http://api.tiksan.ru/api/test", {
+                method: "GET",
+                // headers: {
+                //     "X-CSRF-TOKEN": token,
+                //     "Content-Type": "application/json",
+                //     "X-Requested-With": "XMLHttpRequest",
+                // },
+                // body: JSON.stringify({
+                //     date_on: this.date.date_on,
+                //     date_off: this.date.date_off,
+                // }),
+            })
+                .then((resp) => resp.json())
+                .then((data) => updateData(data));
         },
     },
     components: {
@@ -292,6 +423,16 @@ const filterParams = {
 </script>
 
 <style>
+.ag-theme-alpine-dark {
+    --ag-border-radius: 7px;
+
+    --main-color: #3b3f41;
+    --second-color: #2b2b2b;
+    --third-color: #323336;
+
+    --ag-background-color: #323336;
+    --ag-odd-row-background-color: #323336;
+}
 @keyframes rotation {
     0% {
         transform: rotate(0deg);
@@ -309,17 +450,6 @@ const filterParams = {
     display: inline-block;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
-}
-
-.ag-theme-alpine-dark {
-    --ag-border-radius: 7px;
-
-    --main-color: #3b3f41;
-    --second-color: #2b2b2b;
-    --third-color: #323336;
-
-    --ag-background-color: #323336;
-    --ag-odd-row-background-color: #323336;
 }
 
 .ag-body-viewport-wrapper.ag-layout-normal {
