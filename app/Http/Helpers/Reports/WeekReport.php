@@ -60,34 +60,34 @@ class WeekReport
             $count = count($row);
             for ($i = 0; $i < $count; $i++){
                 if ($i === 0){
-                    $first[$row[0]]['Город'] = $row[$i];
+                    $first[$row[0]]['City'] = $row[$i];
                 }
                 if ($i === 1){
-                    $first[$row[0]]['Общее количество лидов'] = $row[$i];
+                    $first[$row[0]]['Summary_leads'] = $row[$i];
                 }
                 if ($i === 2){
-                    $first[$row[0]]['Общая стоимость лида'] = $row[$i];
+                    $first[$row[0]]['Summary_price_lead'] = $row[$i];
                 }
                 if ($i === 3){
-                    $first[$row[0]]['Яндекс|Количество лидов'] = $row[$i];
+                    $first[$row[0]]['Yandex|Count_leads'] = $row[$i];
                 }
                 if ($i === 4){
-                    $first[$row[0]]['Яндекс|Расход за период с НДС'] = $row[$i];
+                    $first[$row[0]]['Yandex|Cost_period'] = $row[$i];
                 }
                 if ($i === 5){
-                    $first[$row[0]]['Яндекс|Стоимость лида'] = $row[$i];
+                    $first[$row[0]]['Yandex|Price_lead'] = $row[$i];
                 }
                 if ($i === 6){
-                    $first[$row[0]]['Яндекс|Остаток с НДС'] = $row[$i];
+                    $first[$row[0]]['Yandex|Surplus_nds'] = $row[$i];
                 }
                 if ($i === 7){
-                    $first[$row[0]]['Стоимость заявки План'] = $row[$i];
+                    $first[$row[0]]['Price_plan'] = $row[$i];
                 }
                 if ($i === 8){
-                    $first[$row[0]]['Стоимость заявки Факт'] = $row[$i];
+                    $first[$row[0]]['Price_fact'] = $row[$i];
                 }
                 if ($i === 9){
-                    $first[$row[0]]['Кол-во заявок Факт'] = $row[$i];
+                    $first[$row[0]]['Count_fact'] = $row[$i];
                 }
             }
         }
@@ -96,24 +96,24 @@ class WeekReport
             $plan_leads = 0;
             $fact_leads = 0;
 
-            if (isset($budget[$row['Город']])){
-                $row['Недокрут/Перерасход'] = $row['Яндекс|Расход за период с НДС'] > $budget[$row['Город']] ? '-' . round($row['Яндекс|Расход за период с НДС'] - $budget[$row['Город']], 0) : round($budget[$row['Город']] - $row['Яндекс|Расход за период с НДС'], 0);
-                $row['Бюджет в неделю с НДС'] = $budget[$row['Город']];
-                $budget_month = $budget[$row['Город']] / 7 * 30;
+            if (isset($budget[$row['City']])){
+                $row['Drawback/Surplus'] = $row['Yandex|Cost_period'] > $budget[$row['City']] ? '-' . round($row['Yandex|Cost_period'] - $budget[$row['City']], 0) : round($budget[$row['City']] - $row['Yandex|Cost_period'], 0);
+                $row['Budget_per_week'] = $budget[$row['City']];
+                $budget_month = $budget[$row['City']] / 7 * 30;
             }else{
-                $row['Недокрут/Перерасход'] = 0;
-                $row['Бюджет в неделю с НДС'] = 0;
+                $row['Drawback/Surplus'] = 0;
+                $row['Budget_per_week'] = 0;
             }
 
-            $plan_leads = $row['Стоимость заявки Факт'] != null ? (int)$row['Стоимость заявки Факт'] > 0 ? round($row['Стоимость заявки Факт'], 0) : $row['Стоимость заявки Факт'] : 0;
-            $fact_leads = $row['Кол-во заявок Факт'];
+            $plan_leads = $row['Price_fact'] != null ? (int)$row['Price_fact'] > 0 ? round($row['Price_fact'], 0) : $row['Price_fact'] : 0;
+            $fact_leads = $row['Count_fact'];
 
             foreach ($row as &$item){
                 $item = $item != null ? (int)$item > 0 ? (int)round($item, 0) : $item : 0;
 
             }
 
-            $row['Кол-во заявок План'] =  $plan_leads != 0 ? !is_nan(round($budget_month / $plan_leads, 0)) ? !is_infinite(round($budget_month / $plan_leads, 0)) ? round($budget_month / $plan_leads, 0) : 0 : 0 : 0;
+            $row['Count_plan'] =  $plan_leads != 0 ? !is_nan(round($budget_month / $plan_leads, 0)) ? !is_infinite(round($budget_month / $plan_leads, 0)) ? round($budget_month / $plan_leads, 0) : 0 : 0 : 0;
         }
 
         return json_encode($first);
