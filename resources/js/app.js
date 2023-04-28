@@ -19,6 +19,7 @@ import createuser from "./components/template/create.vue";
 import usermenu from "./components/include/usermenu.vue";
 
 // пока не знаю
+import userlist from "./components/basic/users.vue";
 import diagram from "./components/diagram/diagram.vue";
 
 createApp({
@@ -34,5 +35,6 @@ createApp({
         usermenu,
         diagram,
         metrikaweek,
+        userlist,
     },
 }).mount("#app");

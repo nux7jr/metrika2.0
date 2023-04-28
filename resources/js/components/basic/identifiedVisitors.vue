@@ -80,7 +80,7 @@ import { lang } from "../../locale/ru.js";
 import "ag-grid-enterprise";
 
 export default {
-    name: "metrikaBasic",
+    name: "metrikaVisitons",
     data() {
         return {
             loading: false,
@@ -100,6 +100,8 @@ export default {
                     headerName: "city_browser",
                     rowDrag: false,
                     width: 160,
+                    rowGroup: true,
+                    hide: true,
                 },
                 {
                     field: "city_user",
@@ -111,7 +113,7 @@ export default {
                     field: "first_contact_site",
                     headerName: "first_contact_site",
                     rowDrag: false,
-                    width: 160,
+                    width: 200,
                 },
                 {
                     field: "all_sites_visitors",

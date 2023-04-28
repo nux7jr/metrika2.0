@@ -27,7 +27,6 @@ Route::get('/logout', function () {
     return redirect('/');
 })->name('logout');
 
-
 Route::middleware(['guest', 'twofactor'])->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
     Route::post('login', [LoginController::class, 'store'])->name('login.store');
@@ -39,7 +38,7 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
     Route::get('verify', [TwoFactorController::class, 'index'], ["title" => 'Двухфакторная аутентификация'])->name('verify.index');
     Route::post('verify', [TwoFactorController::class, 'store'])->name('verify.store');
 
-    Route::get('create', [RegisterController::class, 'index'])->name('register')->middleware();
+    Route::get('/create', [RegisterController::class, 'index', ["title" => 'Создание пользователя']],)->name('register')->middleware();
     Route::post('create', [RegisterController::class, 'store'])->name('register.store')->middleware();
 
     Route::post('get_leads', [DataGridController::class, 'store'])->name('get_leads');

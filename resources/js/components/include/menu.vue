@@ -33,9 +33,7 @@
                 alt="icon"
             />
             <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive"
-                    >Страница с лидами</span
-                >
+                <span class="menu__text" v-if="isActive">Лиды</span>
             </Transition>
         </a>
         <a class="menu__item" href="/visitors">
@@ -48,16 +46,6 @@
                 <span class="menu__text" v-if="isActive"
                     >Аунтификация посетителей</span
                 >
-            </Transition>
-        </a>
-        <a class="menu__item" href="/somelink">
-            <img
-                class="menu__img"
-                src="../../../images/icons/projects.svg"
-                alt="icon"
-            />
-            <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">projects</span>
             </Transition>
         </a>
         <a class="menu__item" href="/day">
@@ -103,7 +91,7 @@
                 alt="icon"
             />
             <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">Diagrams</span>
+                <span class="menu__text" v-if="isActive">Диаграммы</span>
             </Transition>
         </a>
     </div>

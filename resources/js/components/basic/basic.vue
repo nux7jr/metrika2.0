@@ -124,8 +124,8 @@ export default {
             rowSelection: null,
             sideBar: null,
             date: {
-                date_on: "",
-                date_off: "",
+                date_on: "-",
+                date_off: "-",
             },
             model: {},
         };

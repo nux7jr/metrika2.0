@@ -61,3 +61,12 @@ img {
     flex-grow: 1;
     height: calc(100vh - 88px);
 }
+.watermarks {
+    position: fixed;
+    background: transparent;
+    z-index: 2;
+    bottom: 23px;
+    right: 20px;
+    color: rgba(255, 255, 255, 0.344);
+    user-select: none;
+}

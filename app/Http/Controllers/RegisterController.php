@@ -29,7 +29,7 @@ class RegisterController extends ModelController
     {
         // return Auth::user()->hasRole("super-admin");
         if (!Auth::user()->hasRole("super-admin")) return Auth::user()->hasRole("super-admin");
-        return view('create.index');
+        return view('create.index')->with("title", "Создать пользователя");
     }
 
     public function store(Request $request)

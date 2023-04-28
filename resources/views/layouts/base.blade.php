@@ -26,6 +26,12 @@
             && Auth::user()->hasRole("super-admin")
             && Auth::user()->two_factor_code < 1)' role="user" :user='@json(Auth::user()->login ?? '')'>
         </metrikamenu>
+
+        <usermenu v-if='@json(Auth::check()
+        && Auth::user()->hasRole("user")
+        && Auth::user()->two_factor_code < 1)' role="user" :user='@json(Auth::user()->login ?? '')'>
+        </usermenu>
+
             <div class="container">
                 <metrikaheader title="{{ isset($title) ? $title : 'Аналитика 2.0' }}" 
                     v-if='@json(Auth::check())' 
@@ -38,6 +44,7 @@
     </div>
     {{-- // $user = Auth::user();
     // $user->assignRole('super-admin'); --}}
+    <div class="watermarks">Smart Core | {{ now()->year }} | alpha | {{ App::VERSION() }} </div>
 </body>
 </html>
 

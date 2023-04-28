@@ -1,5 +1,6 @@
 @extends('layouts.base')
 
 @section('content')
-    <createuser></createuser>
+    <userlist></userlist>
+    {{-- <createuser hidden></createuser> --}}
 @endsection

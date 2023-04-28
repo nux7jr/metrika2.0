@@ -88,28 +88,57 @@ export default {
             localeText: null,
             columnDefs: [
                 {
-                    field: "ID",
-                    headerName: "id",
-                    rowDrag: false,
-                    width: 120,
-                    filter: "agNumberColumnFilter",
+                    field: "City",
                     sortable: false,
                     headerCheckboxSelection: true,
                     checkboxSelection: true,
+                    width: 270,
+                    headerName: "Город",
                 },
                 {
-                    field: "DATE",
-                    headerName: "Дата",
-                    width: 150,
-                    filter: "agDateColumnFilter",
-                    filterParams: filterParams,
+                    field: "Summary_leads",
+                    headerName: "Общее количество лидов",
                 },
-                { field: "PHONE", width: 180, headerName: "Телефон" },
-                { field: "EMAIL", headerName: "Емейл" },
-                { field: "UTM_SOURCE" },
-                { field: "UTM_MEDIUM" },
-                { field: "UTM_CAMPAIGN" },
-                { field: "UTM_TERM" },
+                {
+                    field: "Summary_price_lead",
+                    headerName: "Общая стоимость лида",
+                },
+                {
+                    field: "Count_plan",
+                    headerName: "Кол-во заявок План",
+                },
+                {
+                    field: "Count_fact",
+                    headerName: "Кол-во заявок Факт",
+                },
+                {
+                    field: "Drawback/Surplus",
+                    headerName: "Недокрут/Перерасход",
+                },
+                {
+                    field: "Price_fact",
+                    headerName: "Стоимость заявки Факт",
+                },
+                {
+                    field: "Price_plan",
+                    headerName: "Стоимость заявки План",
+                },
+                {
+                    field: "Yandex|Cost_period",
+                    headerName: "Яндекс|Расход за период с НДС",
+                },
+                {
+                    field: "Yandex|Count_leads",
+                    headerName: "Яндекс|Количество лидов",
+                },
+                {
+                    field: "Yandex|Price_lead",
+                    headerName: "Яндекс|Стоимость лида",
+                },
+                {
+                    field: "Yandex|Surplus_nds",
+                    headerName: "Яндекс|Остаток с НДС",
+                },
             ],
             gridApi: null,
             columnApi: null,
@@ -239,9 +268,9 @@ export default {
             })
                 .then((resp) => resp.json())
                 .then((data) => {
-                    this.gridApi.setRowData(data);
                     this.loading = false;
                     this.gridApi.hideOverlay();
+                    this.gridApi.setRowData(data);
                 });
         },
         on_grid_ready(params) {

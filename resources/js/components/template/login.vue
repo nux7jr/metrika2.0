@@ -10,13 +10,13 @@
             <basicInput
                 name="login"
                 typeInput="text"
-                placeholder="Login"
+                placeholder="Логин"
                 :error="info.errors.email"
             />
             <basicInput
                 name="password"
                 typeInput="password"
-                placeholder="Password"
+                placeholder="Пароль"
                 :error="info.errors.password"
             />
             <error :error_mess="info.errors.login" />
