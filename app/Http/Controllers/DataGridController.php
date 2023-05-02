@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Helpers\PipeFiles\GetLeads;
+use App\Http\Helpers\Reports\DailyReport;
 use App\Http\Helpers\Reports\WeekReport;
 use Illuminate\Http\Request;
 use App\Http\Helpers\PipeFiles\Leads;
@@ -71,6 +73,18 @@ class DataGridController extends Controller
             return $Reporter->getJSON($date_on,$date_off);
         }catch (\Exception $error){
             var_dump($error->getMessage());
+        }
+        return false;
+    }
+
+    public function daily(Request $request){
+        try {
+            $date_on = empty($request->input('date_on')) ? date('d.m.Y', strtotime('yesterday')) :$request->input('date_on');
+
+            $Reporter =  new DailyReport($date_on);
+            return $Reporter->getJSON();
+        }catch (\Exception $error){
+            dd($error);
         }
         return false;
     }

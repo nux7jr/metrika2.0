@@ -12,7 +12,7 @@ class WeekReport
         $this->connenct = mysqli_connect('188.246.224.99', 'admin_ometrika', 'C3qUD6vtaw', 'admin_old_metrika', '3306');
         $this->connenct->set_charset('utf8');
     }
-    public function getJSON($date_s,$date_to){
+    public function getJSON($date_s,$date_to): string{
         $date_s = date('Y-m-d',strtotime($date_s));
         $date_to = date('Y-m-d',strtotime($date_to));
 
