@@ -50,9 +50,9 @@ class DailyReport
         $noutm_report['Нанофайбер франшиза Зарубежные страны'] = $result['Нанофайбер франшиза Зарубежные страны'];
         $result_count_no_utm = $this->getResultCount($noutm_report);
 
-        $resultJSON[] = $this->getHeaders();
-        $resultJSON[] = $result_count;
-        $resultJSON[] = $result_count_no_utm;
+        $resultJSON['header'] = $this->getHeaders();
+        $resultJSON['utm'] = $result_count;
+        $resultJSON['noutm'] = $result_count_no_utm;
 
         return json_encode($resultJSON);
     }
