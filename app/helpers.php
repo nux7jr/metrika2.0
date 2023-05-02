@@ -24,6 +24,13 @@ if (!function_exists('permissions_roles')) {
                     'delete',
                     'import',
                     'export',
+                ],
+                'App\\Models\\City' => [
+                    'view',
+                    'view-any',
+                    'create',
+                    'update',
+                    'delete',
                 ]
             ],
             'App\\Models\\User' => [
