@@ -20,7 +20,7 @@ use App\Http\Controllers\DataGridController;
 Route::view('/', 'home.index', ["title" => 'Аналитика 2.0'])->name('home')->middleware(['auth', 'twofactor']);
 Route::view('/visitors', 'visitors.index', ["title" => 'Аунтификация посетителей'])->name('visitors')->middleware(['auth', 'twofactor']);
 Route::view('/week', 'week.index', ["title" => 'Еженедельный отчет'])->name('week')->middleware(['auth', 'twofactor']);
-Route::view('/day', 'somelink.index', ["title" => 'Ежедневный отчет'])->name('somelink')->middleware(['auth', 'twofactor']);
+Route::view('/day', 'day.index', ["title" => 'Ежедневный отчет'])->name('day')->middleware(['auth', 'twofactor']);
 Route::view('/diagram', 'diagram.index', ["title" => 'Диаграммы'])->name('diagram')->middleware(['auth', 'twofactor']);
 Route::get('/logout', function () {
     Auth::logout();
@@ -45,5 +45,5 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
     Route::get('get_leads', [DataGridController::class, 'store'])->name('get_leads');
 
     Route::post('get_week_report', [DataGridController::class, 'week'])->name('get_week_report');
-    Route::get('get_daily_report', [DataGridController::class, 'daily'])->name('get_daily_report');
+    Route::post('get_daily_report', [DataGridController::class, 'daily'])->name('get_daily_report');
 });
