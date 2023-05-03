@@ -7,7 +7,7 @@
             <div class="mtable__heading">ID</div>
             <div class="mtable__heading mtable__heading-name">Имя</div>
             <div class="mtable__heading">Логин</div>
-            <div class="mtable__heading">telegramID</div>
+            <div class="mtable__heading">ID телеграмма</div>
             <div class="mtable__heading">Роль</div>
             <div class="mtable__heading">Города</div>
             <div class="mtable__heading">Дата создания</div>
@@ -24,23 +24,29 @@
                 @submit.prevent="send_info"
             >
                 <div class="mtable__item">{{ user.id }}</div>
+                <input name="id" type="hidden" v-bind:value="user.id" />
                 <input
-                    name="login"
+                    name="name"
                     class="mtable__item mtable__name"
                     contenteditable="true"
                     v-bind:value="user.name"
+                    required
                 />
                 <input
                     name="login"
                     class="mtable__item mtable__login"
                     contenteditable="true"
                     v-bind:value="user.login"
+                    type="text"
+                    required
                 />
                 <input
                     name="telegramID"
+                    type="number"
                     class="mtable__item mtable__telega"
                     contenteditable="true"
                     v-bind:value="user.telegramID"
+                    required
                 />
                 <div class="multiselect mtable__secondary">
                     <div class="selectBox">
@@ -448,6 +454,8 @@ export default {
     right: 0;
     top: 0;
     bottom: 0;
+
+    cursor: pointer;
 }
 
 .checkboxes {
