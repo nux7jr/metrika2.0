@@ -221,7 +221,7 @@ export default {
             },
         ];
 
-        // this.check_user_date();
+        this.check_user_date();
         this.rowSelection = "multiple";
         this.localeText = lang;
         this.overlayLoadingTemplate =
@@ -257,36 +257,25 @@ export default {
             sessionStorage.setItem("date", JSON.stringify(this.date));
         },
         get_date_grid() {
-            this.gridApi = params.api;
-            this.gridColumnApi = params.columnApi;
-            // this.loading = true;
-            // this.gridApi.showLoadingOverlay();
-            // document.getElementById("selectedOnly").checked = true;
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
 
-            // let token = document
-            //     .querySelector('meta[name="csrf-token"]')
-            //     .getAttribute("content");
-            // const localDate = JSON.parse(sessionStorage.getItem("date"));
-            // const userFormDate = new FormData();
-            // userFormDate.append("date_on", localDate.date_on);
-            // fetch("/get_daily_report", {
-            //     method: "POST",
-            //     headers: {
-            //         "X-CSRF-TOKEN": token,
-            //         "Content-Type": "application/json",
-            //         "X-Requested-With": "XMLHttpRequest",
-            //     },
-            //     body: JSON.stringify({
-            //         date_on: this.date.date_on,
-            //     }),
-            // })
-            //     .then((resp) => resp.json())
-            //     .then((data) => {
-            //         this.loading = false;
-            //         this.gridApi.hideOverlay();
-            //         this.gridApi.setRowData(data);
-            //     });
-            // this.gridApi.setRowData(this.bar);
+            fetch("/get_daily_report", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": token,
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                body: JSON.stringify({
+                    date_on: this.date.date_on,
+                }),
+            })
+                .then((resp) => resp.json())
+                .then((data) => {
+                    console.log(data);
+                });
         },
         on_grid_ready(params) {
             this.gridApi = params.api;
@@ -304,8 +293,7 @@ export default {
                     "X-Requested-With": "XMLHttpRequest",
                 },
                 body: JSON.stringify({
-                    date_on: "2023.05.01",
-                    // date_on: this.date.date_on,
+                    date_on: this.date.date_on,
                 }),
             })
                 .then((resp) => resp.json())

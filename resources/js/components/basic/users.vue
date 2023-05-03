@@ -1,5 +1,5 @@
 <template>
-    <button @click="add_user" class="def__button">
+    <button @click="add_user" class="def__button add_user">
         + Создать пользователя
     </button>
     <div class="mtable">
@@ -16,12 +16,14 @@
         </div>
         <div class="mtable__wrapper">
             <form
-                v-for="user in users"
+                v-for="(user, index) in users"
                 :key="user.id"
                 class="mtable__col"
                 method="POST"
                 action="user"
+                v-bind:index="index"
                 @submit.prevent="send_info"
+                v-bind:class="{ isnt_save: user.id == null }"
             >
                 <div class="mtable__item">{{ user.id }}</div>
                 <input name="id" type="hidden" v-bind:value="user.id" />
@@ -167,7 +169,7 @@ export default {
             users: [
                 {
                     id: 0,
-                    login: "admin",
+                    login: "admin0",
                     name: "bar",
                     role: {
                         admin: false,
@@ -181,7 +183,7 @@ export default {
                 },
                 {
                     id: 1,
-                    login: "real_admin",
+                    login: "real_admin1",
                     name: "uff",
                     role: {
                         admin: true,
@@ -195,7 +197,7 @@ export default {
                 },
                 {
                     id: 2,
-                    login: "userA",
+                    login: "userA2",
                     name: "TEST",
                     role: {
                         admin: false,
@@ -209,7 +211,35 @@ export default {
                 },
                 {
                     id: 3,
-                    login: "userA",
+                    login: "userA3",
+                    name: "TEST",
+                    role: {
+                        admin: false,
+                        user: true,
+                        partner: true,
+                    },
+                    city: [""],
+                    birthtime: new Date().toISOString().split("T")[0],
+                    edittime: new Date().toISOString().split("T")[0],
+                    telegramID: 123123123,
+                },
+                {
+                    id: 5,
+                    login: "userA5",
+                    name: "TEST",
+                    role: {
+                        admin: false,
+                        user: true,
+                        partner: true,
+                    },
+                    city: [""],
+                    birthtime: new Date().toISOString().split("T")[0],
+                    edittime: new Date().toISOString().split("T")[0],
+                    telegramID: 123123123,
+                },
+                {
+                    id: 7,
+                    login: "userA7",
                     name: "TEST",
                     role: {
                         admin: false,
@@ -242,7 +272,31 @@ export default {
             // const res = await fetch("http://127.0.0.1:8000/user");
             // this.info = await res.json();
         },
-        send_info: function (evt) {
+        send_info: async function (evt) {
+            const user_form = new FormData(evt.target);
+
+            // delete
+            if (evt.submitter.classList.contains("del__button")) {
+                evt.submitter.classList.add("button-loading");
+                const res = await fetch("/somePUT", {
+                    method: "delete",
+                    body: user_form,
+                });
+                if (res.status == 200) {
+                    this.remove_user(
+                        user_form.get("id"),
+                        evt.target.getAttribute("index")
+                    );
+                } else {
+                    evt.target.classList.add("error_ans");
+                    setTimeout(() => {
+                        evt.target.classList.remove("error_ans");
+                    }, 2000);
+                }
+                evt.submitter.classList.remove("button-loading");
+                return;
+            }
+            evt.submitter.classList.add("button-loading");
             // site
             const input_elements_sites =
                 evt.target.querySelectorAll(".city_input");
@@ -261,14 +315,26 @@ export default {
                     checked_value_role.push(input_elements_role[i].value);
                 }
             }
-            const user_form = new FormData(evt.target);
             user_form.append("cities", JSON.stringify(checked_value_sities));
             user_form.append("role", JSON.stringify(checked_value_role));
 
-            fetch("/asd", {
-                method: "POST",
+            const resSave = await fetch("/somePUT", {
+                method: "put",
                 body: user_form,
             });
+            if (resSave.status !== 200) {
+                evt.target.classList.remove("isnt_save");
+                evt.target.classList.add("success_ans");
+                setTimeout(() => {
+                    evt.target.classList.remove("success_ans");
+                }, 2000);
+            } else {
+                evt.target.classList.add("error_ans");
+                setTimeout(() => {
+                    evt.target.classList.remove("error_ans");
+                }, 2000);
+            }
+            evt.submitter.classList.remove("button-loading");
         },
         is_city_active(cityArr, userCity) {
             for (let i = 0; i < userCity.length; i++) {
@@ -279,8 +345,8 @@ export default {
         },
         add_user() {
             this.users.push({
-                id: this.users.length,
-                login: "Логин",
+                id: null,
+                login: "Login",
                 name: "Имя",
                 role: {
                     admin: false,
@@ -292,6 +358,10 @@ export default {
                 edittime: new Date().toISOString().split("T")[0],
                 telegramID: 9999999999,
             });
+        },
+        remove_user(id, index) {
+            console.log(id, index);
+            this.users.splice(index, 1);
         },
         set_all_checkboxes: function (evt) {
             const all_checkboxes =
@@ -327,14 +397,23 @@ export default {
 
 <style scoped>
 .loader {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border: 2px solid #fff;
     border-bottom-color: transparent;
     border-radius: 50%;
-    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 3px;
+    display: none;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
+}
+.button-loading {
+    position: relative;
+}
+.button-loading > .loader {
+    display: block;
 }
 .mtable {
     color: white;
@@ -409,7 +488,8 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 8px 10px;
+    padding: 8px 25px;
+    max-width: 112px;
     gap: 9px;
     font-style: normal;
     font-weight: 600;
@@ -427,6 +507,9 @@ export default {
 }
 .del__button {
     background-color: #dc3545;
+}
+.del__button:hover {
+    background-color: #d81e30;
 }
 .mtable__option {
     display: flex;
@@ -521,5 +604,17 @@ export default {
     font-family: "Montserrat", sans-serif;
     border-radius: 2px;
     border-color: transparent;
+}
+.isnt_save {
+    background: rgba(26, 103, 228, 0.231);
+}
+.success_ans {
+    background-color: rgba(38, 222, 90, 0.344);
+}
+.error_ans {
+    background-color: rgba(255, 0, 0, 0.344);
+}
+.add_user {
+    max-width: fit-content;
 }
 </style>

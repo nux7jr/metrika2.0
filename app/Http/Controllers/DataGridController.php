@@ -32,8 +32,8 @@ class DataGridController extends Controller
     public function store(Request $request)
     {
         try {
-            $date_on = empty($request->input('date_on')) ? date('YYYY-MM-DD', strtotime('today -7 days')) :$request->input('date_on');
-            $date_off = empty($request->input('date_off')) ? date('YYYY-MM-DD', strtotime('today')) :$request->input('date_off');
+            $date_on = empty($request->input('date_on')) ? date('YYYY-MM-DD', strtotime('today -7 days')) : $request->input('date_on');
+            $date_off = empty($request->input('date_off')) ? date('YYYY-MM-DD', strtotime('today')) : $request->input('date_off');
 
 
             $date_on = $date_on;
@@ -54,10 +54,9 @@ class DataGridController extends Controller
 
             $json = json_encode($arr_to_json, JSON_UNESCAPED_UNICODE);
             echo ($json);
-        }catch (\Exception $error){
+        } catch (\Exception $error) {
             var_dump($error->getMessage());
         }
-
     }
 
     /**
@@ -66,24 +65,26 @@ class DataGridController extends Controller
     public function week(Request $request)
     {
         try {
-            $date_on = empty($request->input('date_on')) ? date('YYYY-MM-DD', strtotime('today -7 days')) :$request->input('date_on');
-            $date_off = empty($request->input('date_off')) ? date('YYYY-MM-DD', strtotime('today')) :$request->input('date_off');
+            $date_on = empty($request->input('date_on')) ? date('YYYY-MM-DD', strtotime('today -7 days')) : $request->input('date_on');
+            $date_off = empty($request->input('date_off')) ? date('YYYY-MM-DD', strtotime('today')) : $request->input('date_off');
 
             $Reporter = new WeekReport();
-            return $Reporter->getJSON($date_on,$date_off);
-        }catch (\Exception $error){
+            return $Reporter->getJSON($date_on, $date_off);
+        } catch (\Exception $error) {
             var_dump($error->getMessage());
         }
         return false;
     }
 
-    public function daily(Request $request){
+    public function daily(Request $request)
+    {
         try {
-            $date_on = empty($request->input('date_on')) ? date('d.m.Y', strtotime('yesterday')) :date('d.m.Y', strtotime($request->input('date_on')));
+            $date_on = empty($request->input('date_on')) ? date('d.m.Y', strtotime('yesterday')) : date('d.m.Y', strtotime($request->input('date_on')));
+
 
             $Reporter =  new DailyReport($date_on);
             return $Reporter->getJSON();
-        }catch (\Exception $error){
+        } catch (\Exception $error) {
             var_dump($error->getMessage());
         }
         return false;
