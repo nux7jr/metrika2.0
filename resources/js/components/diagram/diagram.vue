@@ -5,6 +5,9 @@
 </template>
 
 <script>
+import { Chart, DoughnutController, ArcElement, Tooltip } from "chart.js";
+Chart.register(DoughnutController, ArcElement, Tooltip);
+
 export default {
     name: "metrikaDiagram",
     data() {
