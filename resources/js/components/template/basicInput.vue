@@ -21,6 +21,7 @@
                 :name="name"
                 :id="name"
                 v-model="value"
+                required
             />
             <div
                 ref="basic_close"

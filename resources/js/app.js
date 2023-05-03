@@ -21,6 +21,7 @@ import usermenu from "./components/include/usermenu.vue";
 // пока не знаю
 import userlist from "./components/basic/users.vue";
 import diagram from "./components/diagram/diagram.vue";
+import day from "./components/basic/day.vue";
 
 createApp({
     components: {
@@ -36,5 +37,6 @@ createApp({
         diagram,
         metrikaweek,
         userlist,
+        day,
     },
 }).mount("#app");
