@@ -95,12 +95,16 @@ class CountLeads{
 
         }
 
-        foreach ($summary['Теплые полы'] as &$floorItem){
-            $floorItem = $this->unique_multidim_array($floorItem, 3);
+        if (isset($summary['Теплые полы'])){
+            foreach ($summary['Теплые полы'] as &$floorItem){
+                $floorItem = $this->unique_multidim_array($floorItem, 3);
+            }
         }
 
-        foreach ($summary['Котлы'] as &$boilerItem){
-            $boilerItem = $this->unique_multidim_array($boilerItem, 3);
+        if (isset($summary['Котлы'])){
+            foreach ($summary['Котлы'] as &$boilerItem){
+                $boilerItem = $this->unique_multidim_array($boilerItem, 3);
+            }
         }
 
         if (isset($summary['Промкотлы'])){
@@ -108,9 +112,10 @@ class CountLeads{
                 $promkotel = $this->unique_multidim_array($promkotel, 3);
             }
         }
-
-        foreach ($summary['tiksan_auto'] as &$auto){
-            $auto = $this->unique_multidim_array($auto, 3);
+        if (isset($summary['tiksan_auto'])){
+            foreach ($summary['tiksan_auto'] as &$auto){
+                $auto = $this->unique_multidim_array($auto, 3);
+            }
         }
 
         return $summary;
