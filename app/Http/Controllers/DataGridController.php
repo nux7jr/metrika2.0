@@ -81,7 +81,6 @@ class DataGridController extends Controller
         try {
             $date_on = empty($request->input('date_on')) ? date('d.m.Y', strtotime('yesterday')) : date('d.m.Y', strtotime($request->input('date_on')));
 
-
             $Reporter =  new DailyReport($date_on);
             return $Reporter->getJSON();
         } catch (\Exception $error) {

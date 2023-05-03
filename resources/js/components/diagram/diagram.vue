@@ -1,6 +1,6 @@
 <template>
     <div ref="diagram" class="diagram">
-        <!-- <Bar :data="data" :options="options" /> -->
+        <Bar :data="data" :options="options" />
     </div>
 </template>
 
