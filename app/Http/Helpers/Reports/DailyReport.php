@@ -26,7 +26,15 @@ class DailyReport
         $this->settings['date'] = $date;
         $this->date = date('d.m.y',strtotime($date));
         $leads = new GetLeads($this->path);
-        $this->leads = $leads->get_leads_by_date($date,$date)[$this->date];
+        $temp_leads = $leads->get_leads_by_date($date,$date);
+        if (empty($temp_leads)){
+            throw new \Exception('В файле с лидами нет данных');
+        }
+        if (empty($temp_leads[$this->date])){
+            throw new \Exception('В файле с лидами нет данных на текущую дату: '.$this->date);
+        }
+        $this->leads = $temp_leads[$this->date];
+        unset($temp_leads);
         $this->countLeads = new CountLeads($this->leads);
         $this->bitrixAPI = new B24DailyReport($this->settings);
     }

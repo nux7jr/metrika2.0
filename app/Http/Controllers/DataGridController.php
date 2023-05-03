@@ -36,9 +36,6 @@ class DataGridController extends Controller
             $date_off = empty($request->input('date_off')) ? date('YYYY-MM-DD', strtotime('today')) : $request->input('date_off');
 
 
-            $date_on = $date_on;
-            $date_off = $date_off;
-
             $lead = new Leads();
             $arr = $lead->protect("", $date_on, $date_off);
             $arr_to_json = [];
@@ -71,9 +68,8 @@ class DataGridController extends Controller
             $Reporter = new WeekReport();
             return $Reporter->getJSON($date_on, $date_off);
         } catch (\Exception $error) {
-            var_dump($error->getMessage());
+            return (json_encode(['error'=>$error->getMessage()]));
         }
-        return false;
     }
 
     public function daily(Request $request)
@@ -85,9 +81,8 @@ class DataGridController extends Controller
             $Reporter =  new DailyReport($date_on);
             return $Reporter->getJSON();
         } catch (\Exception $error) {
-            var_dump($error->getMessage());
+            return (json_encode(['error'=>$error->getMessage()]));
         }
-        return false;
     }
 
     /**
