@@ -79,12 +79,12 @@ class DataGridController extends Controller
 
     public function daily(Request $request){
         try {
-            $date_on = empty($request->input('date_on')) ? date('d.m.Y', strtotime('yesterday')) :$request->input('date_on');
+            $date_on = empty($request->input('date_on')) ? date('d.m.Y', strtotime('yesterday')) :date('d.m.Y', strtotime($request->input('date_on')));
 
             $Reporter =  new DailyReport($date_on);
             return $Reporter->getJSON();
         }catch (\Exception $error){
-            dd($error);
+            var_dump($error->getMessage());
         }
         return false;
     }
