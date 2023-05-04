@@ -66,9 +66,12 @@ export default {
 
             columnDefs: [
                 { field: "state", headerName: "Реклама" },
-                { field: "krsk_foolrs", headerName: "krsk_foolrs" },
-                { field: "msk_foolrs", headerName: "Москва ТП" },
-                { field: "dealers_foolrs", headerName: "Дилеры ТП" },
+                { field: "krsk_foolrs_xl_pipe", headerName: "Красноярск ТП xl-pipe" },
+                { field: "krsk_foolrs_daewoo", headerName: "Красноярск ТП daewoo" },
+                { field: "msk_foolrs_xl_pipe", headerName: "Москва ТП xl-pipe" },
+                { field: "msk_foolrs_daewoo", headerName: "Москва ТП daewoo" },
+                { field: "dealers_foolrs_xl_pipe", headerName: "Дилеры ТП xl-pipe" },
+                { field: "dealers_foolrs_daewoo", headerName: "Дилеры ТП daewoo" },
                 { field: "krsk_boilers", headerName: "Красноярск Котлы" },
 
                 {
