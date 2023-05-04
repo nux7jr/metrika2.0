@@ -6,14 +6,14 @@ class CountLeads{
 
     public $leads;
 
-    private $warm_floors = [
-        'отопить-дом.рф', // пустой
-        'xn----htbksgadezd4i.xn--p1ai', // пустой
+    private $warm_floors_xl_pipe = [
         // 'otoplenie-otoplenie.ru',
         'xl-pipe.ru',
         'xlpipe.kz',
         'xlpipe-belarus.by',
-        'daewoo-enertec.com'
+    ];
+    private $warm_floors_daewoo = [
+        'daewoo-enertec.com',
     ];
     private $boilers = [
         'переко.рф',
@@ -53,8 +53,11 @@ class CountLeads{
         foreach ($this->leads as $lead){
             $lead[3] = $this->replace_phone($lead[3]);//приводим телефон к единому виду
             if ($lead[1] === 'Красноярск'){
-                if ($this->count_leads($lead[9], $this->warm_floors, $noutm ? 'dealer' : 'with_utm') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
-                    $summary['Теплые полы']['Красноярск'][] = $lead;
+                if ($this->count_leads($lead[9], $this->warm_floors_xl_pipe, $noutm ? 'dealer' : 'with_utm') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
+                    $summary['Теплые полы']['xl-pipe']['Красноярск'][] = $lead;
+                }
+                if ($this->count_leads($lead[9], $this->warm_floors_daewoo, $noutm ? 'dealer' : 'with_utm') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
+                    $summary['Теплые полы']['daewoo']['Красноярск'][] = $lead;
                 }
                 if (($this->count_leads($lead[9], $this->boilers, 'dealer') || $this->count_leads($lead[9],$this->boilers_krsk, 'dealer')) &&
                     !$this->is_test($lead[4].$lead[6], $this->test_leads) &&
@@ -69,8 +72,11 @@ class CountLeads{
                     $summary['Промкотлы']['Красноярск'][] = $lead;
                 }
             }elseif ($lead[1] === 'Москва'){
-                if ($this->count_leads($lead[9], $this->warm_floors, $noutm ? 'dealer' : 'with_utm') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
-                    $summary['Теплые полы']['Москва'][] = $lead;
+                if ($this->count_leads($lead[9], $this->warm_floors_xl_pipe, $noutm ? 'dealer' : 'with_utm') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
+                    $summary['Теплые полы']['xl-pipe']['Москва'][] = $lead;
+                }
+                if ($this->count_leads($lead[9], $this->warm_floors_daewoo, $noutm ? 'dealer' : 'with_utm') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
+                    $summary['Теплые полы']['daewoo']['Москва'][] = $lead;
                 }
                 if (($this->count_leads($lead[9], $this->boilers, 'dealer') || $this->count_leads($lead[9],$this->boilers_msk, 'dealer')) &&
                     !$this->is_test($lead[4].$lead[6], $this->test_leads) &&
@@ -82,8 +88,11 @@ class CountLeads{
                     $summary['tiksan_auto'][0][] = $lead;
                 }
             }else{
-                if ($this->count_leads($lead[9], $this->warm_floors, 'dealer') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
-                    $summary['Теплые полы']['Диллеры'][] = $lead;
+                if ($this->count_leads($lead[9], $this->warm_floors_xl_pipe, 'dealer') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
+                    $summary['Теплые полы']['xl-pipe']['Диллеры'][] = $lead;
+                }
+                if ($this->count_leads($lead[9], $this->warm_floors_daewoo, 'dealer') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
+                    $summary['Теплые полы']['daewoo']['Диллеры'][] = $lead;
                 }
                 if ($this->count_leads($lead[9], $this->auto, $noutm ? 'dealer' : 'with_utm') && !$this->is_test($lead[4].$lead[6], $this->test_leads)) {
                     $summary['tiksan_auto'][0][] = $lead;
@@ -95,8 +104,14 @@ class CountLeads{
 
         }
 
-        if (isset($summary['Теплые полы'])){
-            foreach ($summary['Теплые полы'] as &$floorItem){
+        if (isset($summary['Теплые полы']['xl-pipe'])){
+            foreach ($summary['Теплые полы']['xl-pipe'] as &$floorItem){
+                $floorItem = $this->unique_multidim_array($floorItem, 3);
+            }
+        }
+
+        if (isset($summary['Теплые полы']['daewoo'])){
+            foreach ($summary['Теплые полы']['daewoo'] as &$floorItem){
                 $floorItem = $this->unique_multidim_array($floorItem, 3);
             }
         }
