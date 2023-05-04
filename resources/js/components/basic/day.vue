@@ -9,9 +9,9 @@
                     <input
                         class="filter__input"
                         type="date"
-                        name="date-off"
-                        id="date-off"
-                        v-model="date.date_on"
+                        name="date-on"
+                        id="date-on"
+                        v-model="date.date_one"
                         @change="set_user_date()"
                     />
                 </div>
@@ -64,7 +64,6 @@ export default {
         return {
             loading: false,
 
-            rowData: null,
             columnDefs: [
                 { field: "state", headerName: "Реклама" },
                 { field: "krsk_foolrs", headerName: "krsk_foolrs" },
@@ -101,129 +100,28 @@ export default {
                 { field: "tiksan_auto", headerName: "Тиксан авто только LP1" },
             ],
             localeText: null,
-            gridApi: null,
-            columnApi: null,
-            rowSelection: null,
+
             date: {
-                date_on: "",
+                date_one: "",
             },
             model: {},
-            bar: {
-                header: {
-                    krsk_foolrs: "Красноярск ТП",
-                    msk_foolrs: "Москва ТП",
-                    dealers_foolrs: "Дилеры ТП",
-                    krsk_boilers: "Красноярск Котлы",
-                    krsk_promboilers: "Красноярск промкотлы",
-                    msk_boilers: "Москва Котлы",
-                    dealers_franchisees: "Дилерство полы",
-                    nanofiber_franchisees_sng: "NanoFiber Франшиза СНГ",
-                    nanofiber_franchisees_world:
-                        "NanoFiber Франшиза Зарубежные страны",
-                    krsk_etaji: "Малые этажи Красноярск",
-                    dealers_etaji: "Малые этажи Регионы",
-                    tumen_etaji: "Малые этажи Тюмень",
-                    irkutsk_etaji: "Малые этажи Иркутск",
-                    vladivostok_etaji: "Малые этажи Владивосток",
-                    perm_etaji: "Малые этажи Пермь",
-                    ekb_etaji: "Малые этажи Екатеринбург",
-                    barnaul_etaji: "Малые этажи Барнаул",
-                    tiksan_auto: "Тиксан авто только LP1",
-                },
-                utm: {
-                    krsk_foolrs: 8,
-                    msk_foolrs: 0,
-                    dealers_foolrs: 52,
-                    krsk_boilers: 9,
-                    krsk_promboilers: 0,
-                    msk_boilers: 33,
-                    dealers_franchisees: 0,
-                    nanofiber_franchisees_sng: 0,
-                    nanofiber_franchisees_world: 0,
-                    krsk_etaji: 8,
-                    dealers_etaji: 21,
-                    tumen_etaji: 4,
-                    irkutsk_etaji: 2,
-                    vladivostok_etaji: 4,
-                    perm_etaji: 1,
-                    ekb_etaji: 10,
-                    barnaul_etaji: 5,
-                    tiksan_auto: 1,
-                },
-                noutm: {
-                    krsk_foolrs: 9,
-                    msk_foolrs: 0,
-                    dealers_foolrs: 52,
-                    krsk_boilers: 9,
-                    krsk_promboilers: 0,
-                    msk_boilers: 33,
-                    dealers_franchisees: 0,
-                    nanofiber_franchisees_sng: 0,
-                    nanofiber_franchisees_world: 0,
-                    krsk_etaji: 10,
-                    dealers_etaji: 21,
-                    tumen_etaji: 4,
-                    irkutsk_etaji: 2,
-                    vladivostok_etaji: 4,
-                    perm_etaji: 1,
-                    ekb_etaji: 10,
-                    barnaul_etaji: 5,
-                    tiksan_auto: 5,
-                },
-            },
+
+            gridApi: null,
+            columnApi: null,
+            rowData: null,
+            rowSelection: null,
+            getRowId: null,
+
+            overlayLoadingTemplate: null,
         };
     },
 
     computed: {},
     created() {
-        this.rowData = [
-            {
-                state: "utm",
-                krsk_foolrs: 8,
-                msk_foolrs: 0,
-                dealers_foolrs: 52,
-                krsk_boilers: 9,
-                krsk_promboilers: 0,
-                msk_boilers: 33,
-                dealers_franchisees: 0,
-                nanofiber_franchisees_sng: 0,
-                nanofiber_franchisees_world: 0,
-                krsk_etaji: 8,
-                dealers_etaji: 21,
-                tumen_etaji: 4,
-                irkutsk_etaji: 2,
-                vladivostok_etaji: 4,
-                perm_etaji: 1,
-                ekb_etaji: 10,
-                barnaul_etaji: 5,
-                tiksan_auto: 1,
-            },
-            {
-                // state: "noutm",
-                krsk_foolrs: 9,
-                msk_foolrs: 0,
-                dealers_foolrs: 52,
-                krsk_boilers: 9,
-                krsk_promboilers: 0,
-                msk_boilers: 33,
-                dealers_franchisees: 0,
-                nanofiber_franchisees_sng: 0,
-                nanofiber_franchisees_world: 0,
-                krsk_etaji: 10,
-                dealers_etaji: 21,
-                tumen_etaji: 4,
-                irkutsk_etaji: 2,
-                vladivostok_etaji: 4,
-                perm_etaji: 1,
-                ekb_etaji: 10,
-                barnaul_etaji: 5,
-                tiksan_auto: 5,
-            },
-        ];
-
         this.check_user_date();
         this.rowSelection = "multiple";
         this.localeText = lang;
+        this.get_date_grid();
         this.overlayLoadingTemplate =
             '<span class="ag-overlay-loading-center loader"></span>';
     },
@@ -239,24 +137,27 @@ export default {
         get_date_now() {
             const targetDate = new Date(Date.now() - 86400000);
             this.date = {
-                date_on: targetDate.toISOString().split("T")[0],
+                date_one: targetDate.toISOString().split("T")[0],
             };
-            sessionStorage.setItem("date", JSON.stringify(this.date));
+            sessionStorage.setItem("date_one", JSON.stringify(this.date));
         },
         check_user_date() {
-            if (sessionStorage.getItem("date")) {
-                const localDate = JSON.parse(sessionStorage.getItem("date"));
+            if (sessionStorage.getItem("date_one")) {
+                const localDate = JSON.parse(
+                    sessionStorage.getItem("date_one")
+                );
                 this.date = {
-                    date_on: localDate.date_on,
+                    date_one: localDate.date_one,
                 };
             } else {
                 this.get_date_now();
             }
         },
         set_user_date() {
-            sessionStorage.setItem("date", JSON.stringify(this.date));
+            sessionStorage.setItem("date_one", JSON.stringify(this.date));
         },
         get_date_grid() {
+            // this.loading = true;
             let token = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
@@ -269,49 +170,23 @@ export default {
                     "X-Requested-With": "XMLHttpRequest",
                 },
                 body: JSON.stringify({
-                    date_on: this.date.date_on,
+                    date_on: this.date.date_one,
                 }),
             })
                 .then((resp) => resp.json())
                 .then((data) => {
-                    console.log(data);
+                    this.loading = false;
+                    this.gridApi.setRowData(data);
                 });
+            // this.loading = false;
         },
         on_grid_ready(params) {
+            // this.loading = true;
+
             this.gridApi = params.api;
             this.gridColumnApi = params.columnApi;
-            const updateData = (data) => params.api.setRowData(data);
-            let token = document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content");
 
-            fetch("/get_daily_report", {
-                method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": token,
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-                body: JSON.stringify({
-                    date_on: this.date.date_on,
-                }),
-            })
-                .then((resp) => resp.json())
-                .then((data) => updateData(data));
-
-            // fetch("/get_daily_report", {
-            //     method: "POST",
-            //     headers: {
-            //         "X-CSRF-TOKEN": token,
-            //         "Content-Type": "application/json",
-            //         "X-Requested-With": "XMLHttpRequest",
-            //     },
-            //     body: JSON.stringify({
-            //         date_on: this.date.date_on,
-            //     }),
-            // })
-            //     .then((resp) => resp.json())
-            //     .then((data) => updateData(data));
+            // this.loading = false;
         },
     },
     components: {
