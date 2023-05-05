@@ -205,6 +205,32 @@ class B24DailyReport{
         return $result;
     }
 
+    private function getCalls(){
+        $method = 'crm.item.list';
+
+        //Формируем параметры для создания лида в переменной $queryData
+        $data = [
+            'entityTypeId' => 2,
+            'order' => ['id' => 'ASC'],
+            'filter' => [
+                'categoryId' => $this->direction,
+                '>=createdTime' => $this->date_start,
+                '<=createdTime' => $this->date_end,
+            ],
+            'select' => ['id', 'title', 'utmSource', 'utmMedium', 'utmContent', 'utmTerm', 'sourceId', 'searchContent', 'typeId'],
+        ];
+        $result = [];
+        do {
+            $queryData = http_build_query($data);
+            $answer = json_decode($this->post($method, $queryData));
+            foreach ($answer->result->items as $lead){
+                $result[] = (array)$lead;
+            }
+        }while(isset($answer->next));
+
+        return $result;
+    }
+
     private function post($method, $queryData)
     {
 

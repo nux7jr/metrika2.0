@@ -5,7 +5,7 @@ namespace App\Http\Helpers\Reports;
 class GetCSVSpreadsheets{
 
     private $url;
-    private $partners_to_site = [
+    private static array $partners_to_site = [
         'ИП Булаев' => 'Нижний Новгород',
         'ИП Сорокин Игорь Николаевич' => 'Санкт-Петербург..',
         'Проект-А' => ['Ижевск' => 'Ижевск', 'Пермь' => 'Пермь'],
@@ -38,7 +38,12 @@ class GetCSVSpreadsheets{
         'ИП Сычев' => 'Липецк',
         'ИП Плотников А.О.' => 'Саратов',
         'Компания Франкосиб' => 'Новосибирск.',
-        'ООО Век Комфорта' => 'Улан-Удэ...',
+        'СИБ ХАУС (Бывший "Цитрин")' => 'Новосибирск..',
+        'ООО Век Комфорта' => 'Улан-Удэ.',
+        'ИП Усманов' => 'Улан-Удэ...',
+        'ИП Тарасова Л.Я.' => 'Псков',
+        'ИП Кондауров СН' => 'Хабаровск',
+        'Стройподрят' => 'Калининград',
     ];
 
     public function __construct(string $id_spreadsheet_file, string $format_export, int $id_list_spreadsheet, string $need_range)
@@ -67,16 +72,16 @@ class GetCSVSpreadsheets{
             }
             preg_match('/\d[\d|\s]+/ui',$pay[15], $matches);
             $sum_per_week = str_replace(' ','',$matches[0]);
-            if ($date > $date_start && $date < $date_end && $sum_per_week[0] != null && isset($this->partners_to_site[$pay[1]])) {
+            if ($date > $date_start && $date < $date_end && $sum_per_week[0] != null && isset(self::$partners_to_site[$pay[1]])) {
                 {
-                    if (!is_array($this->partners_to_site[$pay[1]])){
-                        if (!isset($need_pay[$city = $this->partners_to_site[$pay[1]]])) {
-                            $need_pay[$city = $this->partners_to_site[$pay[1]]] = (int)$sum_per_week;
+                    if (!is_array(self::$partners_to_site[$pay[1]])){
+                        if (!isset($need_pay[$city = self::$partners_to_site[$pay[1]]])) {
+                            $need_pay[$city = self::$partners_to_site[$pay[1]]] = (int)$sum_per_week;
                         }
                     }
                     else{
-                        if (!isset($need_pay[$city = $this->partners_to_site[$pay[1]][$pay[0]]])){
-                            $need_pay[$city = $this->partners_to_site[$pay[1]][$pay[0]]] = (int)$sum_per_week;
+                        if (!isset($need_pay[$city = self::$partners_to_site[$pay[1]][$pay[0]]])){
+                            $need_pay[$city = self::$partners_to_site[$pay[1]][$pay[0]]] = (int)$sum_per_week;
                         }
                     }
                 }
@@ -89,5 +94,23 @@ class GetCSVSpreadsheets{
         $need_pay['Санкт-Петербург...'] = 25000;
 
         return $need_pay;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSiteToPartners(): array
+    {
+        $result = [];
+        foreach (self::$partners_to_site as $partner => $city){
+            if (is_array($city)){
+                foreach ($city as $value){
+                    $result[$value] = $partner;
+                }
+            }else{
+                $result[$city] = $partner;
+            }
+        }
+        return $result;
     }
 }

@@ -59,49 +59,41 @@ import { lang } from "../../locale/ru.js";
 import "ag-grid-enterprise";
 
 export default {
-    name: "metrikaDay",
+    name: "metrikaBasic",
     data() {
         return {
             loading: false,
 
             columnDefs: [
                 { field: "state", headerName: "Реклама" },
-                {
-                    field: "krsk_foolrs",
-                    headerName: "krsk_foolrs",
-                    cellStyle: { color: "red", "background-color": "green" },
-                },
-                { field: "msk_foolrs", headerName: "Москва ТП" },
-                { field: "dealers_foolrs", headerName: "Дилеры ТП" },
+                { field: "krsk_foolrs_xl_pipe", headerName: "Красноярск ТП xl-pipe" },
+                { field: "krsk_foolrs_daewoo", headerName: "Красноярск ТП daewoo" },
                 { field: "krsk_boilers", headerName: "Красноярск Котлы" },
+                { field: "krsk_promboilers", headerName: "Красноярск промкотлы" },
+                { field: "krsk_engineering", headerName: "Красноярск Инжиниринг" },
 
-                {
-                    field: "krsk_promboilers",
-                    headerName: "Красноярск промкотлы",
-                },
+                { field: "msk_foolrs_xl_pipe", headerName: "Москва ТП xl-pipe" },
+                { field: "msk_foolrs_daewoo", headerName: "Москва ТП daewoo" },
                 { field: "msk_boilers", headerName: "Москва Котлы" },
+
+                { field: "dealers_foolrs_xl_pipe", headerName: "Дилеры ТП xl-pipe" },
+                { field: "dealers_foolrs_daewoo", headerName: "Дилеры ТП daewoo" },
                 { field: "dealers_franchisees", headerName: "Дилерство полы" },
-                {
-                    field: "nanofiber_franchisees_sng",
-                    headerName: "NanoFiber Франшиза СНГ",
-                },
-                {
-                    field: "nanofiber_franchisees_world",
-                    headerName: "NanoFiber Франшиза Зарубежные страны",
-                },
+
+                { field: "nanofiber_franchisees_sng", headerName: "NanoFiber Франшиза СНГ" },
+                { field: "nanofiber_franchisees_world", headerName: "NanoFiber Франшиза Зарубежные страны" },
+
                 { field: "krsk_etaji", headerName: "Малые этажи Красноярск" },
                 { field: "dealers_etaji", headerName: "Малые этажи Регионы" },
-
                 { field: "tumen_etaji", headerName: "Малые этажи Тюмень" },
                 { field: "irkutsk_etaji", headerName: "Малые этажи Иркутск" },
-                {
-                    field: "vladivostok_etaji",
-                    headerName: "Малые этажи Владивосток",
-                },
+                { field: "vladivostok_etaji", headerName: "Малые этажи Владивосток" },
                 { field: "perm_etaji", headerName: "Малые этажи Пермь" },
                 { field: "ekb_etaji", headerName: "Малые этажи Екатеринбург" },
                 { field: "barnaul_etaji", headerName: "Малые этажи Барнаул" },
+
                 { field: "tiksan_auto", headerName: "Тиксан авто только LP1" },
+                { field: "tiksan_auto_main", headerName: "Тиксан авто Федеральный" },
             ],
             localeText: null,
 
@@ -122,12 +114,12 @@ export default {
 
     computed: {},
     created() {
-        this.overlayLoadingTemplate =
-            '<span class="ag-overlay-loading-center loader"></span>';
         this.check_user_date();
         this.rowSelection = "multiple";
         this.localeText = lang;
         this.get_date_grid();
+        this.overlayLoadingTemplate =
+            '<span class="ag-overlay-loading-center loader"></span>';
     },
     methods: {
         get_export_all() {
@@ -161,7 +153,7 @@ export default {
             sessionStorage.setItem("date_one", JSON.stringify(this.date));
         },
         get_date_grid() {
-            this.loading = true;
+            // this.loading = true;
             let token = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
@@ -179,18 +171,18 @@ export default {
             })
                 .then((resp) => resp.json())
                 .then((data) => {
-                    if (data.error) {
-                        this.gridApi.setRowData([]);
-                        this.loading = false;
-                    } else {
-                        this.gridApi.setRowData(data);
-                        this.loading = false;
-                    }
+                    this.loading = false;
+                    this.gridApi.setRowData(data);
                 });
+            // this.loading = false;
         },
         on_grid_ready(params) {
+            // this.loading = true;
+
             this.gridApi = params.api;
             this.gridColumnApi = params.columnApi;
+
+            // this.loading = false;
         },
     },
     components: {
