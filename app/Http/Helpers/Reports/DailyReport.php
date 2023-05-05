@@ -90,7 +90,8 @@ class DailyReport
                     'perm_etaji' => count($report['Малые этажи']['Пермь'] ?? []),
                     'ekb_etaji' => count($report['Малые этажи']['Екатеринбург'] ?? []),
                     'barnaul_etaji' => count($report['Малые этажи']['Барнаул'] ?? []),
-                    'tiksan_auto' => count($report['tiksan_auto'][0] ?? [])
+                    'tiksan_auto' => count($report['tiksan_auto'][0] ?? []),
+                    'tiksan_auto_main' => count($report['tiksan_auto'][1] ?? []),
                 ];
     }
 
@@ -117,7 +118,8 @@ class DailyReport
             'perm_etaji' => 'Малые этажи Пермь',
             'ekb_etaji' => 'Малые этажи Екатеринбург',
             'barnaul_etaji' => 'Малые этажи Барнаул',
-            'tiksan_auto' => 'Тиксан авто только LP1'
+            'tiksan_auto' => 'Тиксан авто только LP1',
+            'tiksan_auto_main' => 'Тиксан авто без LP1',
         ];
     }
 }

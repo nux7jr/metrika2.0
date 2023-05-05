@@ -93,6 +93,7 @@ class WeekReport
             }
             $counter++;
         }
+        $city_to_partner = GetCSVSpreadsheets::getSiteToPartners();
         foreach ($first as &$row) {
             $budget_month = 0;
             $plan_leads = 0;
@@ -116,6 +117,7 @@ class WeekReport
             }
 
             $row['Count_plan'] =  $plan_leads != 0 ? !is_nan(round($budget_month / $plan_leads, 0)) ? !is_infinite(round($budget_month / $plan_leads, 0)) ? round($budget_month / $plan_leads, 0) : 0 : 0 : 0;
+            isset($city_to_partner[$row['City']]) ? $row['City'] = $row['City'] . ' | ' . $city_to_partner[$row['City']] : '';
         }
 
         return json_encode($first);
