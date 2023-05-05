@@ -68,39 +68,32 @@ export default {
                 { field: "state", headerName: "Реклама" },
                 { field: "krsk_foolrs_xl_pipe", headerName: "Красноярск ТП xl-pipe" },
                 { field: "krsk_foolrs_daewoo", headerName: "Красноярск ТП daewoo" },
+                { field: "krsk_boilers", headerName: "Красноярск Котлы" },
+                { field: "krsk_promboilers", headerName: "Красноярск промкотлы" },
+                { field: "krsk_engineering", headerName: "Красноярск Инжиниринг" },
+
                 { field: "msk_foolrs_xl_pipe", headerName: "Москва ТП xl-pipe" },
                 { field: "msk_foolrs_daewoo", headerName: "Москва ТП daewoo" },
+                { field: "msk_boilers", headerName: "Москва Котлы" },
+
                 { field: "dealers_foolrs_xl_pipe", headerName: "Дилеры ТП xl-pipe" },
                 { field: "dealers_foolrs_daewoo", headerName: "Дилеры ТП daewoo" },
-                { field: "krsk_boilers", headerName: "Красноярск Котлы" },
-
-                {
-                    field: "krsk_promboilers",
-                    headerName: "Красноярск промкотлы",
-                },
-                { field: "msk_boilers", headerName: "Москва Котлы" },
                 { field: "dealers_franchisees", headerName: "Дилерство полы" },
-                {
-                    field: "nanofiber_franchisees_sng",
-                    headerName: "NanoFiber Франшиза СНГ",
-                },
-                {
-                    field: "nanofiber_franchisees_world",
-                    headerName: "NanoFiber Франшиза Зарубежные страны",
-                },
+
+                { field: "nanofiber_franchisees_sng", headerName: "NanoFiber Франшиза СНГ" },
+                { field: "nanofiber_franchisees_world", headerName: "NanoFiber Франшиза Зарубежные страны" },
+
                 { field: "krsk_etaji", headerName: "Малые этажи Красноярск" },
                 { field: "dealers_etaji", headerName: "Малые этажи Регионы" },
-
                 { field: "tumen_etaji", headerName: "Малые этажи Тюмень" },
                 { field: "irkutsk_etaji", headerName: "Малые этажи Иркутск" },
-                {
-                    field: "vladivostok_etaji",
-                    headerName: "Малые этажи Владивосток",
-                },
+                { field: "vladivostok_etaji", headerName: "Малые этажи Владивосток" },
                 { field: "perm_etaji", headerName: "Малые этажи Пермь" },
                 { field: "ekb_etaji", headerName: "Малые этажи Екатеринбург" },
                 { field: "barnaul_etaji", headerName: "Малые этажи Барнаул" },
+
                 { field: "tiksan_auto", headerName: "Тиксан авто только LP1" },
+                { field: "tiksan_auto_main", headerName: "Тиксан авто Федеральный" },
             ],
             localeText: null,
 
