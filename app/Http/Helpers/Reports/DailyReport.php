@@ -119,7 +119,7 @@ class DailyReport
             'ekb_etaji' => 'Малые этажи Екатеринбург',
             'barnaul_etaji' => 'Малые этажи Барнаул',
             'tiksan_auto' => 'Тиксан авто только LP1',
-            'tiksan_auto_main' => 'Тиксан авто без LP1',
+            'tiksan_auto_main' => 'Тиксан авто Федеральный',
         ];
     }
 }
