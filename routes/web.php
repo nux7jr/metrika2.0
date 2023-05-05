@@ -22,6 +22,9 @@ Route::view('/visitors', 'visitors.index', ["title" => 'Аунтификация
 Route::view('/week', 'week.index', ["title" => 'Еженедельный отчет'])->name('week')->middleware(['auth', 'twofactor']);
 Route::view('/day', 'day.index', ["title" => 'Ежедневный отчет'])->name('day')->middleware(['auth', 'twofactor']);
 Route::view('/diagram', 'diagram.index', ["title" => 'Диаграммы'])->name('diagram')->middleware(['auth', 'twofactor']);
+Route::view('/partners', 'partners.index', ["partners" => 'Ваша таблица'])->name('partners')->middleware(['auth', 'twofactor']);
+
+
 Route::get('/logout', function () {
     Auth::logout();
     return redirect('/');

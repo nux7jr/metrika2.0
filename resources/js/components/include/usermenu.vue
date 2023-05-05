@@ -33,9 +33,7 @@
                 alt="icon"
             />
             <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive"
-                    >Страница с лидами</span
-                >
+                <span class="menu__text" v-if="isActive">Лиды</span>
             </Transition>
         </a>
     </div>

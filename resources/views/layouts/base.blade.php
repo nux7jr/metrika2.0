@@ -42,10 +42,19 @@
                 </div>
             </div>
     </div>
-    {{-- // $user = Auth::user();
-    // $user->assignRole('super-admin'); --}}
+
+    
     <div class="watermarks">Smart Core | {{ now()->year }} | alpha | {{ App::VERSION() }} </div>
 </body>
 </html>
+
+
+<?php
+
+   # $user = Auth::user();
+   # $user->assignRole('super-admin');
+   # $user->removeRole('super-admin');
+
+?>    
 
 
