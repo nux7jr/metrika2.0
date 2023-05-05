@@ -19,7 +19,7 @@
         "ag-grid-enterprise": "^29.3.2",
         "ag-grid-vue3": "^29.3.2",
         "apexcharts": "^3.39.0",
-        "chart.js": "^3.9.1",
-        "vue-chart-3": "^3.1.8"
+        "chart.js": "^4.3.0",
+        "vue-chartjs": "^5.2.0"
     }
 }

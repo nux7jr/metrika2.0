@@ -52,6 +52,7 @@ export default {
     width: -webkit-fill-available;
 
     padding: 10px;
+    padding-left: 0px;
 
     align-items: center;
 }

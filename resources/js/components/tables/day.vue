@@ -59,14 +59,18 @@ import { lang } from "../../locale/ru.js";
 import "ag-grid-enterprise";
 
 export default {
-    name: "metrikaBasic",
+    name: "metrikaDay",
     data() {
         return {
             loading: false,
 
             columnDefs: [
                 { field: "state", headerName: "Реклама" },
-                { field: "krsk_foolrs", headerName: "krsk_foolrs" },
+                {
+                    field: "krsk_foolrs",
+                    headerName: "krsk_foolrs",
+                    cellStyle: { color: "red", "background-color": "green" },
+                },
                 { field: "msk_foolrs", headerName: "Москва ТП" },
                 { field: "dealers_foolrs", headerName: "Дилеры ТП" },
                 { field: "krsk_boilers", headerName: "Красноярск Котлы" },
@@ -118,12 +122,12 @@ export default {
 
     computed: {},
     created() {
+        this.overlayLoadingTemplate =
+            '<span class="ag-overlay-loading-center loader"></span>';
         this.check_user_date();
         this.rowSelection = "multiple";
         this.localeText = lang;
         this.get_date_grid();
-        this.overlayLoadingTemplate =
-            '<span class="ag-overlay-loading-center loader"></span>';
     },
     methods: {
         get_export_all() {
@@ -157,7 +161,7 @@ export default {
             sessionStorage.setItem("date_one", JSON.stringify(this.date));
         },
         get_date_grid() {
-            // this.loading = true;
+            this.loading = true;
             let token = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
@@ -175,18 +179,18 @@ export default {
             })
                 .then((resp) => resp.json())
                 .then((data) => {
-                    this.loading = false;
-                    this.gridApi.setRowData(data);
+                    if (data.error) {
+                        this.gridApi.setRowData([]);
+                        this.loading = false;
+                    } else {
+                        this.gridApi.setRowData(data);
+                        this.loading = false;
+                    }
                 });
-            // this.loading = false;
         },
         on_grid_ready(params) {
-            // this.loading = true;
-
             this.gridApi = params.api;
             this.gridColumnApi = params.columnApi;
-
-            // this.loading = false;
         },
     },
     components: {

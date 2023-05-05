@@ -142,12 +142,32 @@
                 <div class="mtable__item">
                     {{ user.edittime }}
                 </div>
-                <div class="mtable__item mtable__option">
+                <div
+                    v-if="user.id !== null"
+                    class="mtable__item mtable__option"
+                >
+                    <button type="submit" class="def__button">
+                        <span class="loader"></span>
+                        Изменить
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="def__button del__button delete__button"
+                    >
+                        <span class="loader"></span>
+                        Удалить
+                    </button>
+                </div>
+                <div v-else class="mtable__item mtable__option">
                     <button type="submit" class="def__button">
                         <span class="loader"></span>
                         Сохранить
                     </button>
-                    <button class="def__button del__button">
+                    <button
+                        type="submit"
+                        class="def__button del__button delete-front__button"
+                    >
                         <span class="loader"></span>
                         Удалить
                     </button>
@@ -155,103 +175,30 @@
             </form>
         </div>
     </div>
+    <warning
+        :warningInfo="{ warningInfo }"
+        :show="warningInfo.show"
+        @close="warningInfo.show = false"
+        :onRemoveUser="onRemoveUser"
+    />
 </template>
 
 <script>
 import { city } from "../../helper/getSity";
-
+import warning from "../template/warning.vue";
 export default {
     name: "MetrikaUsers",
     data() {
         return {
+            warningInfo: {
+                show: false,
+                username: "",
+                id: "",
+                index: "",
+            },
             info: [],
             expanded: false,
-            users: [
-                {
-                    id: 0,
-                    login: "admin0",
-                    name: "bar",
-                    role: {
-                        admin: false,
-                        user: true,
-                        partner: true,
-                    },
-                    city: ["Абакан", "Красняорск", "Канск", "ЧТО_ТО"],
-                    birthtime: new Date().toISOString().split("T")[0],
-                    edittime: new Date().toISOString().split("T")[0],
-                    telegramID: 228228,
-                },
-                {
-                    id: 1,
-                    login: "real_admin1",
-                    name: "uff",
-                    role: {
-                        admin: true,
-                        user: true,
-                        partner: true,
-                    },
-                    city: ["MSK"],
-                    birthtime: new Date().toISOString().split("T")[0],
-                    edittime: new Date().toISOString().split("T")[0],
-                    telegramID: 123123123,
-                },
-                {
-                    id: 2,
-                    login: "userA2",
-                    name: "TEST",
-                    role: {
-                        admin: false,
-                        user: true,
-                        partner: true,
-                    },
-                    city: ["MSKA", "Альметьевск"],
-                    birthtime: new Date().toISOString().split("T")[0],
-                    edittime: new Date().toISOString().split("T")[0],
-                    telegramID: 123123123,
-                },
-                {
-                    id: 3,
-                    login: "userA3",
-                    name: "TEST",
-                    role: {
-                        admin: false,
-                        user: true,
-                        partner: true,
-                    },
-                    city: [""],
-                    birthtime: new Date().toISOString().split("T")[0],
-                    edittime: new Date().toISOString().split("T")[0],
-                    telegramID: 123123123,
-                },
-                {
-                    id: 5,
-                    login: "userA5",
-                    name: "TEST",
-                    role: {
-                        admin: false,
-                        user: true,
-                        partner: true,
-                    },
-                    city: [""],
-                    birthtime: new Date().toISOString().split("T")[0],
-                    edittime: new Date().toISOString().split("T")[0],
-                    telegramID: 123123123,
-                },
-                {
-                    id: 7,
-                    login: "userA7",
-                    name: "TEST",
-                    role: {
-                        admin: false,
-                        user: true,
-                        partner: true,
-                    },
-                    city: [""],
-                    birthtime: new Date().toISOString().split("T")[0],
-                    edittime: new Date().toISOString().split("T")[0],
-                    telegramID: 123123123,
-                },
-            ],
+            users: [],
             city: city,
             search: "",
         };
@@ -265,28 +212,37 @@ export default {
     },
     created() {
         this.get_info();
-        // console.log(this.city);
     },
     methods: {
+        onRemoveUser(data) {
+            this.remove_user(data.info.warningInfo.index);
+        },
         async get_info() {
-            // const res = await fetch("http://127.0.0.1:8000/user");
-            // this.info = await res.json();
+            const res = await fetch("http://127.0.0.1:8000/users1.json");
+            this.users = await res.json();
         },
         send_info: async function (evt) {
             const user_form = new FormData(evt.target);
-
+            if (evt.submitter.classList.contains("delete-front__button")) {
+                this.remove_user(evt.target.getAttribute("index"));
+                return;
+            }
             // delete
-            if (evt.submitter.classList.contains("del__button")) {
+            if (evt.submitter.classList.contains("delete__button")) {
+                this.warningInfo = {
+                    index: evt.target.getAttribute("index"),
+                    id: user_form.get("id"),
+                    login: user_form.get("login"),
+                    telegramID: user_form.get("telegramID"),
+                    show: true,
+                };
                 evt.submitter.classList.add("button-loading");
-                const res = await fetch("/somePUT", {
+                const res = await fetch("/create", {
                     method: "delete",
                     body: user_form,
                 });
                 if (res.status == 200) {
-                    this.remove_user(
-                        user_form.get("id"),
-                        evt.target.getAttribute("index")
-                    );
+                    this.remove_user(evt.target.getAttribute("index"));
                 } else {
                     evt.target.classList.add("error_ans");
                     setTimeout(() => {
@@ -296,6 +252,7 @@ export default {
                 evt.submitter.classList.remove("button-loading");
                 return;
             }
+            // тут сохранение
             evt.submitter.classList.add("button-loading");
             // site
             const input_elements_sites =
@@ -318,11 +275,11 @@ export default {
             user_form.append("cities", JSON.stringify(checked_value_sities));
             user_form.append("role", JSON.stringify(checked_value_role));
 
-            const resSave = await fetch("/somePUT", {
+            const resSave = await fetch("/create", {
                 method: "put",
                 body: user_form,
             });
-            if (resSave.status !== 200) {
+            if (resSave.status == 200) {
                 evt.target.classList.remove("isnt_save");
                 evt.target.classList.add("success_ans");
                 setTimeout(() => {
@@ -359,8 +316,7 @@ export default {
                 telegramID: 9999999999,
             });
         },
-        remove_user(id, index) {
-            console.log(id, index);
+        remove_user(index) {
             this.users.splice(index, 1);
         },
         set_all_checkboxes: function (evt) {
@@ -391,6 +347,9 @@ export default {
                 this.expanded = false;
             }
         },
+    },
+    components: {
+        warning,
     },
 };
 </script>
@@ -426,12 +385,14 @@ export default {
 
     height: calc(100vh - 126px);
     overflow-y: scroll;
+
+    position: relative;
 }
 .mtable__col,
 .mtable__header {
     padding-left: 10px;
     display: grid;
-    grid-template-columns: 0.3fr 0.4fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 0.3fr 0.4fr 0.6fr 0.8fr 1fr 1fr 0.7fr 0.7fr 1.2fr;
 }
 .mtable__header {
     position: sticky;

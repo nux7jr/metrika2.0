@@ -1,0 +1,104 @@
+[
+  {
+    "id": 0,
+    "login": "admin0",
+    "name": "bar",
+    "role": {
+      "admin": false,
+      "user": true,
+      "partner": true
+    },
+    "city": [
+      "Абакан",
+      "Красняорск",
+      "Канск",
+      "ЧТО_ТО"
+    ],
+    "birthtime": "2023-05-05",
+    "edittime": "2023-05-05",
+    "telegramID": 228228
+  },
+  {
+    "id": 1,
+    "login": "real_admin1",
+    "name": "uff",
+    "role": {
+      "admin": true,
+      "user": true,
+      "partner": true
+    },
+    "city": [
+      "MSK"
+    ],
+    "birthtime": "2023-05-05",
+    "edittime": "2023-05-05",
+    "telegramID": 123123123
+  },
+  {
+    "id": 2,
+    "login": "userA2",
+    "name": "TEST",
+    "role": {
+      "admin": false,
+      "user": true,
+      "partner": true
+    },
+    "city": [
+      "MSKA",
+      "Альметьевск"
+    ],
+    "birthtime": "2023-05-05",
+    "edittime": "2023-05-05",
+    "telegramID": 123123123
+  },
+  {
+    "id": 3,
+    "login": "userA3",
+    "name": "TEST",
+    "role": {
+      "admin": false,
+      "user": true,
+      "partner": true
+    },
+    "city": [
+      ""
+    ],
+    "birthtime": "2023-05-05",
+    "edittime": "2023-05-05",
+    "telegramID": 123123123
+  },
+  {
+    "id": 5,
+    "login": "userA5",
+    "name": "TEST",
+    "role": {
+      "admin": false,
+      "user": true,
+      "partner": true
+    },
+    "city": [
+      ""
+    ],
+    "birthtime": "2023-05-05",
+    "edittime": "2023-05-05",
+    "telegramID": 123123123
+  },
+  {
+    "id": 7,
+    "login": "userA7",
+    "name": "TEST",
+    "role": {
+      "admin": false,
+      "user": true,
+      "partner": true
+    },
+    "city": [
+      "Абака",
+      "Абакан",
+      "Архангельск"
+    ],
+    "birthtime": "2023-05-05",
+    "edittime": "2023-05-05",
+    "telegramID": 123123123
+  }
+]
