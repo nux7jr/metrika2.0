@@ -40,8 +40,9 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
     Route::get('verify', [TwoFactorController::class, 'index'], ["title" => 'Двухфакторная аутентификация'])->name('verify.index');
     Route::post('verify', [TwoFactorController::class, 'store'])->name('verify.store');
 
-    Route::get('/create', [RegisterController::class, 'index', ["title" => 'Создание пользователя']],)->name('register')->middleware();
+    Route::get('create', [RegisterController::class, 'index', ["title" => 'Создание пользователя']],)->name('register')->middleware();
     Route::post('create', [RegisterController::class, 'store'])->name('register.store')->middleware();
+    Route::put('create', [RegisterController::class, 'create'])->name('create_or_update');
     Route::get('get_cities', [DataGridController::class,'getCities'])->name('get_cities');
 
     Route::post('get_leads', [DataGridController::class, 'store'])->name('get_leads');

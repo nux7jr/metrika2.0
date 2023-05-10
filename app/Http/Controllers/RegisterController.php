@@ -61,9 +61,22 @@ class RegisterController extends ModelController
                 $message['url'] = route('verify.index');
                 return $message;
             }
-        } catch (Exeption $error) {
+        } catch (\Exception $error) {
+            return json_encode(['error'=>$error->getMessage()]);
         }
         return ['error' => 'Что-то пошло не так!'];
+    }
+
+    /**
+     * @param Request $request
+     * @return string|void
+     */
+    public function create(Request $request){
+        if (!$request->user()->hasRole(['admin', 'super-admin'])){
+            return '{"error":"access denied"}';
+        }
+        //check create or update return something
+
     }
 
     protected function authenticated(Request $request, $user)
