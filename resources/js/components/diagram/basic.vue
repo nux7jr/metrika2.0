@@ -86,35 +86,25 @@
                     <div class="conversion__heading">Лиды</div>
                     <div class="conversion__heading bm-option">
                         Конверция
-                        <button class="bm-option__button">
+                        <button
+                            @click="filterActive = !filterActive"
+                            class="bm-option__button"
+                        >
                             <img src="../../../images/icons/bm.svg" />
                         </button>
                     </div>
                 </div>
                 <div class="conversion__main">
-                    <div class="conversion__col">
-                        <div class="conversion__item">xl-pipe</div>
-                        <div class="conversion__item">12313</div>
-                        <div class="conversion__item">123</div>
-                        <div class="conversion__item">10%</div>
-                    </div>
-                    <div class="conversion__col">
-                        <div class="conversion__item">xl-pipe</div>
-                        <div class="conversion__item">12313</div>
-                        <div class="conversion__item">123</div>
-                        <div class="conversion__item">10%</div>
-                    </div>
-                    <div class="conversion__col">
-                        <div class="conversion__item">xl-pipe</div>
-                        <div class="conversion__item">12313</div>
-                        <div class="conversion__item">123</div>
-                        <div class="conversion__item">10%</div>
-                    </div>
-                    <div class="conversion__col">
-                        <div class="conversion__item">xl-pipe</div>
-                        <div class="conversion__item">12313</div>
-                        <div class="conversion__item">123</div>
-                        <div class="conversion__item">10%</div>
+                    <div
+                        v-for="item in set_conversion_filter"
+                        class="conversion__col"
+                    >
+                        <div class="conversion__item">{{ item.name }}</div>
+                        <div class="conversion__item">{{ item.visits }}</div>
+                        <div class="conversion__item">{{ item.leads }}</div>
+                        <div class="conversion__item">
+                            {{ item.conversion }} %
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,36 +113,6 @@
                 :data="sitesDate.informationLine"
                 :options="optionsLine"
             />
-            <!-- <div class="line__wrapper"> -->
-            <!-- <div class="line">
-                    <Line
-                        class="line__item"
-                        :data="sitesDate.informationLine"
-                        :options="optionsLine"
-                    />
-                </div> -->
-            <!-- <div class="line">
-                    <Line
-                        class="line__item"
-                        :data="sitesDate.informationLine"
-                        :options="optionsLine"
-                    />
-                </div> -->
-            <!-- </div> -->
-            <!-- <div class="doughnut__wrapper">
-                <div class="doughnut">
-                    <Doughnut
-                        :data="sitesDate.informationDoughnutVisits"
-                        :options="optionsDoughnutVisits"
-                    />
-                </div>
-                <div class="doughnut">
-                    <Doughnut
-                        :data="sitesDate.informationDoughnutLeads"
-                        :options="optionsDoughnutLeads"
-                    />
-                </div>
-            </div> -->
         </div>
     </div>
 </template>
@@ -188,6 +148,33 @@ export default {
     name: "metrikaDiagram",
     data() {
         return {
+            filterActive: false,
+            info: [
+                {
+                    name: "xl-pipe",
+                    visits: 123123,
+                    leads: 123,
+                    conversion: 10,
+                },
+                {
+                    name: "xl-pipe2",
+                    visits: 123123,
+                    leads: 123,
+                    conversion: 12,
+                },
+                {
+                    name: "tiksanauto",
+                    visits: 123123,
+                    leads: 123,
+                    conversion: 15,
+                },
+                {
+                    name: "otopite",
+                    visits: 123123,
+                    leads: 123,
+                    conversion: 5,
+                },
+            ],
             sites: [
                 "xl-pipe",
                 "tiksanauto",
@@ -340,6 +327,9 @@ export default {
             return this.sites.filter((elem) => {
                 return elem.toLowerCase().includes(this.search.toLowerCase());
             });
+        },
+        set_conversion_filter() {
+            return this.info.sort((a, b) => a.conversion - b.conversion);
         },
     },
     created() {

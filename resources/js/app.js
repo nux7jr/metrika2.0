@@ -18,6 +18,8 @@ import createuser from "./components/template/create.vue";
 // компоненты для user
 import usermenu from "./components/include/usermenu.vue";
 
+// для партнера
+import partnersmenu from "./components/include/partnersmenu.vue";
 // пока не знаю
 import userlist from "./components/tables/users.vue";
 import diagram from "./components/diagram/basic.vue";
@@ -38,5 +40,6 @@ createApp({
         metrikaweek,
         userlist,
         day,
+        partnersmenu,
     },
 }).mount("#app");
