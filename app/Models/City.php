@@ -25,4 +25,10 @@ class City extends Model
         'name',
         'active',
     ];
+
+    /**
+     * The table associated with the model
+     * @var string
+     */
+    protected $table = 'city';
 }

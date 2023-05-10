@@ -24,7 +24,6 @@ Route::view('/day', 'day.index', ["title" => 'Ежедневный отчет'])
 Route::view('/diagram', 'diagram.index', ["title" => 'Диаграммы'])->name('diagram')->middleware(['auth', 'twofactor']);
 Route::view('/partners', 'partners.index', ["partners" => 'Ваша таблица'])->name('partners')->middleware(['auth', 'twofactor']);
 
-
 Route::get('/logout', function () {
     Auth::logout();
     return redirect('/');
@@ -43,6 +42,7 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
 
     Route::get('/create', [RegisterController::class, 'index', ["title" => 'Создание пользователя']],)->name('register')->middleware();
     Route::post('create', [RegisterController::class, 'store'])->name('register.store')->middleware();
+    Route::get('get_cities', [DataGridController::class,'getCities'])->name('get_cities');
 
     Route::post('get_leads', [DataGridController::class, 'store'])->name('get_leads');
     Route::get('get_leads', [DataGridController::class, 'store'])->name('get_leads');

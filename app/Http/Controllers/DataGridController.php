@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Helpers\PipeFiles\GetLeads;
 use App\Http\Helpers\Reports\DailyReport;
 use App\Http\Helpers\Reports\WeekReport;
+use App\Models\City;
 use Illuminate\Http\Request;
 use App\Http\Helpers\PipeFiles\Leads;
 
@@ -82,6 +83,18 @@ class DataGridController extends Controller
         } catch (\Exception $error) {
             return (json_encode(['error'=>$error->getMessage()]));
         }
+    }
+
+    public function getCities(Request $request){
+        if (!$request->user()->hasRole(['admin', 'super-admin'])){
+            return '{"error":"access denied"}';
+        }
+
+        $all_cities = City::all()->toArray();
+        foreach ($all_cities as &$city){
+            $city = $city['name'];
+        }
+        return json_encode($all_cities);
     }
 
     /**
