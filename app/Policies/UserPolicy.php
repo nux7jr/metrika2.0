@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\Models\Post;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class PostPolicy extends ModelPolicy
+class UserPolicy extends ModelPolicy
 {
     protected function getModelClass(): string
     {
