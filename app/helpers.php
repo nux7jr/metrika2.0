@@ -15,6 +15,24 @@ if (!function_exists('permissions_roles')) {
     function permissions_roles(): array
     {
         return [
+            'super-admin' => [
+                'App\\Models\\User' => [
+                    'view',
+                    'view-any',
+                    'create',
+                    'update',
+                    'delete',
+                    'import',
+                    'export',
+                ],
+                'App\\Models\\City' => [
+                    'view',
+                    'view-any',
+                    'create',
+                    'update',
+                    'delete',
+                ]
+            ],
             'admin' => [
                 'App\\Models\\User' => [
                     'view',
@@ -33,11 +51,13 @@ if (!function_exists('permissions_roles')) {
                     'delete',
                 ]
             ],
-            'App\\Models\\User' => [
-                'user' => [
+            'user' => [
+                'App\\Models\\User' => [
                     'view',
-                    'view-any',
-                ]
+                ],
+                'App\\Models\\City' => [
+                    'view',
+                ],
             ]
         ];
     }
