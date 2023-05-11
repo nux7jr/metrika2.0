@@ -274,10 +274,18 @@ export default {
             }
             user_form.append("cities", JSON.stringify(checked_value_sities));
             user_form.append("role", JSON.stringify(checked_value_role));
+            user_form.append('_method', 'PUT');
+
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
 
             const resSave = await fetch("/create", {
-                method: "put",
-                body: user_form,
+                method: "post",
+                headers:{
+                    "X-CSRF-TOKEN":token
+                },
+                body: user_form
             });
             if (resSave.status == 200) {
                 evt.target.classList.remove("isnt_save");
