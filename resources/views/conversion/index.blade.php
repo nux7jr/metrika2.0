@@ -1,5 +1,5 @@
 @extends('layouts.base')
 
 @section('content')
-    <diagram></diagram>
+    <conversion></conversion>
 @endsection

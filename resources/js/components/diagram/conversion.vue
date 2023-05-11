@@ -108,11 +108,21 @@
                     </div>
                 </div>
             </div>
-            <Line
-                class="line__item"
-                :data="sitesDate.informationLine"
-                :options="optionsLine"
-            />
+            <div class="line__wrapper">
+                <Line
+                    class="line__item"
+                    :data="sitesDate.informationLine"
+                    :options="optionsLine"
+                />
+                <Line
+                    class="line__item"
+                    :data="sitesDate.informationLine"
+                    :options="optionsLine"
+                />
+            </div>
+            <div class="some__info">
+                <div>informationLine</div>
+            </div>
         </div>
     </div>
 </template>
@@ -423,19 +433,17 @@ export default {
     },
 };
 </script>
-
-<!-- max-width: calc(100vw - 100px); -->
 <style>
 .line__wrapper {
     display: flex;
     border-radius: 7px;
+    width: 500px;
+    height: 300px;
 }
 
 .line__item {
-    flex: 1;
     background-color: rgba(255, 255, 255, 0.327);
-
-    max-width: calc(50vw - 120px);
+    width: 500px;
     height: 300px;
     border-radius: 7px;
     margin-right: 7px;
@@ -463,7 +471,7 @@ export default {
     margin-right: 7px;
 
     height: calc(100vh - 124px);
-    overflow-y: scroll;
+    overflow: scroll;
 
     display: flex;
 }

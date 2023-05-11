@@ -63,7 +63,7 @@
         <a class="menu__item" href="/week">
             <img
                 class="menu__img"
-                src="../../../images/icons/projects.svg"
+                src="../../../images/icons/check.svg"
                 alt="icon"
             />
             <Transition name="slide-fade">
@@ -75,7 +75,7 @@
         <a class="menu__item" href="/create">
             <img
                 class="menu__img"
-                src="../../../images/icons/projects.svg"
+                src="../../../images/icons/userPlus.svg"
                 alt="icon"
             />
             <Transition name="slide-fade">
@@ -84,14 +84,14 @@
                 >
             </Transition>
         </a>
-        <a class="menu__item" href="/diagram">
+        <a class="menu__item" href="/conversion">
             <img
                 class="menu__img"
-                src="../../../images/icons/projects.svg"
+                src="../../../images/icons/conv.svg"
                 alt="icon"
             />
             <Transition name="slide-fade">
-                <span class="menu__text" v-if="isActive">Диаграммы</span>
+                <span class="menu__text" v-if="isActive">Конверсия</span>
             </Transition>
         </a>
     </div>

@@ -20,9 +20,11 @@ import usermenu from "./components/include/usermenu.vue";
 
 // для партнера
 import partnersmenu from "./components/include/partnersmenu.vue";
+import partners from "./components/tables/partners.vue";
+
 // пока не знаю
 import userlist from "./components/tables/users.vue";
-import diagram from "./components/diagram/basic.vue";
+import conversion from "./components/diagram/conversion.vue";
 import day from "./components/tables/day.vue";
 
 createApp({
@@ -36,10 +38,12 @@ createApp({
         metrikamenu,
         metrikaidentifiedvisitors,
         usermenu,
-        diagram,
+        conversion,
         metrikaweek,
         userlist,
         day,
         partnersmenu,
+
+        partners,
     },
 }).mount("#app");
