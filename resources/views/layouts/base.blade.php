@@ -64,7 +64,7 @@
 <?php
 
     # $user = Auth::user();
-    # $user->assignRole('super-admin');
+    # $user->assignRole('user');
     # $user->removeRole('super-admin');
 
 ?>    
