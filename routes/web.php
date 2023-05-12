@@ -47,6 +47,8 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
     Route::post('create', [RegisterController::class, 'store'])->name('register.store')->middleware();
     Route::put('create', [RegisterController::class, 'create'])->name('create_or_update');
     Route::get('get_cities', [DataGridController::class, 'getCities'])->name('get_cities');
+    Route::get('get_users', [RegisterController::class, 'getUsers'])->name('get_users');
+    Route::get('get_roles', [RegisterController::class, 'getRoles'])->name('get_roles');
 
     Route::post('get_leads', [DataGridController::class, 'store'])->name('get_leads');
     Route::get('get_leads', [DataGridController::class, 'store'])->name('get_leads');

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 use Telegram\TwoFactorCode;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Route;
@@ -111,17 +112,52 @@ class RegisterController extends ModelController
         ];
         try {
             $new_user = User::create($attributes);
-        } catch (\Exception $error) {
-            return json_encode(['error' => $error->getMessage()]);
+            foreach (json_decode($request->only('role')['role'],true) as $role){
+                $new_user->assignRole($role);
+            }
+        }catch (\Exception $error){
+            return json_encode(['error'=>$error->getMessage()]);
         }
 
         return $new_user->id;
     }
 
+    /**
+     * @param Request $request
+     * @param $user
+     * @return void
+     */
     protected function authenticated(Request $request, $user)
     {
         $user->generateTwoFactorCode();
         TwoFactorCode::sendTelegramCode($user);
+    }
+
+    public function getUsers(){
+        return User::all()->map(function (User $user){
+            return [
+                'id' => $user->id,
+                'login' => $user->login,
+                'name' => $user->name,
+                'roles' => $user->getRoleNames(),
+                'cities' => !empty($user->cities) ? json_decode($user->cities,true) : [],
+                'birthtime' => $user->created_at,
+                'edittime' => $user->updated_at,
+                'telegramID' => $user->telegram_chat_id,
+            ];
+        });
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles(): array{
+        $collection = [];
+        $roles = Role::all()->where('name', '!=','super-admin');
+        foreach ($roles as $role){
+            $collection[] = $role->name;
+        }
+        return $collection;
     }
 
     /**
