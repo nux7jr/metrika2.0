@@ -23,7 +23,8 @@
 <body>
     <div id="app" class="app">
         <?php
-        $role = getUserMenu(user: Auth::user(),verifyed: (Auth::user()->two_factor_code < 1 ?? false));
+        $verifyed = Auth::user() !== null && (Auth::user()->two_factor_code < 1 ?? false;
+        $role = getUserMenu(user: Auth::user(),verifyed: $verifyed);
         $login = Auth::user()->login ?? '';
         ?>
         @switch($role)
