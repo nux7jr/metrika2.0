@@ -130,20 +130,12 @@ class RegisterController extends ModelController
         if (!$request->user()->hasRole(['admin', 'super-admin'])) {
             return '{"errors":"access denied"}';
         }
-        $validated = self::validateInput($request);
+        $login = $request->only('login')['login'];
 
-        if ($validated->fails()) {
-            foreach ($validated->errors()->get('*') as $key => $error) {
-                $message['errors'][$key] = implode($error);
-            }
-            return json_encode($message);
-        }
-
-        if (($user = User::where('login', $validated->safe()->only('login'))->first()) !== null) {
+        if (($user = User::where('login', $login)->first()) !== null) {
             try {
-                $user->update([
-                    'active' => false,
-                ]);
+                $user->active = false;
+                $user->save();
             }catch (\Exception $error){
                 return json_encode(['errors'=>$error->getMessage()]);
             }

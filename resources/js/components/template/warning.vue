@@ -65,12 +65,22 @@ export default {
         async removeUser(evt) {
             this.$refs.submitter.innerText = "";
             this.loader = true;
+
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+            const delete_form = new FormData(evt.target);
+            delete_form.append('_method', 'delete');
+
             const res = await fetch("/create", {
-                method: "DELETE",
-                body: new FormData(evt.target),
+                method: "POST",
+                body: delete_form,
+                headers:{
+                    "X-CSRF-TOKEN": token,
+                }
             });
 
-            if (res.status !== 200) {
+            if (res.status === 200) {
                 this.$emit("removeUser", {
                     info: this.warningInfo,
                 });
