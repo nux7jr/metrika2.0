@@ -6,12 +6,10 @@ use App\Models\City;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Telegram\TwoFactorCode;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Route;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -36,6 +34,10 @@ class RegisterController extends ModelController
         return view('create.index')->with("title", "Создать пользователя");
     }
 
+    /**
+     * @param Request $request
+     * @return array|false|string
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -157,6 +159,9 @@ class RegisterController extends ModelController
         TwoFactorCode::sendTelegramCode($user);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
     public function getUsers(){
         return User::all()->reject(function (User $user){
             if ($user->active == false){
