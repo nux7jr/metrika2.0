@@ -19,7 +19,7 @@ use App\Http\Controllers\DataGridController;
 
 Route::view('/', 'home.index', ["title" => 'Аналитика 2.0'])->name('home')->middleware(['auth', 'twofactor']);
 Route::view('/visitors', 'visitors.index', ["title" => 'Аунтификация посетителей'])->name('visitors')->middleware(['auth', 'twofactor']);
-Route::view('/week', 'week.index', ["title" => 'Еженедельный отчет'])->name('week')->middleware(['auth', 'twofactor']);
+Route::view('/week', 'week.index', ["title" => 'Еженедельный отчет xl-pipe'])->name('week')->middleware(['auth', 'twofactor']);
 Route::view('/day', 'day.index', ["title" => 'Ежедневный отчет'])->name('day')->middleware(['auth', 'twofactor']);
 Route::view('/conversion', 'conversion.index', ["title" => 'Конверсия'])->name('diagram')->middleware(['auth', 'twofactor']);
 Route::view('/partners', 'partners.index', ["partners" => 'Ваша таблица'])->name('partners')->middleware(['auth', 'twofactor']);
