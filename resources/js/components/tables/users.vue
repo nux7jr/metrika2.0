@@ -137,7 +137,7 @@
                         >
                             <div
                                 class="city__item"
-                                v-if="is_item_active(item, user.city)"
+                                v-if="is_item_active(item, user.cities)"
                             >
                                 <input
                                     type="checkbox"
@@ -219,7 +219,7 @@ export default {
                 index: "",
             },
             info: [],
-            defaut_roles: ["admin", "super-admin", "user"],
+            defaut_roles: ["admin", "user"],
             expanded: false,
             users: [],
             city: city,
@@ -236,6 +236,7 @@ export default {
     created() {
         this.get_info();
         this.get_users();
+        this.get_roles();
     },
     methods: {
         onRemoveUser(data) {
@@ -246,8 +247,12 @@ export default {
             this.city = await res.json();
         },
         async get_users() {
-            const res = await fetch("/users1.json");
+            const res = await fetch("/get_users");
             this.users = await res.json();
+        },
+        async get_roles() {
+            const res = await fetch("/get_roles");
+            this.defaut_roles = await res.json();
         },
         send_info: async function (evt) {
             const user_form = new FormData(evt.target);
@@ -340,7 +345,7 @@ export default {
                 login: "Login",
                 name: "Имя",
                 roles: [""],
-                city: [""],
+                cities: [""],
                 birthtime: new Date().toISOString().split("T")[0],
                 edittime: new Date().toISOString().split("T")[0],
                 telegramID: 9999999999,
