@@ -31,8 +31,6 @@ Route::get('/logout', function () {
 
 Route::middleware(['guest', 'twofactor'])->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
-    // Route::get('register', [RegisterController::class, 'index'])->name('login');
-
     Route::post('login', [LoginController::class, 'store'])->name('login.store');
 });
 
