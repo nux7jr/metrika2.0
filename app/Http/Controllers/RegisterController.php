@@ -96,12 +96,19 @@ class RegisterController extends ModelController
         }
 
         if (($user = User::where('login', $validated->safe()->only('login'))->first()) !== null) {
-            $user->update([
-                'name' => ($validated->safe()->only('name') ?? $user->name),
-                'login' => ($validated->safe()->only('login') ?? $user->login),
-                'telegram_chat_id' => ($validated->safe()->only('telegramID') ?? $user->telegram_chat_id),
-                'cities' => ($validated_cities !== true ? json_encode($validated_cities) : $user->cities)
-            ]);
+            try {
+                $user->update([
+                    'name' => ($validated->safe()->only('name')['name'] ?? $user->name),
+                    'login' => ($validated->safe()->only('login')['login'] ?? $user->login),
+                    'telegram_chat_id' => ($validated->safe()->only('telegramID')['telegramID'] ?? $user->telegram_chat_id),
+                    'cities' => ($validated_cities !== true ? json_encode($validated_cities) : $user->cities)
+                ]);
+                $this->updateRoles(user: $user,roles: json_decode($request->only('role')['role'],true));
+
+                return $user->id;
+            }catch (\Exception $error){
+                return json_encode(['errors'=>$error->getMessage()]);
+            }
         }
 
         $validated = self::validateInput($request, true);
@@ -233,8 +240,34 @@ class RegisterController extends ModelController
         return $cities;
     }
 
+    /**
+     * @return string
+     */
     private static function generatePassword()
     {
         return Str::random(mt_rand(7, 50));
+    }
+
+    /**
+     * @param User $user
+     * @param array $roles
+     * @return User
+     */
+    private function updateRoles(User $user, array $roles){
+        $user_roles = $user->getRoleNames()->toArray();
+        //remove roles from User
+        foreach ($user_roles as $role){
+            if (!in_array($role, $roles)){
+                $user->removeRole($role);
+            }
+        }
+        //up roles to User
+        foreach ($roles as $role){
+            if (!in_array($role, $user_roles)){
+                $user->assignRole($role);
+            }
+        }
+
+        return $user;
     }
 }
