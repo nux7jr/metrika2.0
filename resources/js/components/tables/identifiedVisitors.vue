@@ -350,7 +350,7 @@ export default {
             const userFormDate = new FormData();
             userFormDate.append("date_on", localDate.date_on);
             userFormDate.append("date_off", localDate.date_off);
-            fetch("http://api.tiksan.ru/api/test", {
+            fetch("https://api.tiksan.ru/api/test", {
                 method: "GET",
                 // headers: {
                 //     "X-CSRF-TOKEN": token,
@@ -378,7 +378,7 @@ export default {
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
 
-            fetch("http://api.tiksan.ru/api/test", {
+            fetch("https://api.tiksan.ru/api/test", {
                 method: "GET",
                 // headers: {
                 //     "X-CSRF-TOKEN": token,

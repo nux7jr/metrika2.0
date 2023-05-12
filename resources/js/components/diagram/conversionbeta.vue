@@ -76,11 +76,12 @@ import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { lang } from "../../locale/ru.js";
-
 import "ag-grid-enterprise";
 
+// import { ans } from "ans.js";
+
 export default {
-    name: "metrikaBasic",
+    name: "metrikaVisitons",
     data() {
         return {
             loading: false,
@@ -88,30 +89,13 @@ export default {
             localeText: null,
             columnDefs: [
                 {
-                    field: "ID",
-                    headerName: "id",
+                    field: "ip",
+                    headerName: "ip адрес",
                     rowDrag: false,
-                    width: 120,
-                    filter: "agNumberColumnFilter",
-                    sortable: false,
-                    headerCheckboxSelection: true,
-                    checkboxSelection: true,
+                    rowGroup: true,
+                    hide: true,
+                    width: 140,
                 },
-                { field: "REFERER", headerName: "Сайт" },
-                {
-                    field: "DATE",
-                    headerName: "Дата",
-                    width: 150,
-                    filter: "agDateColumnFilter",
-                    filterParams: filterParams,
-                },
-                { field: "PHONE", width: 180, headerName: "Телефон" },
-                { field: "EMAIL", headerName: "Емейл" },
-
-                { field: "UTM_SOURCE" },
-                { field: "UTM_MEDIUM" },
-                { field: "UTM_CAMPAIGN" },
-                { field: "UTM_TERM" },
             ],
             gridApi: null,
             columnApi: null,
@@ -126,8 +110,8 @@ export default {
             rowSelection: null,
             sideBar: null,
             date: {
-                date_on: "-",
-                date_off: "-",
+                date_on: "",
+                date_off: "",
             },
             model: {},
         };
@@ -216,7 +200,7 @@ export default {
             sessionStorage.setItem("date", JSON.stringify(this.date));
         },
         get_date_grid() {
-            this.loading = true;
+            // this.loading = true;
             this.gridApi.showLoadingOverlay();
             document.getElementById("selectedOnly").checked = true;
 
@@ -227,22 +211,20 @@ export default {
             const userFormDate = new FormData();
             userFormDate.append("date_on", localDate.date_on);
             userFormDate.append("date_off", localDate.date_off);
-            fetch("/get_leads", {
+
+            const user_data = new FormData();
+            user_data.append("from", this.date.date_on);
+            user_data.append("to", this.date.date_off);
+
+            fetch("https://api.tiksan.ru/api/getconversion", {
                 method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": token,
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-                body: JSON.stringify({
-                    date_on: this.date.date_on,
-                    date_off: this.date.date_off,
-                }),
+
+                body: user_data,
             })
                 .then((resp) => resp.json())
                 .then((data) => {
                     this.gridApi.setRowData(data);
-                    this.loading = false;
+                    // this.loading = false;
                     this.gridApi.hideOverlay();
                 });
         },
@@ -254,18 +236,13 @@ export default {
             let token = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
-
-            fetch("/get_leads", {
+            const user_data = new FormData();
+            user_data.append("from", this.date.date_on);
+            user_data.append("to", this.date.date_off);
+            fetch("https://api.tiksan.ru/api/getconversion", {
                 method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": token,
-                    "Content-Type": "application/json",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-                body: JSON.stringify({
-                    date_on: this.date.date_on,
-                    date_off: this.date.date_off,
-                }),
+
+                body: user_data,
             })
                 .then((resp) => resp.json())
                 .then((data) => updateData(data));

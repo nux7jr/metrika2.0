@@ -21,7 +21,9 @@ Route::view('/', 'home.index', ["title" => 'Аналитика 2.0'])->name('hom
 Route::view('/visitors', 'visitors.index', ["title" => 'Аунтификация посетителей'])->name('visitors')->middleware(['auth', 'twofactor']);
 Route::view('/week', 'week.index', ["title" => 'Еженедельный отчет xl-pipe'])->name('week')->middleware(['auth', 'twofactor']);
 Route::view('/day', 'day.index', ["title" => 'Ежедневный отчет'])->name('day')->middleware(['auth', 'twofactor']);
-Route::view('/conversion', 'conversion.index', ["title" => 'Конверсия'])->name('diagram')->middleware(['auth', 'twofactor']);
+Route::view('/conversion', 'conversion.index', ["title" => 'Конверсия'])->name('convesrion')->middleware(['auth', 'twofactor']);
+Route::view('/conversion1', 'conversion1.index', ["title" => 'Конверсия'])->name('convesrion')->middleware(['auth', 'twofactor']);
+
 Route::view('/partners', 'partners.index', ["partners" => 'Ваша таблица'])->name('partners')->middleware(['auth', 'twofactor']);
 
 Route::get('/logout', function () {
@@ -44,7 +46,7 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
     Route::get('create', [RegisterController::class, 'index', ["title" => 'Создание пользователя']],)->name('register')->middleware();
     Route::post('create', [RegisterController::class, 'store'])->name('register.store')->middleware();
     Route::put('create', [RegisterController::class, 'create'])->name('create_or_update');
-    Route::delete('create',[RegisterController::class, 'delete'])->name('delete_user');
+    Route::delete('create', [RegisterController::class, 'delete'])->name('delete_user');
     Route::get('get_cities', [DataGridController::class, 'getCities'])->name('get_cities');
     Route::get('get_users', [RegisterController::class, 'getUsers'])->name('get_users');
     Route::get('get_roles', [RegisterController::class, 'getRoles'])->name('get_roles');

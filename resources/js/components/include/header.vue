@@ -1,11 +1,11 @@
 <template>
-    <div v-if="this.user" class="metrikaheader container">
+    <div v-if="name" class="metrikaheader container">
         <nav class="nav">
             <h1 class="nav__heading">{{ title }}</h1>
             <ul class="nav__list">
                 <li class="nav__text">
                     Привет,
-                    {{ user }}
+                    {{ name }}
                 </li>
                 <li>
                     <a class="nav__link nav__login" href="/logout"> Выход </a>
@@ -23,7 +23,7 @@ export default {
         return {};
     },
     props: {
-        user: "",
+        name: "",
         title: "",
     },
 };

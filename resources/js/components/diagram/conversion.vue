@@ -9,8 +9,8 @@
                     <input
                         class="filter__input"
                         type="date"
-                        name="date-off"
-                        id="date-off"
+                        name="from"
+                        id="from"
                         v-model="date.date_on"
                     />
                     <!-- @change="set_user_date()" -->
@@ -20,8 +20,8 @@
                     <input
                         class="filter__input"
                         type="date"
-                        name="date-on"
-                        id="date-on"
+                        name="to"
+                        id="to"
                         v-model="date.date_off"
                     />
                     <!-- @change="set_user_date()" -->
@@ -67,7 +67,6 @@
                             </label>
                         </div>
                     </div>
-                    <!-- @change="set_user_date()" -->
                 </div>
             </div>
             <div class="info-option__button button-group">
@@ -88,22 +87,60 @@
                     <div class="conversion__heading">Визыты без URL</div>
                 </div>
                 <div class="conversion__main">
-                    <div v-for="(item, index) in info" class="conversion__col">
-                        <div class="conversion__item">{{ index }}</div>
-
-                        <!-- <div class="conversion__item">{{ item.ad }}</div> -->
-                        <div class="conversion__item">{{ item.ad }}</div>
-                        <div class="conversion__item">{{ item.not_ad }}</div>
-                        <div class="conversion__item">
-                            {{ item.summ_visit }}
+                    <div
+                        v-for="(item, index) in info"
+                        class="conversion__col-wrapper"
+                    >
+                        <div class="conversion__col">
+                            <div class="conversion__item">{{ index }}</div>
+                            <div class="conversion__item">{{ item.ad }}</div>
+                            <div class="conversion__item">
+                                {{ item.not_ad }}
+                            </div>
+                            <div class="conversion__item">
+                                {{ item.summ_visit }}
+                            </div>
+                            <div class="conversion__item">{{ item.zero }}</div>
+                            <div class="toggle" @click="toggleMtable">Опен</div>
                         </div>
-
-                        <div class="conversion__item">{{ item.zero }}</div>
-                        <!-- <div class="conversion__item">
-                            {{ item.table }}
-                        </div> -->
+                        <div class="mtable-inner">
+                            <div class="mtable-header">
+                                <div class="mtable-header__item">Страница</div>
+                                <div class="mtable-header__item">
+                                    Кол-во визитов
+                                </div>
+                                <div class="mtable-header__item">
+                                    Кол-во лидов
+                                </div>
+                                <div class="mtable-header__item">Конверсия</div>
+                            </div>
+                            <div
+                                v-for="(mitem, index) in item.table"
+                                class="table__inner"
+                            >
+                                <div>
+                                    {{ index }}
+                                </div>
+                                <div>
+                                    {{ mitem.visit }}
+                                </div>
+                                <div>
+                                    {{ mitem.lead }}
+                                </div>
+                                <div>
+                                    {{ mitem.conversion }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="diagram__card">
+                <h1>Общее кол-во рекламных: {{ groupInfo.ad }}</h1>
+                <h1>Общее кол-во не рекламных: {{ groupInfo.not_ad }}</h1>
+                <h1>Кол-во визитов: {{ groupInfo.summ_visit }}</h1>
+                <h1>Кол-во лидов: {{ groupInfo.summ_lead }}</h1>
+                <h1>Визыты без URL: {{ groupInfo.zero }}</h1>
             </div>
             <!-- <div class="line__wrapper">
                 <Line
@@ -152,6 +189,7 @@ export default {
         return {
             filterActive: false,
             info: [],
+            groupInfo: {},
             sites: [
                 "xl-pipe",
                 "tiksanauto",
@@ -188,8 +226,8 @@ export default {
             loading: false,
             expanded: false,
             date: {
-                date_on: "-",
-                date_off: "-",
+                date_on: "",
+                date_off: "",
             },
             sitesDate: {
                 informationLine: {
@@ -310,8 +348,8 @@ export default {
         // },
     },
     created() {
-        this.get_info();
         this.check_user_date();
+        this.get_info();
     },
     methods: {
         get_date_now() {
@@ -352,22 +390,23 @@ export default {
             console.log(evt);
             this.loading = true;
             const user_form = new FormData(evt.target);
-            const input_elements = evt.target.querySelectorAll(".site_input");
-            const checked_value_sities = [];
-            for (let i = 0; input_elements[i]; ++i) {
-                if (input_elements[i].checked) {
-                    checked_value_sities.push(input_elements[i].value);
-                }
-            }
-            user_form.append("cities", JSON.stringify(checked_value_sities));
+            // const input_elements = evt.target.querySelectorAll(".site_input");
+            // const checked_value_sities = [];
+            // for (let i = 0; input_elements[i]; ++i) {
+            //     if (input_elements[i].checked) {
+            //         checked_value_sities.push(input_elements[i].value);
+            //     }
+            // }
+            // user_form.append("cities", JSON.stringify(checked_value_sities));
 
-            const res = await fetch("/giagram", {
+            const res = await fetch("https://api.tiksan.ru/api/getconversion", {
                 method: "POST",
                 body: user_form,
             });
-            console.log(res.status);
-            // setTimeout(() => {
-            // }, 2000);
+            const fetchInfo = await res.json();
+            this.groupInfo = fetchInfo.all;
+            delete fetchInfo.all;
+            this.info = fetchInfo;
             this.loading = false;
         },
         set_all_checkboxes: function (evt) {
@@ -399,15 +438,20 @@ export default {
             }
         },
         async get_info() {
-            const fo = new FormData();
-            fo.append("from", "2023-05-02");
-            fo.append("to", "2023-05-11");
+            const user_data = new FormData();
+            user_data.append("from", this.date.date_on);
+            user_data.append("to", this.date.date_off);
             const res = await fetch("https://api.tiksan.ru/api/getconversion", {
                 method: "POST",
-                body: fo,
+                body: user_data,
             });
-
-            this.info = await res.json();
+            const fetchInfo = await res.json();
+            this.groupInfo = fetchInfo.all;
+            delete fetchInfo.all;
+            this.info = fetchInfo;
+        },
+        toggleMtable: function (evt) {
+            console.log(evt.target);
         },
     },
 };
@@ -415,6 +459,38 @@ export default {
 <style>
 .some__info {
     width: 100px;
+}
+.toggle {
+    position: absolute;
+    right: 10px;
+    top: 9px;
+
+    cursor: pointer;
+}
+.diagram__card h1 {
+    background-color: white;
+    width: 350px;
+    padding: 20px;
+    border-radius: 20px;
+}
+.table__inner,
+.mtable-header {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    align-items: center;
+    justify-content: center;
+}
+.mtable-inner {
+    border: 1px solid rgba(255, 255, 255, 0.305);
+    border-radius: 7px;
+    margin: 5px;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.182);
+}
+.table__inner {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.252);
 }
 .line__wrapper {
     display: flex;
@@ -574,6 +650,9 @@ export default {
     transition: 0.2s;
     padding: 10px;
 }
+.conversion__col {
+    position: relative;
+}
 .conversion__main {
     height: calc(100vh - 200px);
     overflow-y: scroll;
@@ -601,5 +680,8 @@ export default {
 .bm-option {
     display: flex;
     align-items: center;
+}
+.conversion__col-wrapper:nth-child(even) {
+    background-color: rgb(60, 59, 59) !important;
 }
 </style>

@@ -25,6 +25,9 @@ import partners from "./components/tables/partners.vue";
 // пока не знаю
 import userlist from "./components/tables/users.vue";
 import conversion from "./components/diagram/conversion.vue";
+
+import conversionbeta from "./components/diagram/conversionbeta.vue";
+
 import day from "./components/tables/day.vue";
 
 createApp({
@@ -45,5 +48,6 @@ createApp({
         partnersmenu,
 
         partners,
+        conversionbeta,
     },
 }).mount("#app");
