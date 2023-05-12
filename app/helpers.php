@@ -62,3 +62,14 @@ if (!function_exists('permissions_roles')) {
         ];
     }
 }
+
+if (!function_exists('getUserMenu')) {
+
+    function getUserMenu(App\Models\User $user, bool $verifyed): ?string
+    {
+        if (!$verifyed){
+            return null;
+        }
+        return $user->roles->first()->name;
+    }
+}
