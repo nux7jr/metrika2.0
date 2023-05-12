@@ -4,10 +4,6 @@
     "isEntry": true,
     "src": "resources/css/app.css"
   },
-  "resources/images/icons/bm.svg": {
-    "file": "assets/bm-cd6146b3.svg",
-    "src": "resources/images/icons/bm.svg"
-  },
   "resources/images/icons/check.svg": {
     "file": "assets/check-27af2fb0.svg",
     "src": "resources/images/icons/check.svg"
@@ -37,7 +33,7 @@
     "src": "resources/images/logos/logo.webp"
   },
   "resources/js/app.css": {
-    "file": "assets/app-bd47e26a.css",
+    "file": "assets/app-82907ce2.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -48,13 +44,12 @@
       "assets/projects-39f775f8.svg",
       "assets/check-27af2fb0.svg",
       "assets/userPlus-6f554e35.svg",
-      "assets/conv-9fef2374.svg",
-      "assets/bm-cd6146b3.svg"
+      "assets/conv-9fef2374.svg"
     ],
     "css": [
-      "assets/app-bd47e26a.css"
+      "assets/app-82907ce2.css"
     ],
-    "file": "assets/app-2be1a7c6.js",
+    "file": "assets/app-bbd2b7d4.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

@@ -81,43 +81,40 @@
         <div v-else class="diagram__wrapper">
             <div class="conversion__table">
                 <div class="conversion__header">
-                    <div class="conversion__heading">Сайт</div>
-                    <div class="conversion__heading">Визиты</div>
-                    <div class="conversion__heading">Лиды</div>
-                    <div class="conversion__heading bm-option">
-                        Конверция
-                        <button
-                            @click="filterActive = !filterActive"
-                            class="bm-option__button"
-                        >
-                            <img src="../../../images/icons/bm.svg" />
-                        </button>
-                    </div>
+                    <div class="conversion__heading">Дата</div>
+                    <div class="conversion__heading">Рекламные</div>
+                    <div class="conversion__heading">Не рекламные</div>
+                    <div class="conversion__heading">Визыты</div>
+                    <div class="conversion__heading">Визыты без URL</div>
                 </div>
                 <div class="conversion__main">
-                    <div
-                        v-for="item in set_conversion_filter"
-                        class="conversion__col"
-                    >
-                        <div class="conversion__item">{{ item.name }}</div>
-                        <div class="conversion__item">{{ item.visits }}</div>
-                        <div class="conversion__item">{{ item.leads }}</div>
+                    <div v-for="(item, index) in info" class="conversion__col">
+                        <div class="conversion__item">{{ index }}</div>
+
+                        <!-- <div class="conversion__item">{{ item.ad }}</div> -->
+                        <div class="conversion__item">{{ item.ad }}</div>
+                        <div class="conversion__item">{{ item.not_ad }}</div>
                         <div class="conversion__item">
-                            {{ item.conversion }} %
+                            {{ item.summ_visit }}
                         </div>
+
+                        <div class="conversion__item">{{ item.zero }}</div>
+                        <!-- <div class="conversion__item">
+                            {{ item.table }}
+                        </div> -->
                     </div>
                 </div>
             </div>
-            <div class="line__wrapper">
+            <!-- <div class="line__wrapper">
                 <Line
                     class="line__item"
                     :data="sitesDate.informationLine"
                     :options="optionsLine"
                 />
-            </div>
-            <div class="some__info">
-                <div>info about sites</div>
-            </div>
+            </div> -->
+            <!-- <div class="some__info">
+                <pre>{{ info }}</pre>
+            </div> -->
         </div>
     </div>
 </template>
@@ -154,32 +151,7 @@ export default {
     data() {
         return {
             filterActive: false,
-            info: [
-                {
-                    name: "xl-pipe",
-                    visits: 123123,
-                    leads: 123,
-                    conversion: 10,
-                },
-                {
-                    name: "xl-pipe2",
-                    visits: 123123,
-                    leads: 123,
-                    conversion: 12,
-                },
-                {
-                    name: "tiksanauto",
-                    visits: 123123,
-                    leads: 123,
-                    conversion: 15,
-                },
-                {
-                    name: "otopite",
-                    visits: 123123,
-                    leads: 123,
-                    conversion: 5,
-                },
-            ],
+            info: [],
             sites: [
                 "xl-pipe",
                 "tiksanauto",
@@ -333,11 +305,12 @@ export default {
                 return elem.toLowerCase().includes(this.search.toLowerCase());
             });
         },
-        set_conversion_filter() {
-            return this.info.sort((a, b) => a.conversion - b.conversion);
-        },
+        // set_conversion_filter() {
+        //     return this.info.sort((a, b) => a.conversion - b.conversion);
+        // },
     },
     created() {
+        this.get_info();
         this.check_user_date();
     },
     methods: {
@@ -425,10 +398,24 @@ export default {
                 this.expanded = false;
             }
         },
+        async get_info() {
+            const fo = new FormData();
+            fo.append("from", "2023-05-02");
+            fo.append("to", "2023-05-11");
+            const res = await fetch("https://api.tiksan.ru/api/getconversion", {
+                method: "POST",
+                body: fo,
+            });
+
+            this.info = await res.json();
+        },
     },
 };
 </script>
 <style>
+.some__info {
+    width: 100px;
+}
 .line__wrapper {
     display: flex;
     border-radius: 7px;
@@ -569,7 +556,7 @@ export default {
     border-color: transparent;
 }
 .conversion__table {
-    width: 500px;
+    width: 700px;
     color: rgb(255, 255, 255);
     height: calc(100vh - 144px);
     background: transparent;
@@ -581,11 +568,15 @@ export default {
 .conversion__header,
 .conversion__col {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     border-bottom: 1px solid rgba(255, 255, 255, 0.235);
     padding-left: 10px;
     transition: 0.2s;
     padding: 10px;
+}
+.conversion__main {
+    height: calc(100vh - 200px);
+    overflow-y: scroll;
 }
 .conversion__col:hover {
     background: rgba(26, 103, 228, 0.231);
@@ -595,6 +586,10 @@ export default {
     border-radius: 7px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+}
+.conversion__heading {
+    display: flex;
+    align-items: center;
 }
 .bm-option__button {
     background-color: transparent;
