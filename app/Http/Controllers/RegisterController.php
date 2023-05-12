@@ -66,9 +66,9 @@ class RegisterController extends ModelController
                 return $message;
             }
         } catch (\Exception $error) {
-            return json_encode(['error' => $error->getMessage()]);
+            return json_encode(['errors' => $error->getMessage()]);
         }
-        return json_encode(['error' => 'Что-то пошло не так!']);
+        return json_encode(['errors' => 'Что-то пошло не так!']);
     }
 
     /**
@@ -78,7 +78,7 @@ class RegisterController extends ModelController
     public function create(Request $request)
     {
         if (!$request->user()->hasRole(['admin', 'super-admin'])) {
-            return '{"error":"access denied"}';
+            return '{"errors":"access denied"}';
         }
         $validated = self::validateInput($request);
         $validated_cities = self::validateInputCities(json_decode($request->only('cities')['cities'], true));
@@ -90,7 +90,7 @@ class RegisterController extends ModelController
         }
 
         if ($validated_cities === false) {
-            return '{"error":"Неопознанный город!"}';
+            return '{"errors":"Неопознанный город!"}';
         }
 
         if (($user = User::where('login', $validated->safe()->only('login'))->first()) !== null) {
@@ -116,10 +116,42 @@ class RegisterController extends ModelController
                 $new_user->assignRole($role);
             }
         }catch (\Exception $error){
-            return json_encode(['error'=>$error->getMessage()]);
+            return json_encode(['errors'=>$error->getMessage()]);
         }
 
         return $new_user->id;
+    }
+
+    /**
+     * @param Request $request
+     * @return false|string
+     */
+    public function delete(Request $request){
+        if (!$request->user()->hasRole(['admin', 'super-admin'])) {
+            return '{"errors":"access denied"}';
+        }
+        $validated = self::validateInput($request);
+
+        if ($validated->fails()) {
+            foreach ($validated->errors()->get('*') as $key => $error) {
+                $message['errors'][$key] = implode($error);
+            }
+            return json_encode($message);
+        }
+
+        if (($user = User::where('login', $validated->safe()->only('login'))->first()) !== null) {
+            try {
+                $user->update([
+                    'active' => false,
+                ]);
+            }catch (\Exception $error){
+                return json_encode(['errors'=>$error->getMessage()]);
+            }
+
+            return '{"result":"success"}';
+        }
+
+        return '{"errors":"такого пользователя в базе нет!"}';
     }
 
     /**
