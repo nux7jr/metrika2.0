@@ -8,38 +8,53 @@
     "file": "assets/bm-cd6146b3.svg",
     "src": "resources/images/icons/bm.svg"
   },
+  "resources/images/icons/check.svg": {
+    "file": "assets/check-27af2fb0.svg",
+    "src": "resources/images/icons/check.svg"
+  },
+  "resources/images/icons/conv.svg": {
+    "file": "assets/conv-9fef2374.svg",
+    "src": "resources/images/icons/conv.svg"
+  },
   "resources/images/icons/dashboard.svg": {
-    "file": "assets/dashboard-2ad8eecc.svg",
+    "file": "assets/dashboard-88d4e973.svg",
     "src": "resources/images/icons/dashboard.svg"
   },
   "resources/images/icons/home.svg": {
-    "file": "assets/home-351ee048.svg",
+    "file": "assets/home-a61a7739.svg",
     "src": "resources/images/icons/home.svg"
   },
   "resources/images/icons/projects.svg": {
     "file": "assets/projects-39f775f8.svg",
     "src": "resources/images/icons/projects.svg"
   },
+  "resources/images/icons/userPlus.svg": {
+    "file": "assets/userPlus-6f554e35.svg",
+    "src": "resources/images/icons/userPlus.svg"
+  },
   "resources/images/logos/logo.webp": {
     "file": "assets/logo-037915c2.webp",
     "src": "resources/images/logos/logo.webp"
   },
   "resources/js/app.css": {
-    "file": "assets/app-c02a7249.css",
+    "file": "assets/app-bd47e26a.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "assets": [
       "assets/logo-037915c2.webp",
-      "assets/home-351ee048.svg",
-      "assets/dashboard-2ad8eecc.svg",
+      "assets/home-a61a7739.svg",
+      "assets/dashboard-88d4e973.svg",
       "assets/projects-39f775f8.svg",
+      "assets/check-27af2fb0.svg",
+      "assets/userPlus-6f554e35.svg",
+      "assets/conv-9fef2374.svg",
       "assets/bm-cd6146b3.svg"
     ],
     "css": [
-      "assets/app-c02a7249.css"
+      "assets/app-bd47e26a.css"
     ],
-    "file": "assets/app-84ce5109.js",
+    "file": "assets/app-2be1a7c6.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
