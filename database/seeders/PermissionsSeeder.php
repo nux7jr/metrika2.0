@@ -19,24 +19,27 @@ class PermissionsSeeder extends Seeder
         $this->seedRoles();
     }
 
-    private function loadData():void{
+    private function loadData(): void
+    {
         $this->data = permissions_roles();
     }
 
-    private function seedRoles():void{
+    private function seedRoles(): void
+    {
         Role::create(['name'=>'super-admin', 'guard_name'=>'api']);
 
-        foreach ($this->data as $roleName => $permissions){
-            $role = Role::create(['name'=>$roleName, 'guard_name'=>'api']);
-            $this->seedRolePermissions($role,$permissions);
+        foreach ($this->data as $roleName => $permissions) {
+            $role = Role::create(['name' => $roleName, 'guard_name' => 'api']);
+            $this->seedRolePermissions($role, $permissions);
         }
     }
 
-    private function seedRolePermissions(Role $role, array $modelPermissions):void{
-        foreach ($modelPermissions as $model => $permission){
+    private function seedRolePermissions(Role $role, array $modelPermissions): void
+    {
+        foreach ($modelPermissions as $model => $permission) {
             $buildedPermissions = collect($permission)
                 ->crossJoin($model)
-                ->map(function ($item){
+                ->map(function ($item) {
                     $permission = implode('-', $item);
                     Permission::findOrCreate($permission, 'api');
 

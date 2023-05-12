@@ -31,8 +31,11 @@ Route::get('/logout', function () {
 
 Route::middleware(['guest', 'twofactor'])->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
+    // Route::get('register', [RegisterController::class, 'index'])->name('login');
+
     Route::post('login', [LoginController::class, 'store'])->name('login.store');
 });
+
 
 Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная аутентификация'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');

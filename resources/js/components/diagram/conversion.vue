@@ -114,14 +114,9 @@
                     :data="sitesDate.informationLine"
                     :options="optionsLine"
                 />
-                <Line
-                    class="line__item"
-                    :data="sitesDate.informationLine"
-                    :options="optionsLine"
-                />
             </div>
             <div class="some__info">
-                <div>informationLine</div>
+                <div>info about sites</div>
             </div>
         </div>
     </div>
@@ -438,7 +433,7 @@ export default {
     display: flex;
     border-radius: 7px;
     width: 500px;
-    height: 300px;
+    height: 200px;
 }
 
 .line__item {
@@ -470,7 +465,6 @@ export default {
     margin-top: 7px;
     margin-right: 7px;
 
-    height: calc(100vh - 124px);
     overflow: scroll;
 
     display: flex;
@@ -577,7 +571,8 @@ export default {
 .conversion__table {
     width: 500px;
     color: rgb(255, 255, 255);
-    background: transition;
+    height: calc(100vh - 144px);
+    background: transparent;
     border-radius: 7px;
     margin-bottom: 7px;
     margin-right: 7px;

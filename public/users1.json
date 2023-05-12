@@ -3,11 +3,9 @@
     "id": 0,
     "login": "admin0",
     "name": "bar",
-    "role": {
-      "admin": false,
-      "user": true,
-      "partner": true
-    },
+    "roles": [
+      "admin"
+    ],
     "city": [
       "Абакан",
       "Красняорск",
@@ -22,11 +20,9 @@
     "id": 1,
     "login": "real_admin1",
     "name": "uff",
-    "role": {
-      "admin": true,
-      "user": true,
-      "partner": true
-    },
+    "roles": [
+      "user"
+    ],
     "city": [
       "MSK"
     ],
@@ -38,11 +34,9 @@
     "id": 2,
     "login": "userA2",
     "name": "TEST",
-    "role": {
-      "admin": false,
-      "user": true,
-      "partner": true
-    },
+    "roles": [
+      "admin"
+    ],
     "city": [
       "MSKA",
       "Альметьевск"
@@ -55,11 +49,9 @@
     "id": 3,
     "login": "userA3",
     "name": "TEST",
-    "role": {
-      "admin": false,
-      "user": true,
-      "partner": true
-    },
+    "roles": [
+      "admin"
+    ],
     "city": [
       ""
     ],
@@ -71,11 +63,9 @@
     "id": 5,
     "login": "userA5",
     "name": "TEST",
-    "role": {
-      "admin": false,
-      "user": true,
-      "partner": true
-    },
+    "roles": [
+      "admin"
+    ],
     "city": [
       ""
     ],
@@ -87,11 +77,10 @@
     "id": 7,
     "login": "userA7",
     "name": "TEST",
-    "role": {
-      "admin": false,
-      "user": true,
-      "partner": true
-    },
+    "roles": [
+      "admin", 
+      "super-admin"
+    ],
     "city": [
       "Абака",
       "Абакан",

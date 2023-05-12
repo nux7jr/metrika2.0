@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         $schema = Schema::connection('mysql');
-        $schema->table('users', function (Blueprint $table){
+        $schema->table('users', function (Blueprint $table) {
             $table->json('cities')->nullable();
         });
     }

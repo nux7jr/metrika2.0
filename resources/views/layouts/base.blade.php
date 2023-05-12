@@ -23,7 +23,18 @@
 <body>
     <div id="app" class="app">
 
-
+        {{-- @switch($i)
+        @case(1)
+            First case...
+            @break
+     
+        @case(2)
+            Second case...
+            @break
+     
+        @default
+            Default case...
+    @endswitch --}}
         <metrikamenu v-if='@json(Auth::check()
         && Auth::user()->hasRole("super-admin")
         && Auth::user()->two_factor_code < 1)' role="super-admin" :user='@json(Auth::user()->login ?? '')'>
@@ -64,7 +75,7 @@
 <?php
 
     # $user = Auth::user();
-    # $user->assignRole('user');
-    # $user->removeRole('super-admin');
+    # $user->assignRole('admin');
+    # $user->removeRole('user');
 
 ?>    

@@ -65,7 +65,7 @@ class RegisterController extends ModelController
                 return $message;
             }
         } catch (\Exception $error) {
-            return json_encode(['error'=>$error->getMessage()]);
+            return json_encode(['error' => $error->getMessage()]);
         }
         return json_encode(['error' => 'Что-то пошло не так!']);
     }
@@ -74,29 +74,30 @@ class RegisterController extends ModelController
      * @param Request $request
      * @return string|void
      */
-    public function create(Request $request){
-        if (!$request->user()->hasRole(['admin', 'super-admin'])){
+    public function create(Request $request)
+    {
+        if (!$request->user()->hasRole(['admin', 'super-admin'])) {
             return '{"error":"access denied"}';
         }
         $validated = self::validateInput($request);
-        $validated_cities = self::validateInputCities(json_decode($request->only('cities')['cities'],true));
-        if ($validated->fails()){
+        $validated_cities = self::validateInputCities(json_decode($request->only('cities')['cities'], true));
+        if ($validated->fails()) {
             foreach ($validated->errors()->get('*') as $key => $error) {
                 $message['errors'][$key] = implode($error);
             }
             return json_encode($message);
         }
 
-        if ($validated_cities === false){
+        if ($validated_cities === false) {
             return '{"error":"Неопознанный город!"}';
         }
 
-        if (($user = User::where('login',$validated->safe()->only('login'))->first()) !== null){
+        if (($user = User::where('login', $validated->safe()->only('login'))->first()) !== null) {
             $user->update([
                 'name' => ($validated->safe()->only('name') ?? $user->name),
                 'login' => ($validated->safe()->only('login') ?? $user->login),
                 'telegram_chat_id' => ($validated->safe()->only('telegramID') ?? $user->telegram_chat_id),
-                'cities' => ($validated_cities !== true ? json_encode($validated_cities): $user->cities)
+                'cities' => ($validated_cities !== true ? json_encode($validated_cities) : $user->cities)
             ]);
         }
 
@@ -110,8 +111,8 @@ class RegisterController extends ModelController
         ];
         try {
             $new_user = User::create($attributes);
-        }catch (\Exception $error){
-            return json_encode(['error'=>$error->getMessage()]);
+        } catch (\Exception $error) {
+            return json_encode(['error' => $error->getMessage()]);
         }
 
         return $new_user->id;
@@ -128,32 +129,34 @@ class RegisterController extends ModelController
      * @param Request $request
      * @return \Illuminate\Validation\Validator
      */
-    private static function validateInput(Request $request, bool $unique = false): \Illuminate\Validation\Validator {
+    private static function validateInput(Request $request, bool $unique = false): \Illuminate\Validation\Validator
+    {
         $rules = [
             'name' => ['required', 'string', 'max:50'],
             'login' => ['required', 'string', 'max:50'],
             'telegramID' => ['required', 'digits_between:5,15'],
         ];
-        if ($unique){
+        if ($unique) {
             $rules['name'][] = 'unique:users';
             $rules['telegramID'][] = 'unique:users,telegram_chat_id';
         }
-        return Validator::make($request->all(),$rules);
+        return Validator::make($request->all(), $rules);
     }
 
     /**
      * @param array $cities
      * @return array|bool
      */
-    private static function validateInputCities(array $cities){
-        if (empty($cities)){
+    private static function validateInputCities(array $cities)
+    {
+        if (empty($cities)) {
             return true;
         }
 
         $cities_model = City::all('name')->keyBy('name')->toArray();
 
-        foreach ($cities as $city){
-            if (!isset($cities_model[$city])){
+        foreach ($cities as $city) {
+            if (!isset($cities_model[$city])) {
                 return false;
             }
         }
@@ -161,7 +164,8 @@ class RegisterController extends ModelController
         return $cities;
     }
 
-    private static function generatePassword(){
+    private static function generatePassword()
+    {
         return Str::random(mt_rand(7, 50));
     }
 }

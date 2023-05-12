@@ -63,7 +63,29 @@
                         ></div>
                     </div>
                     <div class="checkboxes checkboxes_role">
-                        <label v-for="(value, name, index) in user.role">
+                        <label
+                            class="checkboxes__label-role"
+                            v-for="item in defaut_roles"
+                        >
+                            <div v-if="is_item_active(item, user.roles)">
+                                <input
+                                    type="checkbox"
+                                    class="role_input"
+                                    v-bind:value="item"
+                                    checked
+                                />{{ item }}
+                            </div>
+                            <div v-else>
+                                <input
+                                    type="checkbox"
+                                    class="role_input"
+                                    v-bind:value="item"
+                                />
+                                {{ item }}
+                            </div>
+                        </label>
+
+                        <!-- <label v-for="(value, name, index) in user.role">
                             <div v-if="value">
                                 <input
                                     class="role_input"
@@ -79,7 +101,7 @@
                                     v-bind:value="name"
                                 />{{ name }}
                             </div>
-                        </label>
+                        </label> -->
                     </div>
                 </div>
 
@@ -115,7 +137,7 @@
                         >
                             <div
                                 class="city__item"
-                                v-if="is_city_active(item, user.city)"
+                                v-if="is_item_active(item, user.city)"
                             >
                                 <input
                                     type="checkbox"
@@ -197,6 +219,7 @@ export default {
                 index: "",
             },
             info: [],
+            defaut_roles: ["admin", "super-admin", "user"],
             expanded: false,
             users: [],
             city: city,
@@ -212,13 +235,18 @@ export default {
     },
     created() {
         this.get_info();
+        this.get_users();
     },
     methods: {
         onRemoveUser(data) {
             this.remove_user(data.info.warningInfo.index);
         },
         async get_info() {
-            const res = await fetch("http://127.0.0.1:8000/users1.json");
+            const res = await fetch("/get_cities");
+            this.city = await res.json();
+        },
+        async get_users() {
+            const res = await fetch("/users1.json");
             this.users = await res.json();
         },
         send_info: async function (evt) {
@@ -236,25 +264,24 @@ export default {
                     telegramID: user_form.get("telegramID"),
                     show: true,
                 };
-                evt.submitter.classList.add("button-loading");
-                const res = await fetch("/create", {
-                    method: "delete",
-                    body: user_form,
-                });
-                if (res.status == 200) {
-                    this.remove_user(evt.target.getAttribute("index"));
-                } else {
-                    evt.target.classList.add("error_ans");
-                    setTimeout(() => {
-                        evt.target.classList.remove("error_ans");
-                    }, 2000);
-                }
-                evt.submitter.classList.remove("button-loading");
+                // evt.submitter.classList.add("button-loading");
+                // const res = await fetch("/createFO", {
+                //     method: "delete",
+                //     body: user_form,
+                // });
+                // if (res.status == 200) {
+                //     this.remove_user(evt.target.getAttribute("index"));
+                // } else {
+                //     evt.target.classList.add("error_ans");
+                //     setTimeout(() => {
+                //         evt.target.classList.remove("error_ans");
+                //     }, 2000);
+                // }
+                // evt.submitter.classList.remove("button-loading");
                 return;
             }
-            // тут сохранение
+            // save
             evt.submitter.classList.add("button-loading");
-            // site
             const input_elements_sites =
                 evt.target.querySelectorAll(".city_input");
             const checked_value_sities = [];
@@ -263,7 +290,6 @@ export default {
                     checked_value_sities.push(input_elements_sites[i].value);
                 }
             }
-            // role
             const input_elements_role =
                 evt.target.querySelectorAll(".role_input");
             const checked_value_role = [];
@@ -274,7 +300,7 @@ export default {
             }
             user_form.append("cities", JSON.stringify(checked_value_sities));
             user_form.append("role", JSON.stringify(checked_value_role));
-            user_form.append('_method', 'PUT');
+            user_form.append("_method", "PUT");
 
             let token = document
                 .querySelector('meta[name="csrf-token"]')
@@ -282,10 +308,10 @@ export default {
 
             const resSave = await fetch("/create", {
                 method: "post",
-                headers:{
-                    "X-CSRF-TOKEN":token
+                headers: {
+                    "X-CSRF-TOKEN": token,
                 },
-                body: user_form
+                body: user_form,
             });
             if (resSave.status == 200) {
                 evt.target.classList.remove("isnt_save");
@@ -301,9 +327,9 @@ export default {
             }
             evt.submitter.classList.remove("button-loading");
         },
-        is_city_active(cityArr, userCity) {
-            for (let i = 0; i < userCity.length; i++) {
-                if (userCity[i].includes(cityArr)) {
+        is_item_active(someArr, item) {
+            for (let i = 0; i < item.length; i++) {
+                if (item[i].includes(someArr)) {
                     return true;
                 }
             }
@@ -313,11 +339,7 @@ export default {
                 id: null,
                 login: "Login",
                 name: "Имя",
-                role: {
-                    admin: false,
-                    user: true,
-                    partner: false,
-                },
+                roles: [""],
                 city: [""],
                 birthtime: new Date().toISOString().split("T")[0],
                 edittime: new Date().toISOString().split("T")[0],
@@ -560,6 +582,9 @@ export default {
     background: #222628;
 }
 .checkboxes__label {
+    padding: 5px;
+}
+.checkboxes__label-role {
     padding: 5px;
 }
 .checkboxes-site {

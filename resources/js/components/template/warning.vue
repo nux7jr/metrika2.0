@@ -70,7 +70,7 @@ export default {
                 body: new FormData(evt.target),
             });
 
-            if (res.status == 200) {
+            if (res.status !== 200) {
                 this.$emit("removeUser", {
                     info: this.warningInfo,
                 });
