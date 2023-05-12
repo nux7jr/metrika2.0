@@ -157,35 +157,23 @@ class RegisterController extends ModelController
         TwoFactorCode::sendTelegramCode($user);
     }
 
-    public function getUsers(Request $request){
-        if ($request->user()->hasRole(['admin', 'super-admin'])){
-            return User::all()->map(function (User $user){
-                return [
-                    'id' => $user->id,
-                    'login' => $user->login,
-                    'name' => $user->name,
-                    'roles' => $user->getRoleNames(),
-                    'cities' => !empty($user->cities) ? json_decode($user->cities,true) : [],
-                    'birthtime' => $user->created_at,
-                    'edittime' => $user->updated_at,
-                    'telegramID' => $user->telegram_chat_id,
-                ];
-            });
-        }else{
-            return User::where('active',true)->map(function (User $user){
-                return [
-                    'id' => $user->id,
-                    'login' => $user->login,
-                    'name' => $user->name,
-                    'roles' => $user->getRoleNames(),
-                    'cities' => !empty($user->cities) ? json_decode($user->cities,true) : [],
-                    'birthtime' => $user->created_at,
-                    'edittime' => $user->updated_at,
-                    'telegramID' => $user->telegram_chat_id,
-                ];
-            });
-        }
-
+    public function getUsers(){
+        return User::all()->reject(function (User $user){
+            if ($user->active == false){
+                return $user;
+            }
+        })->map(function (User $user){
+            return [
+                'id' => $user->id,
+                'login' => $user->login,
+                'name' => $user->name,
+                'roles' => $user->getRoleNames(),
+                'cities' => !empty($user->cities) ? json_decode($user->cities,true) : [],
+                'birthtime' => $user->created_at,
+                'edittime' => $user->updated_at,
+                'telegramID' => $user->telegram_chat_id,
+            ];
+        });
     }
 
     /**
