@@ -24,8 +24,6 @@ class PermissionsSeeder extends Seeder
     }
 
     private function seedRoles():void{
-        Role::create(['name'=>'super-admin', 'guard_name'=>'api']);
-
         foreach ($this->data as $roleName => $permissions){
             $role = Role::create(['name'=>$roleName, 'guard_name'=>'api']);
             $this->seedRolePermissions($role,$permissions);
