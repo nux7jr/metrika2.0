@@ -6,12 +6,10 @@ use App\Models\City;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Telegram\TwoFactorCode;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Route;
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -36,6 +34,10 @@ class RegisterController extends ModelController
         return view('create.index')->with("title", "Создать пользователя");
     }
 
+    /**
+     * @param Request $request
+     * @return array|false|string
+     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -94,12 +96,19 @@ class RegisterController extends ModelController
         }
 
         if (($user = User::where('login', $validated->safe()->only('login'))->first()) !== null) {
-            $user->update([
-                'name' => ($validated->safe()->only('name') ?? $user->name),
-                'login' => ($validated->safe()->only('login') ?? $user->login),
-                'telegram_chat_id' => ($validated->safe()->only('telegramID') ?? $user->telegram_chat_id),
-                'cities' => ($validated_cities !== true ? json_encode($validated_cities) : $user->cities)
-            ]);
+            try {
+                $user->update([
+                    'name' => ($validated->safe()->only('name')['name'] ?? $user->name),
+                    'login' => ($validated->safe()->only('login')['login'] ?? $user->login),
+                    'telegram_chat_id' => ($validated->safe()->only('telegramID')['telegramID'] ?? $user->telegram_chat_id),
+                    'cities' => ($validated_cities !== true ? json_encode($validated_cities) : $user->cities)
+                ]);
+                $this->updateRoles(user: $user,roles: json_decode($request->only('role')['role'],true));
+
+                return $user->id;
+            }catch (\Exception $error){
+                return json_encode(['errors'=>$error->getMessage()]);
+            }
         }
 
         $validated = self::validateInput($request, true);
@@ -157,35 +166,26 @@ class RegisterController extends ModelController
         TwoFactorCode::sendTelegramCode($user);
     }
 
-    public function getUsers(Request $request){
-        if ($request->user()->hasRole(['admin', 'super-admin'])){
-            return User::all()->map(function (User $user){
-                return [
-                    'id' => $user->id,
-                    'login' => $user->login,
-                    'name' => $user->name,
-                    'roles' => $user->getRoleNames(),
-                    'cities' => !empty($user->cities) ? json_decode($user->cities,true) : [],
-                    'birthtime' => $user->created_at,
-                    'edittime' => $user->updated_at,
-                    'telegramID' => $user->telegram_chat_id,
-                ];
-            });
-        }else{
-            return User::where('active',true)->map(function (User $user){
-                return [
-                    'id' => $user->id,
-                    'login' => $user->login,
-                    'name' => $user->name,
-                    'roles' => $user->getRoleNames(),
-                    'cities' => !empty($user->cities) ? json_decode($user->cities,true) : [],
-                    'birthtime' => $user->created_at,
-                    'edittime' => $user->updated_at,
-                    'telegramID' => $user->telegram_chat_id,
-                ];
-            });
-        }
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Support\Collection
+     */
+    public function getUsers(){
+        return User::all()->reject(function (User $user){
+            if ($user->active == false){
+                return $user;
+            }
+        })->map(function (User $user){
+            return [
+                'id' => $user->id,
+                'login' => $user->login,
+                'name' => $user->name,
+                'roles' => $user->getRoleNames(),
+                'cities' => !empty($user->cities) ? json_decode($user->cities,true) : [],
+                'birthtime' => $user->created_at,
+                'edittime' => $user->updated_at,
+                'telegramID' => $user->telegram_chat_id,
+            ];
+        });
     }
 
     /**
@@ -240,8 +240,34 @@ class RegisterController extends ModelController
         return $cities;
     }
 
+    /**
+     * @return string
+     */
     private static function generatePassword()
     {
         return Str::random(mt_rand(7, 50));
+    }
+
+    /**
+     * @param User $user
+     * @param array $roles
+     * @return User
+     */
+    private function updateRoles(User $user, array $roles){
+        $user_roles = $user->getRoleNames()->toArray();
+        //remove roles from User
+        foreach ($user_roles as $role){
+            if (!in_array($role, $roles)){
+                $user->removeRole($role);
+            }
+        }
+        //up roles to User
+        foreach ($roles as $role){
+            if (!in_array($role, $user_roles)){
+                $user->assignRole($role);
+            }
+        }
+
+        return $user;
     }
 }

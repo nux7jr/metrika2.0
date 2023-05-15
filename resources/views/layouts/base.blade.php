@@ -22,42 +22,44 @@
 </head>
 <body>
     <div id="app" class="app">
+        <?php
+        $verifyed = Auth::user() !== null && (Auth::user()->two_factor_code < 1 ?? false);
+        $role = getUserMenu(user: Auth::user(),verifyed: $verifyed);
+        $login = Auth::user()->login ?? '';
+        ?>
+        @switch($role)
+            @case('super-admin')
+                <metrikamenu role={{$role}} :user='@json($login)'></metrikamenu>
+                @break
 
-        {{-- @switch($i)
-        @case(1)
-            First case...
-            @break
-     
-        @case(2)
-            Second case...
-            @break
-     
-        @default
-            Default case...
-    @endswitch --}}
-        <metrikamenu v-if='@json(Auth::check()
-        && Auth::user()->hasRole("super-admin")
-        && Auth::user()->two_factor_code < 1)' role="super-admin" :user='@json(Auth::user()->login ?? '')'>
-        </metrikamenu>
-        <usermenu v-if='@json(Auth::check()
-        && Auth::user()->hasRole("user")
-        && Auth::user()->two_factor_code < 1)' role="user" :user='@json(Auth::user()->login ?? '')'>
-        </usermenu>
-        <partnersmenu v-if='@json(Auth::check()
-        && Auth::user()->hasRole("partner")
-        && Auth::user()->two_factor_code < 1)' role="partner" :user='@json(Auth::user()->login ?? '')'>
-        </partnersmenu>
+            @case('admin')
+                <metrikamenu role={{$role}} :user='@json($login)'></metrikamenu>
+                @break
+            @case('user')
+                <usermenu role={{$role}} :user='@json($login)'></usermenu>
+                @break
+            @case('partner')
+                <partnersmenu role={{$role}} :user='@json($login)'></partnersmenu>
+                @break
+            @default
+            {{null}}
+        @endswitch
             <div class="container">
-                <metrikaheader title="{{ isset($title) ? $title : 'Аналитика 2.0' }}" 
-                    v-if='@json(Auth::check())' 
-                    :name='@json(Auth::user()->name ?? '')'>
+
+
+                <metrikaheader title="{{ isset($title) ? $title : 'Аналитика 2.0' }}"
+                    v-if='@json(Auth::check())'
+                    :user='@json(Auth::user()->login ?? '')'>
                 </metrikaheader>
                 <div class="main-page">
                     @yield('content')
                 </div>
 
+
             </div>
     </div>
+
+
     <div class="watermarks">Smart Core | {{ now()->year }} | alpha | {{ App::VERSION() }} </div>
 </body>
 </html>
@@ -69,4 +71,4 @@
     # $user->assignRole('admin');
     # $user->removeRole('user');
 
-?>    
+?>
