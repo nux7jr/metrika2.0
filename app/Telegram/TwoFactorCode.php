@@ -9,7 +9,7 @@ class TwoFactorCode
         curl_setopt_array(
             $ch,
             array(
-                CURLOPT_URL => 'https://api.telegram.org/bot5970971353:AAHyyXHLAMyC86oIiUREWrMNk8baHoYYZ4E/sendMessage', // bot Дениса
+                CURLOPT_URL => 'https://api.telegram.org/bot5970971353:AAHyyXHLAMyC86oIiUREWrMNk8baHoYYZ4E/sendMessage',
                 CURLOPT_POST => TRUE,
                 CURLOPT_RETURNTRANSFER => TRUE,
                 CURLOPT_TIMEOUT => 10,
