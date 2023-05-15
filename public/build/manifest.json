@@ -33,7 +33,7 @@
     "src": "resources/images/logos/logo.webp"
   },
   "resources/js/app.css": {
-    "file": "assets/app-f08efba4.css",
+    "file": "assets/app-553adac8.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -47,9 +47,9 @@
       "assets/conv-9fef2374.svg"
     ],
     "css": [
-      "assets/app-f08efba4.css"
+      "assets/app-553adac8.css"
     ],
-    "file": "assets/app-2ee6d0c1.js",
+    "file": "assets/app-51ca7f4a.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
