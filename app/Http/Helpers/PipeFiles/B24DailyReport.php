@@ -139,6 +139,7 @@ class B24DailyReport{
         ];
         $result = [];
         do {
+            $data['start'] = isset($answer->next) ? $answer->next : 0;
             $queryData = http_build_query($data);
             $answer = json_decode($this->post($method, $queryData));
             foreach ($answer->result->items as $lead){
