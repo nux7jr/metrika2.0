@@ -42,14 +42,12 @@
                 <partnersmenu role={{$role}} :user='@json($login)'></partnersmenu>
                 @break
             @default
-            {{null}}
+                {{null}}
         @endswitch
             <div class="container">
-
-
                 <metrikaheader title="{{ isset($title) ? $title : 'Аналитика 2.0' }}"
                     v-if='@json(Auth::check())'
-                    :user='@json(Auth::user()->login ?? '')'>
+                    :name='@json(Auth::user()->name ?? "")'>
                 </metrikaheader>
                 <div class="main-page">
                     @yield('content')
