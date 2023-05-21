@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\PipeFiles\GetLeads;
+use App\Http\Helpers\PipeFiles\ParseLeadsFileAndB24;
 use App\Http\Helpers\Reports\DailyReport;
 use App\Http\Helpers\Reports\WeekReport;
 use App\Models\City;
@@ -16,7 +17,7 @@ class DataGridController extends Controller
      */
     public function index()
     {
-        //
+        $test = new ParseLeadsFileAndB24();
     }
 
     /**

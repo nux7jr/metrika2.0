@@ -29,8 +29,9 @@ class RegisterController extends ModelController
     }
     public function index()
     {
-        // return Auth::user()->hasRole("super-admin");
-        if (!Auth::user()->hasRole("super-admin")) return Auth::user()->hasRole("super-admin");
+        if (!Auth::user()->hasRole("super-admin"))
+            return Auth::user()->hasRole("super-admin");
+
         return view('create.index')->with("title", "Создать пользователя");
     }
 
@@ -171,9 +172,10 @@ class RegisterController extends ModelController
      */
     public function getUsers(){
         return User::all()->reject(function (User $user){
-            if ($user->active == false){
+            if (!$user->active){
                 return $user;
             }
+            return null;
         })->map(function (User $user){
             return [
                 'id' => $user->id,
