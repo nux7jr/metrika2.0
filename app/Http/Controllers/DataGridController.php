@@ -18,6 +18,7 @@ class DataGridController extends Controller
     public function index()
     {
         $test = new ParseLeadsFileAndB24();
+        $stop = 1;
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Http\Helpers\PipeFiles;
 
 class Leads
 {
-    public const pathFileWithLeads = '/home/admin/web/centr-polov.ru/public_html/upload/bd/alldealers_leads.txt';
+    public const pathFileWithLeads = 'C:/OSPanel/alldealers_leads.txt';
 
 
     public function protect($rows, $date_on, $date_off)
