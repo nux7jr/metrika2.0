@@ -13,17 +13,19 @@ class TwoFactor
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
 
         if (auth()->check() && $user->two_factor_code != null) {
             if ($user->two_factor_expires_at < now()) {
-                $user->resetTwoFactorCode();
-                return redirect('verify');
+                return $next($request->route('verify.resend'));
             }
             if (!$request->is('verify*')) {
-                return redirect('verify');
+                if($request->isMethod('get')){
+                    return $next($request->route('verify.index'));
+                }
+                return $next($request->route('verify.store'));
             }
         }
         return $next($request);
