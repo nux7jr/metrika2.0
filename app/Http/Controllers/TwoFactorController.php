@@ -38,7 +38,6 @@ class TwoFactorController extends Controller
         $user = auth()->user();
         $user->generateTwoFactorCode();
         TwoFactorCode::sendTelegramCode($user);
-        $message['error'] = "Двухфакторный код отправлен снова";
-        return redirect('verify')->withErrors($message);
+        return redirect('/verify')->withErrors(['errors'=>'Двухфакторный код отправлен снова']);
     }
 }
