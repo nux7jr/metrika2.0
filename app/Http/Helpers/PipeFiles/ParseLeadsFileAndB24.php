@@ -20,6 +20,8 @@ class ParseLeadsFileAndB24
         'userId' => '1',
         'codewebhook' => 't7wy1lx66dizck10'
     ];
+    public static array $deals;
+
     public function __construct(){
         try {
             self::$leads = new Leads();
@@ -55,7 +57,7 @@ class ParseLeadsFileAndB24
                         if (isset($item['PHONE'])){
                             foreach ($item['PHONE'] as $phone){
                                 if (isset(self::$leads_from_file[self::phone_format($phone['VALUE'])])){
-                                    self::$leads_from_file[self::phone_format($phone['VALUE'])]['CONTACTS'][$item['ID']] = $item['ID'];
+                                    self::$leads_from_file[self::phone_format($phone['VALUE'])]['CONTACTS'][$item['ID']] = [];
                                     $contacts[$item['ID']][self::phone_format($phone['VALUE'])] = self::phone_format($phone['VALUE']);
                                 }
                             }
@@ -120,7 +122,41 @@ class ParseLeadsFileAndB24
 //                }
 //            }
 //        }
-        return self::$leads_from_file;
+        $deals = [];
+        foreach (self::$leads_from_file as $phone => $lead){
+            if (isset($lead['CONTACTS'])){
+                foreach ($lead['CONTACTS'] as $contact_id => $contact){
+                    if (isset($contact['DEALS'])){
+                        foreach ($contact['DEALS'] as $deal){
+                            foreach ($deal as $key => $value){
+                                if (isset($value['ID']))
+                                    $deals[$value['ID']] = $value;
+                            }
+                            if (isset($value['ID'])){
+                                $deals[$value['ID']]['DATE']         = $lead['DATE']         ?? '';
+                                $deals[$value['ID']]['TIME']         = $lead['TIME']         ?? '';
+                                $deals[$value['ID']]['CITY']         = $lead['CITY']         ?? '';
+                                $deals[$value['ID']]['PARTNER']      = $lead['PARTNER']      ?? '';
+                                $deals[$value['ID']]['PHONE']        = $lead['PHONE']        ?? '';
+                                $deals[$value['ID']]['EMAIL']        = $lead['EMAIL']        ?? '';
+                                $deals[$value['ID']]['NAME']         = $lead['NAME']         ?? '';
+                                $deals[$value['ID']]['TYPE']         = $lead['TYPE']         ?? '';
+                                $deals[$value['ID']]['COMMENT']      = $lead['COMMENT']      ?? '';
+                                $deals[$value['ID']]['REFERER']      = $lead['REFERER']      ?? '';
+                                $deals[$value['ID']]['UTM_SOURCE']   = $lead['UTM_SOURCE']   ?? '';
+                                $deals[$value['ID']]['UTM_MEDIUM']   = $lead['UTM_MEDIUM']   ?? '';
+                                $deals[$value['ID']]['UTM_CAMPAIGN'] = $lead['UTM_CAMPAIGN'] ?? '';
+                                $deals[$value['ID']]['UTM_TERM']     = $lead['UTM_TERM']     ?? '';
+                                $deals[$value['ID']]['UTM_CONTENT']  = $lead['UTM_CONTENT']  ?? '';
+                                $deals[$value['ID']]['SITE']         = $lead['SITE']         ?? '';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        self::$deals = $deals;
+        return $deals;
     }
 
     /**

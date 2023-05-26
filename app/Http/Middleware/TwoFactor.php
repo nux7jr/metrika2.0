@@ -19,8 +19,7 @@ class TwoFactor
 
         if (auth()->check() && $user->two_factor_code != null) {
             if ($user->two_factor_expires_at < now()) {
-                $user->resetTwoFactorCode();
-                return redirect('verify');
+                return redirect('verify/resend');
             }
             if (!$request->is('verify*')) {
                 return redirect('verify');
