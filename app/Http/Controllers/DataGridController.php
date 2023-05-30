@@ -19,53 +19,68 @@ class DataGridController extends Controller
      */
     public function index()
     {
-        $deals = new ParseLeadsFileAndB24();
-        $connection = DB::connection('pgsql');
-        foreach ($deals::$deals as $deal){
-            if ($connection->table('deals')->where('id','=',$deal['ID'])->exists()){
-                continue;
+        try {
+            $deals = new ParseLeadsFileAndB24();
+            $connection = DB::connection('pgsql');
+            foreach ($deals::$deals as $deal){
+                foreach ($deal as &$item){
+                    if (!mb_check_encoding($item, 'utf8')){
+                        $item = mb_convert_encoding($item, 'utf8');
+                    }
+                }
+                $connection->reconnectIfMissingConnection();
+                if ($connection->table('deals')->where('id','=',$deal['ID'])->exists()){
+                    continue;
+                }
+                $is_adv = false;
+                if (!empty($deal['UTM_SOURCE'])){
+                    $deal['UTM_SOURCE'] !== 'TEST' && $deal['UTM_SOURCE'] !== 'Без UTM' ? $is_adv = true : '';
+                }
+                if (!empty($deal['UTM_MEDIUM'])){
+                    $deal['UTM_MEDIUM'] !== 'TEST' && $deal['UTM_MEDIUM'] !== 'Без UTM' ? $is_adv = true : '';
+                }
+                if (!empty($deal['UTM_CAMPAIGN'])){
+                    $deal['UTM_CAMPAIGN'] !== 'Без UTM' ? $is_adv = true : '';
+                }
+                if (!empty($deal['UTM_TERM'])){
+                    $deal['UTM_TERM'] !== 'Без UTM' ? $is_adv = true : '';
+                }
+                if (!empty($deal['UTM_CONTENT'])){
+                    $deal['UTM_CONTENT'] !== 'Без UTM' ? $is_adv = true : '';
+                }
+                $parsed = parse_url($deal['REFERER']);
+                $parsed_send = '';
+                !empty($parsed['host']) ? $parsed_send .= $parsed['host'] : '';
+                !empty($parsed['path']) ? $parsed_send .= $parsed['path'] : '';
+                $carbon = new Carbon($deal['DATE_CREATE']);
+                $carbon->timezone(7);
+                $date_create = $carbon->toDateTimeString();
+                $carbon->timezone(3);
+                $carbon->setDateTimeFrom($deal['DATE_MODIFY']);
+                $carbon->timezone(7);
+                $date_updated = $carbon->toDateTimeString();
+                $connection->table('deals')->insert([
+                    'id'            => $deal['ID'],
+                    'is_adv'        => $is_adv,
+                    'utm_source'    => $deal['UTM_SOURCE'] ?? '',
+                    'utm_medium'    => $deal['UTM_MEDIUM'] ?? '',
+                    'utm_campaign'  => $deal['UTM_CAMPAIGN'] ?? '',
+                    'utm_content'   => $deal['UTM_CONTENT'] ?? '',
+                    'utm_term'      => $deal['UTM_TERM'] ?? '',
+                    'url'           => $parsed_send,
+                    'stage_now'     => $deal['STAGE_ID'],
+                    'income'        => floatval($deal['OPPORTUNITY']),
+                    'currency'      => $deal['CURRENCY_ID'],
+                    'created_at'    => $date_create,
+                    'updated_at'    => $date_updated,
+                ]);
             }
-            $is_adv = false;
-            if (!empty($deal['UTM_SOURCE'])){
-                $deal['UTM_SOURCE'] !== 'TEST' && $deal['UTM_SOURCE'] !== 'Без UTM' ? $is_adv = true : '';
-            }
-            if (!empty($deal['UTM_MEDIUM'])){
-                $deal['UTM_MEDIUM'] !== 'TEST' && $deal['UTM_MEDIUM'] !== 'Без UTM' ? $is_adv = true : '';
-            }
-            if (!empty($deal['UTM_CAMPAIGN'])){
-                $deal['UTM_CAMPAIGN'] !== 'Без UTM' ? $is_adv = true : '';
-            }
-            if (!empty($deal['UTM_TERM'])){
-                $deal['UTM_TERM'] !== 'Без UTM' ? $is_adv = true : '';
-            }
-            if (!empty($deal['UTM_CONTENT'])){
-                $deal['UTM_CONTENT'] !== 'Без UTM' ? $is_adv = true : '';
-            }
-            $parsed = parse_url($deal['REFERER']);
-            $parsed_send = '';
-            !empty($parsed['host']) ? $parsed_send .= $parsed['host'] : '';
-            !empty($parsed['path']) ? $parsed_send .= $parsed['path'] : '';
-            $carbon = new Carbon($deal['DATE_CREATE']);
-            $carbon->timezone(7);
-            $date_create = $carbon->toDateTimeString();
-            $carbon->timezone(3);
-            $carbon->setDateTimeFrom($deal['DATE_MODIFY']);
-            $carbon->timezone(7);
-            $date_updated = $carbon->toDateTimeString();
-            $connection->table('deals')->insert([
-                'id'            => $deal['ID'],
-                'is_adv'        => $is_adv,
-                'utm_source'    => $deal['UTM_SOURCE'] ?? '',
-                'utm_medium'    => $deal['UTM_MEDIUM'] ?? '',
-                'utm_campaign'  => $deal['UTM_CAMPAIGN'] ?? '',
-                'utm_content'   => $deal['UTM_CONTENT'] ?? '',
-                'utm_term'      => $deal['UTM_TERM'] ?? '',
-                'url'           => $parsed_send,
-                'stage_now'     => $deal['STAGE_ID'],
-                'created_at'    => $date_create,
-                'updated_at'    => $date_updated,
-            ]);
+        }catch (\Exception $error){
+            echo $error->getMessage();
+        } finally {
+            $stop = 1;
         }
+
         $stop = 1;
     }
 
