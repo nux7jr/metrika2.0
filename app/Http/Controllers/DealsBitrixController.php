@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 
 class DealsBitrixController extends Controller
@@ -16,21 +17,30 @@ class DealsBitrixController extends Controller
      * @throws GuzzleException
      */
     public function updateDeal(Request $request){
-        $this->sendTelegram(serialize($request->toArray()));
-//        $validated = $request->validate(
-//            rules:[
-//                'ID' => 'required|numeric',
-//                'STAGE_ID' => 'required|string',
-//            ]
-//        );
-
+        $input = $request->toArray();
+        if (!self::authorizeRequest($input['auth']['application_token'])){
+            Log::info('Запрос с неизвестного приложения. input: ' . json_encode($input));
+            return 'this action is unauthorized';
+        }
+        $validated = $request->validate(
+            rules:[
+                'data.FIELDS.ID'    => 'required|numeric',
+                'event' => 'required|string',
+            ]
+        );
+        $this->sendTelegram(serialize($validated));
     }
-    /**
-     * @param string $mess
-     * @param int $chat_id
-     * @return void
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
+    private static function authorizeRequest(string $request_token): bool{
+        $tokens = [
+            'gu04g0rumcbps79d7vhxwbii0pywbidf' => true,
+            'j8tkjnkkpii718woufh6p11seew1ntdc' => true,
+        ];
+        if (isset($tokens[$request_token])){
+            return $tokens[$request_token];
+        }
+        return false;
+    }
+
     private function sendTelegram(string $mess, int $chat_id = 233617089){
         $guzzle = new Client(
             config: [
