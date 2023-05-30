@@ -24,6 +24,9 @@ Route::view('/day', 'day.index', ["title" => 'Ежедневный отчет'])
 Route::view('/conversion', 'conversion.index', ["title" => 'Конверсия'])->name('convesrion')->middleware(['auth', 'twofactor']);
 Route::view('/conversion1', 'conversion1.index', ["title" => 'Конверсия'])->name('convesrion')->middleware(['auth', 'twofactor']);
 
+Route::view('/deal', 'deal.index', ["title" => 'Информация о лидах'])->name('deal')->middleware(['auth', 'twofactor']);
+
+
 Route::view('/partners', 'partners.index', ["partners" => 'Ваша таблица'])->name('partners')->middleware(['auth', 'twofactor']);
 
 Route::get('/logout', function () {
@@ -35,7 +38,6 @@ Route::middleware(['guest', 'twofactor'])->group(function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
     Route::post('login', [LoginController::class, 'store'])->name('login.store');
 });
-
 
 Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная аутентификация'])->group(function () {
     Route::get('verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');

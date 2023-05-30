@@ -97,7 +97,7 @@ export default {
                     headerCheckboxSelection: true,
                     checkboxSelection: true,
                 },
-                { field: "REFERER", headerName: "Сайт" },
+                { field: "REFERER", width: 150, headerName: "Сайт" },
                 {
                     field: "DATE",
                     headerName: "Дата",

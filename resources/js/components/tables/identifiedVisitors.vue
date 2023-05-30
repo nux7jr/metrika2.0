@@ -88,6 +88,14 @@ export default {
             localeText: null,
             columnDefs: [
                 {
+                    field: "mask",
+                    headerName: "mask",
+                    rowDrag: false,
+                    rowGroup: true,
+                    hide: true,
+                    width: 140,
+                },
+                {
                     field: "ip",
                     headerName: "ip адрес",
                     rowDrag: false,
@@ -100,15 +108,10 @@ export default {
                     headerName: "city_browser",
                     rowDrag: false,
                     width: 160,
-                    rowGroup: true,
+                    rowGroup: false,
                     hide: true,
                 },
-                {
-                    field: "city_user",
-                    headerName: "city_user",
-                    rowDrag: false,
-                    width: 160,
-                },
+
                 {
                     field: "first_contact_site",
                     headerName: "first_contact_site",
@@ -232,6 +235,12 @@ export default {
                 {
                     field: "updated_at",
                     headerName: "updated_at",
+                    rowDrag: false,
+                    width: 160,
+                },
+                {
+                    field: "city_user",
+                    headerName: "city_user",
                     rowDrag: false,
                     width: 160,
                 },
@@ -397,30 +406,6 @@ export default {
     components: {
         "ag-grid-vue": AgGridVue,
     },
-};
-const filterParams = {
-    comparator: (filterLocalDateAtMidnight, cellValue) => {
-        const dateAsString = cellValue;
-        if (dateAsString == null) return -1;
-        const dateParts = dateAsString.split("/");
-        const cellDate = new Date(
-            Number(dateParts[2]),
-            Number(dateParts[1]) - 1,
-            Number(dateParts[0])
-        );
-        if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-            return 0;
-        }
-        if (cellDate < filterLocalDateAtMidnight) {
-            return -1;
-        }
-        if (cellDate > filterLocalDateAtMidnight) {
-            return 1;
-        }
-        return 0;
-    },
-    minValidYear: 2015,
-    inRangeFloatingFilterDateFormat: "Do MMM YYYY",
 };
 </script>
 

@@ -7,6 +7,8 @@ import telegram from "./components/template/telegram.vue";
 import metrikabasic from "./components/tables/basic.vue";
 import metrikaweek from "./components/tables/week.vue";
 
+import deal from "./components/tables/deal.vue";
+
 import metrikaidentifiedvisitors from "./components/tables/identifiedVisitors.vue";
 import metrikaheader from "./components/include/header.vue";
 
@@ -40,6 +42,7 @@ createApp({
         metrikabasic,
         metrikamenu,
         metrikaidentifiedvisitors,
+        deal,
         usermenu,
         conversion,
         metrikaweek,
