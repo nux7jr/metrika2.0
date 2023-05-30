@@ -94,6 +94,16 @@
                 <span class="menu__text" v-if="isActive">Конверсия</span>
             </Transition>
         </a>
+        <a class="menu__item" href="/deal">
+            <img
+                class="menu__img"
+                src="../../../images/icons/graph.svg"
+                alt="icon"
+            />
+            <Transition name="slide-fade">
+                <span class="menu__text" v-if="isActive">Сделки</span>
+            </Transition>
+        </a>
     </div>
 </template>
 
