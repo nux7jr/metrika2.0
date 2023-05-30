@@ -164,7 +164,7 @@ class DealsBitrixController extends Controller
             $carbon->setTimezone(7);
             $date_updated = $carbon->toDateTimeString();
 
-            $phone = phoneFormatter($contact['result'][0]['PHONE'][0]['VALUE']);
+            $phone = isset($contact['result'][0]['PHONE'][0]['VALUE'])? phoneFormatter($contact['result'][0]['PHONE'][0]['VALUE']) : null;
 
             $insert_data = [
                 'id'            => $deal['ID'],
