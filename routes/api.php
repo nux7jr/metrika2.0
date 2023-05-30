@@ -18,4 +18,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('update_deal', [\App\Http\Controllers\DealsBitrixController::class, 'updateDeal']);
+Route::post('update_deal', [\App\Http\Controllers\DealsBitrixController::class, 'update']);
