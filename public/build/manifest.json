@@ -16,6 +16,10 @@
     "file": "assets/dashboard-2ad8eecc.svg",
     "src": "resources/images/icons/dashboard.svg"
   },
+  "resources/images/icons/graph.svg": {
+    "file": "assets/graph-08ab206d.svg",
+    "src": "resources/images/icons/graph.svg"
+  },
   "resources/images/icons/home.svg": {
     "file": "assets/home-351ee048.svg",
     "src": "resources/images/icons/home.svg"
@@ -33,7 +37,7 @@
     "src": "resources/images/logos/logo.webp"
   },
   "resources/js/app.css": {
-    "file": "assets/app-553adac8.css",
+    "file": "assets/app-35265bde.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -44,12 +48,13 @@
       "assets/projects-39f775f8.svg",
       "assets/check-27af2fb0.svg",
       "assets/userPlus-6f554e35.svg",
-      "assets/conv-9fef2374.svg"
+      "assets/conv-9fef2374.svg",
+      "assets/graph-08ab206d.svg"
     ],
     "css": [
-      "assets/app-553adac8.css"
+      "assets/app-35265bde.css"
     ],
-    "file": "assets/app-51ca7f4a.js",
+    "file": "assets/app-bf30affe.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
