@@ -189,7 +189,9 @@ class DealsBitrixController extends Controller
             $connection->commit();
         }catch (\Exception $error){
             $connection->rollBack();
-            $this->sendTelegram('error create Deal. Message: ' . $error->getMessage());
+            if (strpos('duplicate key value violates unique constraint "deals_pkey"') !== false){
+                $this->sendTelegram('error create Deal. Message: ' . $error->getMessage());
+            }
             Log::info('error create Deal. Message: ' . $error->getMessage());
         }
 
