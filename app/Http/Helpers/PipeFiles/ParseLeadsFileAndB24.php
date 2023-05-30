@@ -81,6 +81,8 @@ class ParseLeadsFileAndB24
                         "CLOSED",
                         "CONTACT_ID",
                         "CATEGORY_ID",
+                        "OPPORTUNITY",
+                        "CURRENCY_ID",
                     ],
                     'start' => $start,
                 ]);
