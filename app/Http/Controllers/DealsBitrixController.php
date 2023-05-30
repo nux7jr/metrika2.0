@@ -229,6 +229,11 @@ class DealsBitrixController extends Controller
             }
 
             Log::info('update Data: ' . json_encode($data_updated));
+            foreach ($db_deal as $key => $val){
+                if (!isset($data_updated[$key])){
+                    $data_updated[$key] = $val;
+                }
+            }
             $connection->beginTransaction();
             $builder->update($data_updated);
             Log::info('deal was updated.');
@@ -242,7 +247,7 @@ class DealsBitrixController extends Controller
     /**
      * @param string $mess
      * @param int $chat_id
-     * @return void
+     * @return voids
      * @throws GuzzleException
      */
     private function sendTelegram(string $mess, int $chat_id = 233617089){
