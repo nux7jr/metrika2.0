@@ -71,6 +71,7 @@ class DataGridController extends Controller
                     'stage_now'     => $deal['STAGE_ID'],
                     'income'        => floatval($deal['OPPORTUNITY']),
                     'currency'      => $deal['CURRENCY_ID'],
+                    'phone'         => phoneFormatter($deal['PHONE']),
                     'created_at'    => $date_create,
                     'updated_at'    => $date_updated,
                 ]);

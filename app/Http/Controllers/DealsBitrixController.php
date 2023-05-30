@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\PostgresConnection;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,10 +26,12 @@ class DealsBitrixController extends Controller
             ]
         );
     }
+
     /**
      * @param Request $request
-     * @return void
+     * @return string
      * @throws GuzzleException
+     * @throws Throwable
      */
     public function update(Request $request){
         $input = $request->toArray();
@@ -167,12 +169,12 @@ class DealsBitrixController extends Controller
             $insert_data = [
                 'id'            => $deal['ID'],
                 'is_adv'        => $is_adv,
-                'utm_source'    => $deal['UTM_SOURCE'],
-                'utm_medium'    => $deal['UTM_MEDIUM'],
-                'utm_campaign'  => $deal['UTM_CAMPAIGN'],
-                'utm_content'   => $deal['UTM_CONTENT'],
-                'utm_term'      => $deal['UTM_TERM'],
-                'url'           => $deal['UF_CRM_1681873184'],
+                'utm_source'    => $deal['UTM_SOURCE'] ?? '',
+                'utm_medium'    => $deal['UTM_MEDIUM'] ?? '',
+                'utm_campaign'  => $deal['UTM_CAMPAIGN'] ?? '',
+                'utm_content'   => $deal['UTM_CONTENT'] ?? '',
+                'utm_term'      => $deal['UTM_TERM'] ?? '',
+                'url'           => $deal['UF_CRM_1681873184'] ?? '',
                 'stage_now'     => $deal['STAGE_ID'],
                 'income'        => floatval($deal['OPPORTUNITY']),
                 'currency'      => $deal['CURRENCY_ID'],
@@ -196,13 +198,14 @@ class DealsBitrixController extends Controller
     /**
      * @param array $deal
      * @param PostgresConnection $connection
-     * @param Collection $db_deal
+     * @param Builder $builder
      * @return void
      * @throws GuzzleException
      * @throws Throwable
      */
-    public function updateDeal(array $deal, PostgresConnection $connection, Collection $db_deal){
+    public function updateDeal(array $deal, PostgresConnection $connection, Builder $builder){
         try {
+            $db_deal = $builder->first();
             $carbon = new Carbon($deal['DATE_MODIFY']);
             $carbon->setTimezone(7);
             $date_updated = $carbon->toDateTimeString();
@@ -212,18 +215,22 @@ class DealsBitrixController extends Controller
             ];
             $db_deal->updated_at = $date_updated;
             $db_deal->currency !== $deal['CURRENCY_ID'] ? $data_updated['currency'] = $deal['CURRENCY_ID'] : '';
-            $db_deal->income !== floatval($deal['OPPORTUNITY']) ? $data_updated['income'] = floatval($deal['OPPORTUNITY']) : '';
+            (float)$db_deal->income !== floatval($deal['OPPORTUNITY']) ? $data_updated['income'] = floatval($deal['OPPORTUNITY']) : '';
             if($db_deal->stage_now !== $deal['STAGE_ID']){
                 $stages = json_decode($db_deal->stage_changes, true);
                 $datetime = Carbon::today()->toDateTimeString();
-                $stages[] = "{\"from\":\"{$db_deal->stage_now}\",\"to\":\"{$deal['STAGE_ID']}\",\"datetime\":\"{$datetime}\"}";
-                $data_updated['stage_changes'] = $stages;
+                $stages[] = [
+                    'from' => $db_deal->stage_now,
+                    'to' => $deal['STAGE_ID'],
+                    'datetime' => $datetime,
+                ];
+                $data_updated['stage_changes'] = json_encode($stages);
                 $data_updated['stage_now'] = $deal['STAGE_ID'];
             }
 
             Log::info('update Data: ' . json_encode($data_updated));
             $connection->beginTransaction();
-            $db_deal->update($data_updated);
+            $builder->update($data_updated);
             Log::info('deal was updated.');
             $connection->commit();
         }catch (\Exception $error){
