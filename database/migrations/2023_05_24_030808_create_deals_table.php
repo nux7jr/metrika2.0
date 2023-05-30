@@ -23,6 +23,9 @@ return new class extends Migration
             $table->text('url')->default('без url');
             $table->string('stage_now')->default('new');
             $table->json('stage_changes')->default(json_encode([]));
+            $table->float('income')->nullable();
+            $table->string('currency')->default('RUB');
+            $table->string('phone')->nullable();
             $table->timestamps();
             $table->index(['is_adv', 'created_at']);
         });
