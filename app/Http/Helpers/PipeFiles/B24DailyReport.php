@@ -56,6 +56,8 @@ class B24DailyReport{
             $queryData = http_build_query($data);
             $answer = json_decode($this->post($method, $queryData));
 
+            if(!isset($answer->result)){return $result;}
+
             foreach ($answer->result->items as $lead){
                 if ($utmIsset){
                     $lead->utmSource ? $result[$this->search_phone($lead->searchContent)] = (array)$lead : null;
@@ -103,6 +105,8 @@ class B24DailyReport{
             $data['start'] = isset($answer->next) ? $answer->next : 0;
             $queryData = http_build_query($data);
             $answer = json_decode($this->post($method, $queryData));
+
+            if(!isset($answer->result)){return $result;}
 
             foreach ($answer->result->items as $lead){
                 $result[$this->search_phone($lead->searchContent)] = (array)$lead;
