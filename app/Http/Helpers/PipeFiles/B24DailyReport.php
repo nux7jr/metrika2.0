@@ -45,9 +45,9 @@ class B24DailyReport{
                 'categoryId' => $this->direction,
                 '>=createdTime' => $this->date_start,
                 '<=createdTime' => $this->date_end,
-                'ufCrm1651563289996' => $cityCode,
+                'ufCrm_1651563289996' => $cityCode,
             ],
-            'select' => ['id', 'title', 'utmSource', 'utmMedium', 'utmContent', 'utmTerm','ufCrm1651563289996', 'sourceId', 'searchContent', 'typeId','sourceDescription'],
+            'select' => ['id', 'title', 'utmSource', 'utmMedium', 'utmContent', 'utmTerm','ufCrm_1651563289996', 'sourceId', 'searchContent', 'typeId','sourceDescription'],
         ];
         $result = [];
         do {
@@ -96,9 +96,9 @@ class B24DailyReport{
                 'categoryId' => $this->direction,
                 '>=createdTime' => $this->date_start,
                 '<=createdTime' => $this->date_end,
-                'ufCrm1651563289996' => $cityCode,
+                'ufCrm_1651563289996' => $cityCode,
             ],
-            'select' => ['id', 'title', 'utmSource', 'utmMedium', 'utmContent', 'utmTerm','ufCrm1651563289996', 'sourceId', 'searchContent', 'typeId','sourceDescription'],
+            'select' => ['id', 'title', 'utmSource', 'utmMedium', 'utmContent', 'utmTerm','ufCrm_1651563289996', 'sourceId', 'searchContent', 'typeId','sourceDescription'],
         ];
         $result = [];
         do {
