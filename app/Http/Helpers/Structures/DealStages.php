@@ -7,7 +7,7 @@ class DealStages
     /**
      * @var array|array[]
      */
-    public static array $stages = [
+    private static array $stages = [
         '0' =>
             [
                 'NEW'       => 'Новая',
@@ -321,6 +321,35 @@ class DealStages
                 'APOLOGY'           => 'Анализ причины провала',
             ],
     ];
+    private static array $directions = [
+        '0'     => 'Общая',
+        'C36'   => 'Строительство | Готовые решения',
+        'C34'   => 'Строительство | Проработка ипотеки',
+        'C32'   => 'Строительство | Партнеры',
+        'C42'   => 'Первичный отказ',
+        'C44'   => 'Строительство',
+        'C46'   => 'Воронка продаж',
+        'C60'   => 'Партнерский канал',
+        'C50'   => 'Отказная воронка',
+        'C52'   => 'Реферальная программа',
+        'C70'   => 'Тиксан Авто (b2c)',
+        'C80'   => 'СТП',
+        'C94'   => 'СТП развитие',
+        'C131'  => 'Отопить.РФ | МСК',
+        'C133'  => 'Отопить.РФ | Холодные звонки (МСК)',
+        'C90'   => 'Отопить.РФ | ОП 52-ой квартал',
+        'C116'  => 'Отопить.рф | Авиаторов',
+        'C153'  => 'Отопить.РФ | Регионы',
+        'C92'   => 'NF | Развитие',
+        'C108'  => 'NF | Дилеры',
+        'C129'  => 'NF | Заявки дилеров',
+        'C110'  => 'NF | Розница',
+        'C139'  => 'NF | Партнерская сеть',
+        'C135'  => 'КОД ЛИДЕРА',
+        'C157'  => 'Бизнес Академия',
+        'C161'  => 'Бизнес Академия: Вебинары',
+        'C167'  => 'Лёгкий бизнес',
+    ];
 
     /**
      * @param string|null $key
@@ -353,5 +382,15 @@ class DealStages
      */
     public static function getAllStages(): array{
         return self::$stages;
+    }
+
+    public static function getDirectionName(?string $direction): string{
+        if ($direction === null){
+            return $direction;
+        }
+        if (!isset(self::$directions[$direction])){
+            return $direction;
+        }
+        return self::$directions[$direction];
     }
 }

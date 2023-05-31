@@ -28,14 +28,14 @@ class DataGridController extends Controller
                 $normalized = explode(':',$deals[$i]->stage_now);
                 if (!isset($normalized[1])){
                     $deals[$i]->stage_now = DealStages::getStageName(null, $normalized[0]);
-                    $deals[$i]->direction = $normalized[0];
+                    $deals[$i]->direction = DealStages::getDirectionName($normalized[0]);
                     foreach (DealStages::getStagesByDirection(null) as $key => $stage_name){
                         $deals[$i]->$stage_name = intval($normalized[0] === $key);
                     }
                 }
                 if (isset($normalized[1])){
                     $deals[$i]->stage_now = DealStages::getStageName($normalized[0], $normalized[1]);
-                    $deals[$i]->direction = $normalized[0];
+                    $deals[$i]->direction = DealStages::getDirectionName($normalized[0]);
                     foreach (DealStages::getStagesByDirection($normalized[0]) as $key => $stage_name){
                         $deals[$i]->$stage_name = intval($normalized[0] === $key);
                     }
