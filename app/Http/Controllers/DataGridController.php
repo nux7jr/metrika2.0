@@ -6,8 +6,8 @@ use App\Http\Helpers\PipeFiles\GetLeads;
 use App\Http\Helpers\PipeFiles\ParseLeadsFileAndB24;
 use App\Http\Helpers\Reports\DailyReport;
 use App\Http\Helpers\Reports\WeekReport;
+use App\Http\Helpers\Structures\DealStages;
 use App\Models\City;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Helpers\PipeFiles\Leads;
 use Illuminate\Support\Facades\DB;
@@ -17,72 +17,34 @@ class DataGridController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $deals = new ParseLeadsFileAndB24();
             $connection = DB::connection('pgsql');
-            foreach ($deals::$deals as $deal){
-                foreach ($deal as &$item){
-                    if (!mb_check_encoding($item, 'utf8')){
-                        $item = mb_convert_encoding($item, 'utf8');
+            $deals = $connection->table('deals')->where('is_adv', '=', true)->get()->toArray();
+            $count = count($deals);
+            for ($i = 0; $i < $count; $i++){
+                unset($deals[$i]->stage_changes);
+                $normalized = explode(':',$deals[$i]->stage_now);
+                if (!isset($normalized[1])){
+                    $deals[$i]->stage_now = DealStages::getStageName(null, $normalized[0]);
+                    $deals[$i]->direction = $normalized[0];
+                    foreach (DealStages::getStagesByDirection(null) as $key => $stage_name){
+                        $deals[$i]->$stage_name = intval($normalized[0] === $key);
                     }
                 }
-                $connection->reconnectIfMissingConnection();
-                if ($connection->table('deals')->where('id','=',$deal['ID'])->exists()){
-                    continue;
+                if (isset($normalized[1])){
+                    $deals[$i]->stage_now = DealStages::getStageName($normalized[0], $normalized[1]);
+                    $deals[$i]->direction = $normalized[0];
+                    foreach (DealStages::getStagesByDirection($normalized[0]) as $key => $stage_name){
+                        $deals[$i]->$stage_name = intval($normalized[0] === $key);
+                    }
                 }
-                $is_adv = false;
-                if (!empty($deal['UTM_SOURCE'])){
-                    $deal['UTM_SOURCE'] !== 'TEST' && $deal['UTM_SOURCE'] !== 'Без UTM' ? $is_adv = true : '';
-                }
-                if (!empty($deal['UTM_MEDIUM'])){
-                    $deal['UTM_MEDIUM'] !== 'TEST' && $deal['UTM_MEDIUM'] !== 'Без UTM' ? $is_adv = true : '';
-                }
-                if (!empty($deal['UTM_CAMPAIGN'])){
-                    $deal['UTM_CAMPAIGN'] !== 'Без UTM' ? $is_adv = true : '';
-                }
-                if (!empty($deal['UTM_TERM'])){
-                    $deal['UTM_TERM'] !== 'Без UTM' ? $is_adv = true : '';
-                }
-                if (!empty($deal['UTM_CONTENT'])){
-                    $deal['UTM_CONTENT'] !== 'Без UTM' ? $is_adv = true : '';
-                }
-                $parsed = parse_url($deal['REFERER']);
-                $parsed_send = '';
-                !empty($parsed['host']) ? $parsed_send .= $parsed['host'] : '';
-                !empty($parsed['path']) ? $parsed_send .= $parsed['path'] : '';
-                $carbon = new Carbon($deal['DATE_CREATE']);
-                $carbon->timezone(7);
-                $date_create = $carbon->toDateTimeString();
-                $carbon->timezone(3);
-                $carbon->setDateTimeFrom($deal['DATE_MODIFY']);
-                $carbon->timezone(7);
-                $date_updated = $carbon->toDateTimeString();
-                $connection->table('deals')->insert([
-                    'id'            => $deal['ID'],
-                    'is_adv'        => $is_adv,
-                    'utm_source'    => $deal['UTM_SOURCE'] ?? '',
-                    'utm_medium'    => $deal['UTM_MEDIUM'] ?? '',
-                    'utm_campaign'  => $deal['UTM_CAMPAIGN'] ?? '',
-                    'utm_content'   => $deal['UTM_CONTENT'] ?? '',
-                    'utm_term'      => $deal['UTM_TERM'] ?? '',
-                    'url'           => $parsed_send,
-                    'stage_now'     => $deal['STAGE_ID'],
-                    'income'        => floatval($deal['OPPORTUNITY']),
-                    'currency'      => $deal['CURRENCY_ID'],
-                    'phone'         => phoneFormatter($deal['PHONE']),
-                    'created_at'    => $date_create,
-                    'updated_at'    => $date_updated,
-                ]);
             }
+            return json_encode($deals);
         }catch (\Exception $error){
-            echo $error->getMessage();
-        } finally {
-            $stop = 1;
+            return $error->getMessage();
         }
-
-        $stop = 1;
     }
 
     /**
