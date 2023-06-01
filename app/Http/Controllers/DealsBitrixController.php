@@ -82,7 +82,7 @@ class DealsBitrixController extends Controller
      * @return array
      * @throws GuzzleException
      */
-    private function getDealById(int $id): array{
+    public function getDealById(int $id): array{
         $response = self::$guzzle->post(
             uri:'crm.deal.list.json',
             options: [
@@ -108,6 +108,14 @@ class DealsBitrixController extends Controller
                         'UTM_TERM',
                         'UTM_CONTENT',
                         'UF_CRM_1681873184', // поле url
+                        'UF_CRM_1651563289996', // поле Город
+                        'UF_CRM_1676887184893', // поле Провал отопить мск
+                        'UF_CRM_1603858489', // поле Провал воронка продаж
+                        'UF_CRM_1658364680', // поле Провал авто
+                        'UF_CRM_1663244279467', // поле Провал СТП
+                        'UF_CRM_1662519844408', // поле Провал МСК холодные
+                        'UF_CRM_1663671866564', // поле Провал отопить
+                        'UF_CRM_1677737737113', // поле Провал отопить пром
                     ],
                 ]),
             ],
@@ -181,6 +189,7 @@ class DealsBitrixController extends Controller
                 'phone'         => $phone,
                 'created_at'    => $date_create,
                 'updated_at'    => $date_updated,
+                'city'          => $deal['UF_CRM_1651563289996'],
             ];
             Log::info('insert Data: ' . json_encode($insert_data));
             $connection->beginTransaction();
@@ -228,6 +237,28 @@ class DealsBitrixController extends Controller
                 ];
                 $data_updated['stage_changes'] = json_encode($stages);
                 $data_updated['stage_now'] = $deal['STAGE_ID'];
+            }
+
+            if (!empty($deal['UF_CRM_1676887184893'])){
+                $data_updated['reason_closed'] = getReasonClosedByName(field_code: 'UF_CRM_1676887184893', id: intval($deal['UF_CRM_1676887184893']));
+            }
+            if (!empty($deal['UF_CRM_1603858489'])){
+                $data_updated['reason_closed'] = getReasonClosedByName(field_code: 'UF_CRM_1603858489', id: intval($deal['UF_CRM_1603858489'][0]));
+            }
+            if (!empty($deal['UF_CRM_1658364680'])){
+                $data_updated['reason_closed'] = getReasonClosedByName(field_code: 'UF_CRM_1658364680', id: intval($deal['UF_CRM_1658364680'][0]));
+            }
+            if (!empty($deal['UF_CRM_1663244279467'])){
+                $data_updated['reason_closed'] = getReasonClosedByName(field_code: 'UF_CRM_1663244279467', id: intval($deal['UF_CRM_1663244279467']));
+            }
+            if (!empty($deal['UF_CRM_1662519844408'])){
+                $data_updated['reason_closed'] = getReasonClosedByName(field_code: 'UF_CRM_1662519844408', id: intval($deal['UF_CRM_1662519844408']));
+            }
+            if (!empty($deal['UF_CRM_1663671866564'])){
+                $data_updated['reason_closed'] = getReasonClosedByName(field_code: 'UF_CRM_1663671866564', id: intval($deal['UF_CRM_1663671866564']));
+            }
+            if (!empty($deal['UF_CRM_1677737737113'])){
+                $data_updated['reason_closed'] = getReasonClosedByName(field_code: 'UF_CRM_1677737737113', id: intval($deal['UF_CRM_1677737737113']));
             }
 
             Log::info('update Data: ' . json_encode($data_updated));
