@@ -89,11 +89,11 @@ export default {
             columnDefs: [
                 {
                     field: "direction",
-                    headerName: "direction",
+                    headerName: "Воронка",
                     rowDrag: false,
                     rowGroup: true,
                     hide: false,
-                    width: 140,
+                    width: 250,
                 },
                 {
                     field: "utm_source",
@@ -102,6 +102,15 @@ export default {
                     rowGroup: true,
                     hide: false,
                     width: 140,
+                },
+
+                {
+                    field: "stage_now",
+                    headerName: "Стадия",
+                    rowDrag: false,
+                    rowGroup: true,
+                    hide: false,
+                    width: 200,
                 },
                 {
                     field: "utm_medium",
@@ -138,7 +147,15 @@ export default {
                 },
                 {
                     field: "url",
-                    headerName: "url",
+                    headerName: "Ссылка на сайт",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "city",
+                    headerName: "Город",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
@@ -146,7 +163,7 @@ export default {
                 },
                 {
                     field: "stage_now",
-                    headerName: "stage_now",
+                    headerName: "Стадия",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
@@ -154,7 +171,7 @@ export default {
                 },
                 {
                     field: "income",
-                    headerName: "income",
+                    headerName: "Прибыль",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
@@ -162,7 +179,7 @@ export default {
                 },
                 {
                     field: "currency",
-                    headerName: "currency",
+                    headerName: "Валюта",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
@@ -170,7 +187,7 @@ export default {
                 },
                 {
                     field: "phone",
-                    headerName: "phone",
+                    headerName: "Телефон",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
@@ -178,7 +195,7 @@ export default {
                 },
                 {
                     field: "created_at",
-                    headerName: "created_at",
+                    headerName: "Дата создания",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
@@ -186,7 +203,7 @@ export default {
                 },
                 {
                     field: "updated_at",
-                    headerName: "updated_at",
+                    headerName: "Дата последнего изменения",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
@@ -194,7 +211,7 @@ export default {
                 },
                 {
                     field: "is_adv",
-                    headerName: "is_adv",
+                    headerName: "Реклама",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
