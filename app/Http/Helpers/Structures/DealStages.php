@@ -384,12 +384,16 @@ class DealStages
         return self::$stages;
     }
 
-    public static function getDirectionName(?string $direction): string{
+    /**
+     * @param string|null $direction
+     * @return string|bool
+     */
+    public static function getDirectionName(?string $direction): string|bool{
         if ($direction === null){
-            return $direction;
+            return false;
         }
         if (!isset(self::$directions[$direction])){
-            return $direction;
+            return false;
         }
         return self::$directions[$direction];
     }
