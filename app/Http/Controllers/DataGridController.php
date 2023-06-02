@@ -28,12 +28,14 @@ class DataGridController extends Controller
             $date_on = empty($request->input('date_on')) ?
                 $carbon->setDateTime(2020,7, 9,0,0)->toDateTimeString() :
                 $carbon->from($request->input('date_on'))->toDateTimeString();
+            $direction = $request->input('direction') !== null ?'C'.$request->input('direction').':%' : 'C116:%';
             $connection = DB::connection('pgsql');
             $deals = $connection->table('deals')->where([
                 ['is_adv', '=', true],
                 ['created_at', '>=', $date_on],
                 ['updated_at', '<=', $date_off],
                 ['url', '!=', null],
+                ['stage_now', 'like', $direction],
             ])->get()->toArray();
             $count = count($deals);
             for ($i = 0; $i < $count; $i++){
@@ -62,7 +64,7 @@ class DataGridController extends Controller
                     }
                 }
             }
-            return json_encode($deals);
+            return json_encode(array_values($deals));
         }catch (\Exception $error){
             return $error->getMessage();
         }
