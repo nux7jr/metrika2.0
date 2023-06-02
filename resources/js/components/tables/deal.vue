@@ -93,7 +93,7 @@ export default {
                     rowDrag: false,
                     rowGroup: true,
                     hide: false,
-                    width: 140,
+                    width: 250,
                 },
                 {
                     field: "utm_source",
@@ -102,6 +102,15 @@ export default {
                     rowGroup: true,
                     hide: false,
                     width: 140,
+                },
+
+                {
+                    field: "stage_now",
+                    headerName: "stage_now",
+                    rowDrag: false,
+                    rowGroup: true,
+                    hide: false,
+                    width: 200,
                 },
                 {
                     field: "utm_medium",
@@ -139,6 +148,14 @@ export default {
                 {
                     field: "url",
                     headerName: "url",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "city",
+                    headerName: "city",
                     rowDrag: false,
                     width: 160,
                     rowGroup: false,
