@@ -44,6 +44,7 @@ class DataGridController extends Controller
                     $deals[$i]->direction = DealStages::getDirectionName($normalized[0]);
                     if ($deals[$i]->direction === false){
                         unset($deals[$i]);
+                        continue;
                     }
                     foreach (DealStages::getStagesByDirection(null) as $key => $stage_name){
                         $deals[$i]->$stage_name = intval($normalized[0] === $key);
@@ -54,6 +55,7 @@ class DataGridController extends Controller
                     $deals[$i]->direction = DealStages::getDirectionName($normalized[0]);
                     if ($deals[$i]->direction === false){
                         unset($deals[$i]);
+                        continue;
                     }
                     foreach (DealStages::getStagesByDirection($normalized[0]) as $key => $stage_name){
                         $deals[$i]->$stage_name = intval($normalized[0] === $key);
