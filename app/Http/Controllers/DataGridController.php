@@ -89,7 +89,7 @@ class DataGridController extends Controller
 
 
             $lead = new Leads();
-            $arr = $lead->protect("", $date_on, $date_off);
+            $arr = $lead->getLeadsFromFile($date_on, $date_off);
             $arr_to_json = [];
             foreach ($arr as $key => $item) {
                 foreach ($item as $key1 => $item1) {
