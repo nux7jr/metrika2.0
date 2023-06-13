@@ -33,7 +33,7 @@ class DataGridController extends Controller
             $deals = $connection->table('deals')->where([
                 ['is_adv', '=', true],
                 ['created_at', '>=', $date_on],
-                ['updated_at', '<=', $date_off],
+                ['created_at', '<=', $date_off],
                 ['url', '!=', null],
                 ['stage_now', 'like', $direction],
             ])->get()->toArray();
