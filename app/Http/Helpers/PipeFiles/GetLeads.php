@@ -4,15 +4,22 @@ namespace App\Http\Helpers\PipeFiles;
 
 class GetLeads
 {
-
-    public $path;
+    /**
+     * @var string|null
+     */
+    public ?string $path;
 
     public function __construct($input_path)
     {
         $this->path = $input_path;
     }
 
-    public function get_leads_by_date($date_start, $date_end)
+    /**
+     * @param $date_start
+     * @param $date_end
+     * @return bool|array
+     */
+    public function get_leads_by_date($date_start, $date_end): bool|array
     {
 
         if (!isset($this->path)) {
@@ -40,7 +47,10 @@ class GetLeads
         return $leads;
     }
 
-    public function get_leads_yesterday()
+    /**
+     * @return bool|array
+     */
+    public function get_leads_yesterday(): bool|array
     {
         if (!isset($this->path)) {
             return false;
@@ -66,7 +76,13 @@ class GetLeads
         return $yesterday_leads;
     }
 
-    private function get_period($start, $end, $format = 'd.m.y')
+    /**
+     * @param $start
+     * @param $end
+     * @param $format
+     * @return array
+     */
+    private function get_period($start, $end, $format = 'd.m.y'): array
     {
 
         $day = 86400;

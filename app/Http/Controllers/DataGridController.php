@@ -8,6 +8,7 @@ use App\Http\Helpers\Reports\DailyReport;
 use App\Http\Helpers\Reports\WeekReport;
 use App\Http\Helpers\Structures\DealStages;
 use App\Models\City;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Helpers\PipeFiles\Leads;
 use Illuminate\Support\Facades\DB;
@@ -20,8 +21,22 @@ class DataGridController extends Controller
     public function index(Request $request)
     {
         try {
+            $carbon = Carbon::tomorrow();
+            $date_off = empty($request->input('date_off')) ?
+                $carbon->toDateTimeString() :
+                $carbon->from($request->input('date_off'))->toDateTimeString();
+            $date_on = empty($request->input('date_on')) ?
+                $carbon->setDateTime(2020,7, 9,0,0)->toDateTimeString() :
+                $carbon->from($request->input('date_on'))->toDateTimeString();
+            $direction = $request->input('direction') !== null ?'C'.$request->input('direction').':%' : 'C116:%';
             $connection = DB::connection('pgsql');
-            $deals = $connection->table('deals')->where('is_adv', '=', true)->get()->toArray();
+            $deals = $connection->table('deals')->where([
+                ['is_adv', '=', true],
+                ['created_at', '>=', $date_on],
+                ['created_at', '<=', $date_off],
+                ['url', '!=', null],
+                ['stage_now', 'like', $direction],
+            ])->get()->toArray();
             $count = count($deals);
             for ($i = 0; $i < $count; $i++){
                 unset($deals[$i]->stage_changes);
@@ -29,6 +44,10 @@ class DataGridController extends Controller
                 if (!isset($normalized[1])){
                     $deals[$i]->stage_now = DealStages::getStageName(null, $normalized[0]);
                     $deals[$i]->direction = DealStages::getDirectionName($normalized[0]);
+                    if ($deals[$i]->direction === false){
+                        unset($deals[$i]);
+                        continue;
+                    }
                     foreach (DealStages::getStagesByDirection(null) as $key => $stage_name){
                         $deals[$i]->$stage_name = intval($normalized[0] === $key);
                     }
@@ -36,12 +55,16 @@ class DataGridController extends Controller
                 if (isset($normalized[1])){
                     $deals[$i]->stage_now = DealStages::getStageName($normalized[0], $normalized[1]);
                     $deals[$i]->direction = DealStages::getDirectionName($normalized[0]);
+                    if ($deals[$i]->direction === false){
+                        unset($deals[$i]);
+                        continue;
+                    }
                     foreach (DealStages::getStagesByDirection($normalized[0]) as $key => $stage_name){
                         $deals[$i]->$stage_name = intval($normalized[0] === $key);
                     }
                 }
             }
-            return json_encode($deals);
+            return json_encode(array_values($deals));
         }catch (\Exception $error){
             return $error->getMessage();
         }
@@ -66,7 +89,7 @@ class DataGridController extends Controller
 
 
             $lead = new Leads();
-            $arr = $lead->protect("", $date_on, $date_off);
+            $arr = $lead->getLeadsFromFile($date_on, $date_off);
             $arr_to_json = [];
             foreach ($arr as $key => $item) {
                 foreach ($item as $key1 => $item1) {

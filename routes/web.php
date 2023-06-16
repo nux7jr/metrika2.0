@@ -60,4 +60,5 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
     Route::post('get_daily_report', [DataGridController::class, 'daily'])->name('get_daily_report');
 
     Route::get('get_deals', [DataGridController::class, 'index'])->name('get_deals');
+    Route::post('get_deals', [DataGridController::class, 'index'])->name('get_deals');
 });
