@@ -47,58 +47,31 @@
                     type="checkbox"
                     checked
                 />
-                <button v-on:click="onRowDataA()">Row Data A</button>
-                <button v-on:click="onRowDataB()">Row Data B</button>
             </div>
         </div>
         <div class="main-table">
             <ag-grid-vue
                 class="ag-theme-alpine-dark main-table__wrapper"
+                :columnDefs="columnDefs"
+                @grid-ready="on_grid_ready"
                 :localeText="localeText"
+                :defaultColDef="defaultColDef"
                 :rowDragManaged="true"
                 :rowDragMultiRow="true"
-                :columnDefs="columnDefs"
-                @grid-ready="onGridReady"
-                :rowData="rowData"
                 :rowSelection="rowSelection"
                 :animateRows="true"
+                :rowData="rowData"
                 :copyHeadersToClipboard="true"
                 :sideBar="sideBar"
                 :statusBar="statusBar"
+                :suppressRowClickSelection="true"
                 :overlayLoadingTemplate="overlayLoadingTemplate"
-                :defaultColDef="defaultColDef"
             ></ag-grid-vue>
         </div>
     </div>
 </template>
 <script>
-const rowDataA = [
-    { make: "Toyota", model: "Celica", price: 35000 },
-    { make: "Porsche", model: "Boxster", price: 72000, stageY: "stageY" },
-    {
-        make: "Aston Martin",
-        model: "DBX",
-        price: 190000,
-        stageX: "stageY",
-        model31: "model31",
-    },
-];
-
-const rowDataB = [
-    { make: "Toyota", model: "Celica", price: 35000 },
-    { make: "Ford", model: "Mondeo", price: 32000 },
-    { make: "Porsche", model: "Boxster", price: 72000, stage2: "stage2" },
-    { make: "BMW", model: "M50", price: 60000 },
-    {
-        make: "Aston Martin",
-        model: "DBX",
-        price: 190000,
-        make: "Aston Martin",
-        model: "DBX",
-        stage1: "stage1",
-    },
-];
-
+// import "../../adGrid/ag-grid-enterprise";
 import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -107,56 +80,168 @@ import { lang } from "../../locale/ru.js";
 import "ag-grid-enterprise";
 
 export default {
-    name: "metrikaDeal",
+    name: "metrikaVisitons",
     data() {
         return {
             loading: false,
+
             localeText: null,
-            defaultColDef: {
-                // set every column width
-                width: 100,
-                // make every column editable
-                editable: true,
-                // make every column use 'text' filter by default
-                filter: "agTextColumnFilter",
-            },
             columnDefs: [
-                { field: "make" },
-                { field: "model" },
-                { width: 100, editable: true, filter: "agTextColumnFilter" },
-                { width: 100, editable: true, filter: "agTextColumnFilter" },
-                { width: 100, editable: true, filter: "agTextColumnFilter" },
-                { width: 100, editable: true, filter: "agTextColumnFilter" },
-                { width: 100, editable: true, filter: "agTextColumnFilter" },
-                { width: 100, editable: true, filter: "agTextColumnFilter" },
-                // { field: "price" },
-                // { field: "stage1" },
-                // { field: "stage2" },
-                // { field: "stageY" },
-                // { field: "stageX" },
+                {
+                    field: "direction",
+                    headerName: "Воронка",
+                    rowDrag: false,
+                    rowGroup: true,
+                    hide: false,
+                    width: 250,
+                },
+                {
+                    field: "utm_source",
+                    headerName: "utm_source",
+                    rowDrag: false,
+                    rowGroup: true,
+                    hide: false,
+                    width: 140,
+                },
+
+                {
+                    field: "stage_now",
+                    headerName: "Стадия",
+                    rowDrag: false,
+                    rowGroup: true,
+                    hide: false,
+                    width: 200,
+                },
+                {
+                    field: "utm_medium",
+                    headerName: "utm_medium",
+                    rowDrag: false,
+                    rowGroup: true,
+                    hide: false,
+                    width: 140,
+                },
+
+                {
+                    field: "utm_campaign",
+                    headerName: "utm_campaign",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "utm_content",
+                    headerName: "utm_content",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "utm_term",
+                    headerName: "utm_term",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "url",
+                    headerName: "Ссылка на сайт",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "city",
+                    headerName: "Город",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "stage_now",
+                    headerName: "Стадия",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "income",
+                    headerName: "Прибыль",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "currency",
+                    headerName: "Валюта",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "phone",
+                    headerName: "Телефон",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "created_at",
+                    headerName: "Дата создания",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "updated_at",
+                    headerName: "Дата последнего изменения",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
+                {
+                    field: "is_adv",
+                    headerName: "Реклама",
+                    rowDrag: false,
+                    width: 160,
+                    rowGroup: false,
+                    hide: false,
+                },
             ],
-            // columnDefsB: [
-            //     { field: "make" },
-            //     { field: "model" },
-            //     { field: "price" },
-            // ],
             gridApi: null,
             columnApi: null,
-
+            defaultColDef: {
+                editable: true,
+                sortable: true,
+                filter: true,
+                filterParams: { buttons: ["reset", "apply"] },
+                width: 250,
+            },
             rowData: null,
             rowSelection: null,
+            sideBar: null,
             date: {
                 date_on: "",
                 date_off: "",
             },
+            model: {},
         };
     },
 
     computed: {},
     created() {
         this.check_user_date();
-        this.rowData = rowDataA;
-        this.rowSelection = "single";
+        this.rowSelection = "multiple";
         this.localeText = lang;
         this.statusBar = {
             statusPanels: [
@@ -190,6 +275,17 @@ export default {
             '<span class="ag-overlay-loading-center loader"></span>';
     },
     methods: {
+        get_export_all() {
+            this.gridApi.exportDataAsExcel();
+        },
+        get_export_checked_box() {
+            this.gridApi.exportDataAsExcel({
+                onlySelected: document.querySelector("#selectedOnly").checked,
+            });
+        },
+        clear_filters() {
+            this.gridApi.setFilterModel(null);
+        },
         get_date_now() {
             const supDate = new Date(),
                 targetDay = 1,
@@ -224,15 +320,64 @@ export default {
         set_user_date() {
             sessionStorage.setItem("date", JSON.stringify(this.date));
         },
-        onRowDataA() {
-            this.gridApi.setRowData(rowDataA);
+        get_date_grid() {
+            // this.loading = true;
+            this.gridApi.showLoadingOverlay();
+            document.getElementById("selectedOnly").checked = true;
+
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+            const localDate = JSON.parse(sessionStorage.getItem("date"));
+            const userFormDate = new FormData();
+            userFormDate.append("date_on", localDate.date_on);
+            userFormDate.append("date_off", localDate.date_off);
+            fetch("/get_deals", {
+                method: "GET",
+                // headers: {
+                //     "X-CSRF-TOKEN": token,
+                //     "Content-Type": "application/json",
+                //     "X-Requested-With": "XMLHttpRequest",
+                // },
+                // body: JSON.stringify({
+                //     date_on: this.date.date_on,
+                //     date_off: this.date.date_off,
+                // }),
+            })
+                .then((resp) => resp.json())
+                .then((data) => {
+                    // console.log(data);
+                    this.gridApi.setRowData(data);
+                    // this.loading = false;
+                    this.gridApi.hideOverlay();
+                });
         },
-        onRowDataB() {
-            this.gridApi.setRowData(rowDataB);
-        },
-        onGridReady(params) {
+        on_grid_ready(params) {
+            document.getElementById("selectedOnly").checked = true;
             this.gridApi = params.api;
             this.gridColumnApi = params.columnApi;
+            const updateData = (data) => params.api.setRowData(data);
+            let token = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            fetch("/get_deals", {
+                method: "GET",
+                // headers: {
+                //     "X-CSRF-TOKEN": token,
+                //     "Content-Type": "application/json",
+                //     "X-Requested-With": "XMLHttpRequest",
+                // },
+                // body: JSON.stringify({
+                //     date_on: this.date.date_on,
+                //     date_off: this.date.date_off,
+                // }),
+            })
+                .then((resp) => resp.json())
+                .then((data) => {
+                    console.log(data);
+                    updateData(data);
+                });
         },
     },
     components: {
