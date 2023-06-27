@@ -226,6 +226,7 @@ export default {
             const localDate = JSON.parse(sessionStorage.getItem("date"));
             const localDirection = JSON.parse(sessionStorage.getItem("direction"));
             const localFilter = JSON.parse(sessionStorage.getItem("filter"));
+            if(!localFilter){ localFilter = 'all'; }
             this.check_filter(localFilter);
             fetch('/get_grid_deals?' + new URLSearchParams({
                 date_on: localDate.date_on, 
@@ -274,6 +275,7 @@ export default {
             this.gridColumnApi = params.columnApi;
             const updateData = (data) => params.api.setRowData(data);
             const localFilter = JSON.parse(sessionStorage.getItem("filter"));
+            if(!localFilter){ localFilter = 'all'; }
             this.check_filter(localFilter);            
             let token = document
                 .querySelector('meta[name="csrf-token"]')
