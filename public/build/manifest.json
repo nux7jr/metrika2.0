@@ -41,7 +41,7 @@
     "src": "resources/images/logos/logo_metrika.png"
   },
   "resources/js/app.css": {
-    "file": "assets/app-b62abd98.css",
+    "file": "assets/app-dd7fcbe5.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
@@ -57,9 +57,9 @@
       "assets/logo-037915c2.webp"
     ],
     "css": [
-      "assets/app-b62abd98.css"
+      "assets/app-dd7fcbe5.css"
     ],
-    "file": "assets/app-dc8a50b4.js",
+    "file": "assets/app-cd71ce55.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }
