@@ -47,31 +47,58 @@
                     type="checkbox"
                     checked
                 />
+                <button v-on:click="onRowDataA()">Row Data A</button>
+                <button v-on:click="onRowDataB()">Row Data B</button>
             </div>
         </div>
         <div class="main-table">
             <ag-grid-vue
                 class="ag-theme-alpine-dark main-table__wrapper"
-                :columnDefs="columnDefs"
-                @grid-ready="on_grid_ready"
                 :localeText="localeText"
-                :defaultColDef="defaultColDef"
                 :rowDragManaged="true"
                 :rowDragMultiRow="true"
+                :columnDefs="columnDefs"
+                @grid-ready="onGridReady"
+                :rowData="rowData"
                 :rowSelection="rowSelection"
                 :animateRows="true"
-                :rowData="rowData"
                 :copyHeadersToClipboard="true"
                 :sideBar="sideBar"
                 :statusBar="statusBar"
-                :suppressRowClickSelection="true"
                 :overlayLoadingTemplate="overlayLoadingTemplate"
+                :defaultColDef="defaultColDef"
             ></ag-grid-vue>
         </div>
     </div>
 </template>
 <script>
-// import "../../adGrid/ag-grid-enterprise";
+const rowDataA = [
+    { make: "Toyota", model: "Celica", price: 35000 },
+    { make: "Porsche", model: "Boxster", price: 72000, stageY: "stageY" },
+    {
+        make: "Aston Martin",
+        model: "DBX",
+        price: 190000,
+        stageX: "stageY",
+        model31: "model31",
+    },
+];
+
+const rowDataB = [
+    { make: "Toyota", model: "Celica", price: 35000 },
+    { make: "Ford", model: "Mondeo", price: 32000 },
+    { make: "Porsche", model: "Boxster", price: 72000, stage2: "stage2" },
+    { make: "BMW", model: "M50", price: 60000 },
+    {
+        make: "Aston Martin",
+        model: "DBX",
+        price: 190000,
+        make: "Aston Martin",
+        model: "DBX",
+        stage1: "stage1",
+    },
+];
+
 import { AgGridVue } from "ag-grid-vue3";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -80,195 +107,56 @@ import { lang } from "../../locale/ru.js";
 import "ag-grid-enterprise";
 
 export default {
-    name: "metrikaVisitons",
+    name: "metrikaDeal",
     data() {
         return {
             loading: false,
-
             localeText: null,
+            defaultColDef: {
+                // set every column width
+                width: 100,
+                // make every column editable
+                editable: true,
+                // make every column use 'text' filter by default
+                filter: "agTextColumnFilter",
+            },
             columnDefs: [
-                {
-                    field: "mask",
-                    headerName: "mask",
-                    rowDrag: false,
-                    rowGroup: true,
-                    hide: true,
-                    width: 140,
-                },
-                {
-                    field: "ip",
-                    headerName: "ip адрес",
-                    rowDrag: false,
-                    rowGroup: true,
-                    hide: true,
-                    width: 140,
-                },
-                {
-                    field: "city_browser",
-                    headerName: "city_browser",
-                    rowDrag: false,
-                    width: 160,
-                    rowGroup: false,
-                    hide: true,
-                },
-
-                {
-                    field: "first_contact_site",
-                    headerName: "first_contact_site",
-                    rowDrag: false,
-                    width: 200,
-                },
-                {
-                    field: "all_sites_visitors",
-                    headerName: "all_sites_visitors",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "phone",
-                    headerName: "phone",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "email",
-                    headerName: "email",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "first_name",
-                    headerName: "first_name",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "second_name",
-                    headerName: "second_name",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "last_name",
-                    headerName: "last_name",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "first_referer",
-                    headerName: "first_referer",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "first_adv_or_seo",
-                    headerName: "first_adv_or_seo",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "second_adv_or_seo",
-                    headerName: "second_adv_or_seo",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "seo",
-                    headerName: "seo",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "adv",
-                    headerName: "adv",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "first_utm_source",
-                    headerName: "first_utm_source",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "first_utm_medium",
-                    headerName: "first_utm_medium",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "first_utm_campaign",
-                    headerName: "first_utm_campaign",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "first_utm_term",
-                    headerName: "first_utm_term",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "first_utm_content",
-                    headerName: "first_utm_content",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "utm_store",
-                    headerName: "utm_store",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "count_visits",
-                    headerName: "count_visits",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "created_at",
-                    headerName: "created_at",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "updated_at",
-                    headerName: "updated_at",
-                    rowDrag: false,
-                    width: 160,
-                },
-                {
-                    field: "city_user",
-                    headerName: "city_user",
-                    rowDrag: false,
-                    width: 160,
-                },
+                { field: "make" },
+                { field: "model" },
+                { width: 100, editable: true, filter: "agTextColumnFilter" },
+                { width: 100, editable: true, filter: "agTextColumnFilter" },
+                { width: 100, editable: true, filter: "agTextColumnFilter" },
+                { width: 100, editable: true, filter: "agTextColumnFilter" },
+                { width: 100, editable: true, filter: "agTextColumnFilter" },
+                { width: 100, editable: true, filter: "agTextColumnFilter" },
+                // { field: "price" },
+                // { field: "stage1" },
+                // { field: "stage2" },
+                // { field: "stageY" },
+                // { field: "stageX" },
             ],
+            // columnDefsB: [
+            //     { field: "make" },
+            //     { field: "model" },
+            //     { field: "price" },
+            // ],
             gridApi: null,
             columnApi: null,
-            defaultColDef: {
-                editable: true,
-                sortable: true,
-                filter: true,
-                filterParams: { buttons: ["reset", "apply"] },
-                width: 250,
-            },
+
             rowData: null,
             rowSelection: null,
-            sideBar: null,
             date: {
                 date_on: "",
                 date_off: "",
             },
-            model: {},
         };
     },
 
     computed: {},
     created() {
         this.check_user_date();
-        this.rowSelection = "multiple";
+        this.rowData = rowDataA;
+        this.rowSelection = "single";
         this.localeText = lang;
         this.statusBar = {
             statusPanels: [
@@ -302,17 +190,6 @@ export default {
             '<span class="ag-overlay-loading-center loader"></span>';
     },
     methods: {
-        get_export_all() {
-            this.gridApi.exportDataAsExcel();
-        },
-        get_export_checked_box() {
-            this.gridApi.exportDataAsExcel({
-                onlySelected: document.querySelector("#selectedOnly").checked,
-            });
-        },
-        clear_filters() {
-            this.gridApi.setFilterModel(null);
-        },
         get_date_now() {
             const supDate = new Date(),
                 targetDay = 1,
@@ -347,60 +224,15 @@ export default {
         set_user_date() {
             sessionStorage.setItem("date", JSON.stringify(this.date));
         },
-        get_date_grid() {
-            // this.loading = true;
-            this.gridApi.showLoadingOverlay();
-            document.getElementById("selectedOnly").checked = true;
-
-            let token = document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content");
-            const localDate = JSON.parse(sessionStorage.getItem("date"));
-            const userFormDate = new FormData();
-            userFormDate.append("date_on", localDate.date_on);
-            userFormDate.append("date_off", localDate.date_off);
-            fetch("https://api.tiksan.ru/api/test", {
-                method: "GET",
-                // headers: {
-                //     "X-CSRF-TOKEN": token,
-                //     "Content-Type": "application/json",
-                //     "X-Requested-With": "XMLHttpRequest",
-                // },
-                // body: JSON.stringify({
-                //     date_on: this.date.date_on,
-                //     date_off: this.date.date_off,
-                // }),
-            })
-                .then((resp) => resp.json())
-                .then((data) => {
-                    this.gridApi.setRowData(data);
-                    // this.loading = false;
-                    this.gridApi.hideOverlay();
-                });
+        onRowDataA() {
+            this.gridApi.setRowData(rowDataA);
         },
-        on_grid_ready(params) {
-            document.getElementById("selectedOnly").checked = true;
+        onRowDataB() {
+            this.gridApi.setRowData(rowDataB);
+        },
+        onGridReady(params) {
             this.gridApi = params.api;
             this.gridColumnApi = params.columnApi;
-            const updateData = (data) => params.api.setRowData(data);
-            let token = document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content");
-
-            fetch("https://api.tiksan.ru/api/test", {
-                method: "GET",
-                // headers: {
-                //     "X-CSRF-TOKEN": token,
-                //     "Content-Type": "application/json",
-                //     "X-Requested-With": "XMLHttpRequest",
-                // },
-                // body: JSON.stringify({
-                //     date_on: this.date.date_on,
-                //     date_off: this.date.date_off,
-                // }),
-            })
-                .then((resp) => resp.json())
-                .then((data) => updateData(data));
         },
     },
     components: {
@@ -409,7 +241,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .ag-theme-alpine-dark {
     --ag-border-radius: 7px;
 

@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-938c5137.css",
+    "file": "assets/app-6166ee25.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
@@ -36,25 +36,30 @@
     "file": "assets/logo-037915c2.webp",
     "src": "resources/images/logos/logo.webp"
   },
+  "resources/images/logos/logo_metrika.png": {
+    "file": "assets/logo_metrika-e7efc466.png",
+    "src": "resources/images/logos/logo_metrika.png"
+  },
   "resources/js/app.css": {
-    "file": "assets/app-35265bde.css",
+    "file": "assets/app-26d10634.css",
     "src": "resources/js/app.css"
   },
   "resources/js/app.js": {
     "assets": [
-      "assets/logo-037915c2.webp",
+      "assets/logo_metrika-e7efc466.png",
       "assets/home-351ee048.svg",
       "assets/dashboard-2ad8eecc.svg",
       "assets/projects-39f775f8.svg",
       "assets/check-27af2fb0.svg",
       "assets/userPlus-6f554e35.svg",
       "assets/conv-9fef2374.svg",
-      "assets/graph-08ab206d.svg"
+      "assets/graph-08ab206d.svg",
+      "assets/logo-037915c2.webp"
     ],
     "css": [
-      "assets/app-35265bde.css"
+      "assets/app-26d10634.css"
     ],
-    "file": "assets/app-be0ed891.js",
+    "file": "assets/app-5c4f7258.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   }

@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\DataGridController;
+use App\Http\Controllers\DataDealsGridController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,4 +62,7 @@ Route::middleware(['twofactor', 'auth'], ["title" => 'Двухфакторная
 
     Route::get('get_deals', [DataGridController::class, 'index'])->name('get_deals');
     Route::post('get_deals', [DataGridController::class, 'index'])->name('get_deals');
+
+    Route::get('get_grid_deals', [DataDealsGridController::class, 'index'])->name('get_deals');
+    Route::post('get_grid_deals', [DataDealsGridController::class, 'index'])->name('get_deals'); 
 });

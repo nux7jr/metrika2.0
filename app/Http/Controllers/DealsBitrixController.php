@@ -154,7 +154,7 @@ class DealsBitrixController extends Controller
      * @throws Throwable
      */
     public function insertDeal(array $deal, PostgresConnection $connection): void{
-        try {
+        try { 
             $contact = $this->getContactById(intval($deal['CONTACT_ID']));
 
             $is_adv = false;
@@ -196,6 +196,7 @@ class DealsBitrixController extends Controller
             $result = $connection->table('deals')->insert($insert_data);
             Log::info('deal was created.');
             $connection->commit();
+
         }catch (\Exception $error){
             $connection->rollBack();
             if (strpos('duplicate key value violates unique constraint "deals_pkey"') !== false){

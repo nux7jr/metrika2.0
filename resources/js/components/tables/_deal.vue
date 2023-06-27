@@ -3,50 +3,27 @@
         <div class="info-option">
             <div class="info-filters">
                 <div class="filter__item">
-                    <label class="filter__label" for="date-off"
-                        >Показать данные от</label
-                    >
-                    <input
-                        class="filter__input"
-                        type="date"
-                        name="date-off"
-                        id="date-off"
-                        v-model="date.date_on"
-                        @change="set_user_date()"
-                    />
-                </div>
+                    <label class="filter__label" for="funnels">Показать данные</label>
+                    <select v-model="funnel_current" @change="set_user_direction()">
+                        <option value="" selected disabled hidden>Выберите воронку</option>
+                        <option v-for="funnel in funnels">{{ funnel }}</option>
+                    </select>
+                </div>                 
                 <div class="filter__item">
-                    <label class="filter__label" for="date-on">До</label>
-                    <input
-                        class="filter__input"
-                        type="date"
-                        name="date-on"
-                        id="date-on"
-                        @change="set_user_date()"
-                        v-model="date.date_off"
-                    />
+                    <div class="filter__item_title">Выберите период</div>
+                    <div class="filter__input_container">
+                        <input class="filter__input" type="date" name="date-off" id="date-off" v-model="date.date_on" @change="set_user_date()" />
+                        <span> - </span>
+                        <input class="filter__input" type="date" name="date-on" id="date-on" @change="set_user_date()" v-model="date.date_off" />
+                    </div>
                 </div>
             </div>
             <div class="info-option__button button-group">
-                <button class="def__button" @click="get_date_grid()">
-                    <span v-if="loading" class="loader"></span>
-                    Показать данные
-                </button>
-                <button class="def__button" @click="clear_filters()">
-                    Сброс всех фильтров
-                </button>
-                <button class="def__button" @click="get_export_checked_box()">
-                    Скачать выбранные строки
-                </button>
-                <button class="def__button" @click="get_export_all()">
-                    Скачать всё
-                </button>
-                <input
-                    class="option-hidden"
-                    id="selectedOnly"
-                    type="checkbox"
-                    checked
-                />
+                <button class="def__button" @click="get_date_grid()"><span v-if="loading" class="loader"></span>Показать данные</button>
+                <button class="def__button" @click="clear_filters()">Сброс всех фильтров</button>
+                <button class="def__button" @click="get_export_checked_box()">Скачать выбранные строки</button>
+                <button class="def__button" @click="get_export_all()">Скачать всё</button>
+                <input class="option-hidden" id="selectedOnly" type="checkbox" checked />
             </div>
         </div>
         <div class="main-table">
@@ -230,6 +207,9 @@ export default {
             rowData: null,
             rowSelection: null,
             sideBar: null,
+            funnels: "",
+            funnel_current: "",
+            funnel_default: "",
             date: {
                 date_on: "",
                 date_off: "",
@@ -317,38 +297,31 @@ export default {
                 this.get_date_now();
             }
         },
+        set_user_direction() {
+            sessionStorage.setItem("direction", JSON.stringify(this.funnel_current));
+        },        
         set_user_date() {
             sessionStorage.setItem("date", JSON.stringify(this.date));
         },
         get_date_grid() {
-            // this.loading = true;
+            // this.loading = true; 
             this.gridApi.showLoadingOverlay();
             document.getElementById("selectedOnly").checked = true;
-
             let token = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
             const localDate = JSON.parse(sessionStorage.getItem("date"));
-            const userFormDate = new FormData();
-            userFormDate.append("date_on", localDate.date_on);
-            userFormDate.append("date_off", localDate.date_off);
-            fetch("/get_deals", {
-                method: "GET",
-                // headers: {
-                //     "X-CSRF-TOKEN": token,
-                //     "Content-Type": "application/json",
-                //     "X-Requested-With": "XMLHttpRequest",
-                // },
-                // body: JSON.stringify({
-                //     date_on: this.date.date_on,
-                //     date_off: this.date.date_off,
-                // }),
-            })
+            const localDirection = JSON.parse(sessionStorage.getItem("direction"));
+
+            fetch('/get_grid_deals?' + new URLSearchParams({
+                date_on: localDate.date_on,
+                date_off: localDate.date_off,
+                direction: localDirection,
+            }))
                 .then((resp) => resp.json())
                 .then((data) => {
-                    // console.log(data);
-                    this.gridApi.setRowData(data);
-                    // this.loading = false;
+                    this.funnels = data.direction;
+                    this.gridApi.setRowData(data.deals);
                     this.gridApi.hideOverlay();
                 });
         },
@@ -361,22 +334,14 @@ export default {
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
 
-            fetch("/get_deals", {
-                method: "GET",
-                // headers: {
-                //     "X-CSRF-TOKEN": token,
-                //     "Content-Type": "application/json",
-                //     "X-Requested-With": "XMLHttpRequest",
-                // },
-                // body: JSON.stringify({
-                //     date_on: this.date.date_on,
-                //     date_off: this.date.date_off,
-                // }),
-            })
+            fetch('/get_grid_deals?' + new URLSearchParams({
+                date_on: this.date.date_on,
+                date_off: this.date.date_off,
+            }))
                 .then((resp) => resp.json())
                 .then((data) => {
-                    console.log(data);
-                    updateData(data);
+                    this.funnels = data.direction;
+                    updateData(data.deals);
                 });
         },
     },
@@ -386,7 +351,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .ag-theme-alpine-dark {
     --ag-border-radius: 7px;
 
@@ -404,6 +369,30 @@ export default {
     100% {
         transform: rotate(360deg);
     }
+}
+select {
+    width: 301px;
+    font-family: "Montserrat", sans-serif;
+    padding: 8px;
+    border-radius: 7px;
+    border-color: transparent;
+    border: 1px #2196f3 solid;
+    outline: none;
+    color: white;
+    background: transparent;
+    color-scheme: dark;
+}
+option{
+    width: 301px;
+    font-family: "Montserrat", sans-serif;
+    padding: 8px;
+    border-radius: 7px;
+    border-color: transparent;
+    border: 1px #2196f3 solid;
+    outline: none;
+    color: white;
+    background: #3b3f41;
+    color-scheme: dark;    
 }
 .loader {
     width: 17px;
@@ -492,7 +481,7 @@ export default {
 }
 .info-option {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 20px;
     padding-bottom: 7px;
 }
@@ -506,12 +495,9 @@ export default {
     border-radius: 7px;
     border-color: transparent;
     border: 1px #2196f3 solid;
-
     outline: none;
-
     color: white;
     background: transparent;
-
     color-scheme: dark;
 }
 .filter__label {
@@ -520,7 +506,19 @@ export default {
 .filter__item {
     display: flex;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+.filter__item_title{
+    color: white;
+}
+.filter__input_container{
+
+}
+.info-filters span{
+    color: white;
+    padding: 0 15px;    
 }
 .option-hidden {
     display: none;

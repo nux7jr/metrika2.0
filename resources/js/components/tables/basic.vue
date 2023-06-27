@@ -301,7 +301,7 @@ const filterParams = {
 };
 </script>
 
-<style>
+<style scoped>
 .ag-theme-alpine-dark {
     --ag-border-radius: 7px;
 

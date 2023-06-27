@@ -65,7 +65,7 @@ img {
     position: fixed;
     background: transparent;
     z-index: 2;
-    bottom: 23px;
+    bottom: 12px;
     right: 20px;
     color: rgba(255, 255, 255, 0.344);
     user-select: none;
