@@ -6,6 +6,8 @@ use App\Http\Helpers\PipeFiles\B24DailyReport;
 use App\Http\Helpers\PipeFiles\CountLeads;
 use App\Http\Helpers\PipeFiles\GetLeads;
 use App\Http\Helpers\PipeFiles\Leads;
+use AXP\YaMetrika\Client;
+use AXP\YaMetrika\YaMetrika;
 
 class DailyReport
 {
@@ -13,6 +15,7 @@ class DailyReport
 
     private array $leads;
     private string $date;
+    private string $YMDate;
     private CountLeads $countLeads;
     private B24DailyReport $bitrixAPI;
     private array $settings = [
@@ -24,6 +27,7 @@ class DailyReport
     ];
     public function __construct(string $date)
     {
+        $this->YMDate = date('Y-m-d',strtotime($date));
         $this->settings['date'] = $date;
         $this->date = date('d.m.y',strtotime($date));
         $leads = new GetLeads($this->path);
@@ -64,6 +68,29 @@ class DailyReport
         $resultJSON[0] = array_merge(['state' => 'Рекламные'], $result_count);
         $resultJSON[1] = array_merge(['state' => 'Все'], $result_count_no_utm);
 
+        $client = new Client(env('METRIKA_YANDEX_TOKEN'), env('CALL_YANDEX_COUNTER_ID'));
+        $metrika = new YaMetrika($client);
+        $callsMetric = $metrika->customQuery([
+            'date'         => \DateTime::createFromFormat('Y-m-d', $this->YMDate),
+            'metrics'       => 'ym:s:goal265457930visits',
+            'dimensions'    => 'ym:s:date',
+            'sort'          => 'ym:s:date',
+        ]);
+        $summaryCalls = 0;
+        foreach ($callsMetric->rawData()['data'] as $callByDay)
+        {
+            if ($callByDay['dimensions'][0]['name'] === $this->YMDate)
+                $summaryCalls += ($callByDay['metrics'][0] ?? 0);
+        }
+
+        $resultJSON[2] = [
+            'state' => 'Сайты',
+            'krsk_foolrs_xl_pipe' => 'xl-pipe все поддомены',
+        ];
+        $resultJSON[3] = [
+            'state' => 'Звонки',
+            'krsk_foolrs_xl_pipe' => $summaryCalls,
+        ];
         return json_encode($resultJSON);
     }
 
