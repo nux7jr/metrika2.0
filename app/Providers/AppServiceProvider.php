@@ -29,9 +29,5 @@ class AppServiceProvider extends ServiceProvider
         $vite->useScriptTagAttributes([
             'defer' => true,
         ]);
-
-        // Vite::useScriptTagAttributes([
-        //     'defer' => true, // Specify an attribute without a value...
-        // ]);
     }
 }
