@@ -8,6 +8,7 @@ use App\Http\Helpers\PipeFiles\GetLeads;
 use App\Http\Helpers\PipeFiles\Leads;
 use AXP\YaMetrika\Client;
 use AXP\YaMetrika\YaMetrika;
+use Exception;
 
 class DailyReport
 {
@@ -25,6 +26,11 @@ class DailyReport
         'direction' => '46',
         'date' => 'date in format d.m.Y'
     ];
+
+    /**
+     * @param string $date
+     * @throws Exception
+     */
     public function __construct(string $date)
     {
         $this->YMDate = date('Y-m-d',strtotime($date));
@@ -33,10 +39,10 @@ class DailyReport
         $leads = new GetLeads($this->path);
         $temp_leads = $leads->get_leads_by_date($date,$date);
         if (empty($temp_leads)){
-            throw new \Exception('В файле с лидами нет данных');
+            throw new Exception('В файле с лидами нет данных');
         }
         if (empty($temp_leads[$this->date])){
-            throw new \Exception('В файле с лидами нет данных на текущую дату: '.$this->date);
+            throw new Exception('В файле с лидами нет данных на текущую дату: '.$this->date);
         }
         $this->leads = $temp_leads[$this->date];
         unset($temp_leads);
@@ -68,29 +74,14 @@ class DailyReport
         $resultJSON[0] = array_merge(['state' => 'Рекламные'], $result_count);
         $resultJSON[1] = array_merge(['state' => 'Все'], $result_count_no_utm);
 
-        $client = new Client(env('METRIKA_YANDEX_TOKEN'), env('CALL_YANDEX_COUNTER_ID'));
-        $metrika = new YaMetrika($client);
-        $callsMetric = $metrika->customQuery([
-            'date'         => \DateTime::createFromFormat('Y-m-d', $this->YMDate),
-            'metrics'       => 'ym:s:goal265457930visits',
-            'dimensions'    => 'ym:s:date',
-            'sort'          => 'ym:s:date',
-        ]);
-        $summaryCalls = 0;
-        foreach ($callsMetric->rawData()['data'] as $callByDay)
-        {
-            if ($callByDay['dimensions'][0]['name'] === $this->YMDate)
-                $summaryCalls += ($callByDay['metrics'][0] ?? 0);
-        }
-
-        $resultJSON[2] = [
-            'state' => 'Сайты',
-            'krsk_foolrs_xl_pipe' => 'xl-pipe все поддомены',
-        ];
-        $resultJSON[3] = [
-            'state' => 'Звонки',
-            'krsk_foolrs_xl_pipe' => $summaryCalls,
-        ];
+//        $resultJSON[2] = [
+//            'state' => 'Сайты',
+//            'krsk_foolrs_xl_pipe' => 'xl-pipe все поддомены',
+//        ];
+//        $resultJSON[3] = [
+//            'state' => 'Звонки',
+//            'krsk_foolrs_xl_pipe' => $summaryCalls,
+//        ];
         return json_encode($resultJSON);
     }
 
