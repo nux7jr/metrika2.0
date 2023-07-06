@@ -6,9 +6,11 @@ use App\Http\Helpers\PipeFiles\B24DailyReport;
 use App\Http\Helpers\PipeFiles\CountLeads;
 use App\Http\Helpers\PipeFiles\GetLeads;
 use App\Http\Helpers\PipeFiles\Leads;
+use App\Models\MetrikaGoalCallsSites;
 use AXP\YaMetrika\Client;
 use AXP\YaMetrika\YaMetrika;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class DailyReport
 {
@@ -74,14 +76,19 @@ class DailyReport
         $resultJSON[0] = array_merge(['state' => 'Рекламные'], $result_count);
         $resultJSON[1] = array_merge(['state' => 'Все'], $result_count_no_utm);
 
-//        $resultJSON[2] = [
-//            'state' => 'Сайты',
-//            'krsk_foolrs_xl_pipe' => 'xl-pipe все поддомены',
-//        ];
-//        $resultJSON[3] = [
-//            'state' => 'Звонки',
-//            'krsk_foolrs_xl_pipe' => $summaryCalls,
-//        ];
+        $callByDate = DB::table('metrika_goals_call_sites')->where('date', \Carbon\Carbon::createFromFormat('d.m.y',$this->date)->format('Y-m-d'))->get();
+        $resultJSON[2] = [
+            'state' => 'Сайт',
+            'krsk_foolrs_xl_pipe' => 'Звонок | Количество кликов',
+        ];
+        $counterRaw = 3;
+        foreach ($callByDate as $call){
+            $resultJSON[$counterRaw] = [
+                'state' => $call->site_full,
+                'krsk_foolrs_xl_pipe' => $call->calls_count,
+            ];
+            $counterRaw++;
+        }
         return json_encode($resultJSON);
     }
 
@@ -101,7 +108,7 @@ class DailyReport
                     'nanofiber_franchisees_sng' => count($report['Нанофайбер франшиза СНГ'][0] ?? []),
                     'nanofiber_franchisees_world' => count($report['Нанофайбер франшиза Зарубежные страны'][0] ?? []),
                     'krsk_etaji' => count($report['Малые этажи']['Красноярск'] ?? []),
-                    'dealers_etaji' => (count($report['Малые этажи']['Тюмень'] ?? []) + count($report['Малые этажи']['Иркутск'] ?? []) + count($report['Малые этажи']['Владивосток'] ?? []) + count($report['Малые этажи']['Пермь'] ?? []) + count($report['Малые этажи']['Екатеринбург'] ?? [])),
+                    'dealers_etaji' => (count($report['Малые этажи']['Тюмень'] ?? []) + count($report['Малые этажи']['Иркутск'] ?? []) + count($report['Малые этажи']['Владивосток'] ?? []) + count($report['Малые этажи']['Пермь'] ?? []) + count($report['Малые этажи']['Екатеринбург'] ?? []) + count($report['Малые этажи']['Барнаул'] ?? [])),
                     'tumen_etaji' => count($report['Малые этажи']['Тюмень'] ?? []),
                     'irkutsk_etaji' => count($report['Малые этажи']['Иркутск'] ?? []),
                     'vladivostok_etaji' => count($report['Малые этажи']['Владивосток'] ?? []),
