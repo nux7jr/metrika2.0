@@ -112,6 +112,10 @@ export default {
                     headerName: "Кол-во заявок Факт",
                 },
                 {
+                    field: "Budget_per_week",
+                    headerName: "Бюджет в неделю с НДС"
+                },
+                {
                     field: "Drawback/Surplus",
                     headerName: "Недокрут/Перерасход",
                 },
