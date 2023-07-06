@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
                  'date_start' => Carbon::yesterday(),
                  'date_end' => Carbon::yesterday(),
              ]);
-         })->timezone('Europe/Moscow')->dailyAt('01:00')->withoutOverlapping();
+         })->timezone('Europe/Moscow')->name('push_metrika_data')->withoutOverlapping()->dailyAt('01:00');
     }
 
     /**
