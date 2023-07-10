@@ -45,6 +45,7 @@ class GetCSVSpreadsheets{
         'ИП Кондауров СН' => 'Хабаровск',
         'Стройподрят' => 'Калининград',
         'ИП Комеров' => 'Чита',
+        'ИП Майорова' => 'Краснодар',
     ];
 
     public function __construct(string $id_spreadsheet_file, string $format_export, int $id_list_spreadsheet, string $need_range)
